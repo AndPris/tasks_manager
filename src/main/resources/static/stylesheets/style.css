@@ -1,0 +1,464 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* #363532, rgb(88, 111, 112) */
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    font-family: "Work Sans", sans-serif;
+    min-height: 100vh;
+    padding-top: 3%;
+    justify-content: space-between;
+}
+
+.standard {
+    background-image: linear-gradient(100deg, #575656, #062e3f);
+    color: #ffdfdb;
+    transition: 0.3s linear;
+}
+
+#header,
+#form {
+    margin: 0 1rem;
+    min-height: 10vh;
+    width: 100%;
+}
+
+#header {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 3rem;
+    min-height: 25vh;
+    width: 100%;
+}
+
+/* Theme buttons div */
+.flexrow-container {
+    align-items: center;
+    align-self: flex-end;
+    display: flex;
+    justify-content: space-around;
+    margin-right: 3%;
+}
+
+.theme-selector {
+    border: 1px solid #d1dae3;
+    border-radius: 100%;
+    height: 35px;
+    margin: 0 8px;
+    transition: tranform 150ms ease-in-out, box-shadow 200ms ease-in-out;
+    width: 35px;
+}
+
+.theme-selector:hover {
+    box-shadow: white 0 0 8px;
+    cursor: pointer;
+}
+
+.theme-selector:active {
+    transform: scale(0.95);
+}
+
+.standard-theme {
+    background-image: linear-gradient(100deg, #575656, #062e3f);
+}
+
+/* Animation */
+#title {
+    border-right: solid 3px rgba(0, 0, 0, 0.75);
+    white-space: pre;
+    overflow: hidden;
+    letter-spacing: 0.2rem;
+    margin-top: 50px;
+    margin-bottom: 100px;
+    max-width: 480px;
+}
+
+/* Animation */
+#title {
+    animation: animated-text 2s steps(11, end) 0.5s 1 normal both,
+    animated-cursor 750ms steps(11, end) infinite;
+}
+
+/* text animation */
+
+@keyframes animated-text {
+    from {
+        width: 0;
+    }
+    to {
+        width: 480px;
+    }
+}
+
+/* cursor animations */
+
+@keyframes animated-cursor {
+    from {
+        border-right-color: rgba(0, 0, 0, 0.75);
+    }
+    to {
+        border-right-color: transparent;
+    }
+}
+
+form {
+    display: flex;
+    font-size: 1.7rem;
+    justify-content: center;
+    margin: 15px 0;
+    padding: 0.8rem;
+    width: 100%;
+}
+
+form input {
+    padding: 10px;
+    font-size: 17px;
+    border: none;
+    outline: none;
+    /* border-radius: 15; */
+    border-top-left-radius: 17px;
+    border-bottom-left-radius: 17px;
+    max-width: 500px;
+    transition: background-color 200ms ease-in-out;
+    width: 100%;
+}
+
+#descriptionToFind {
+    padding: 10px;
+    font-size: 17px;
+    border: none;
+    outline: none;
+    border-top-left-radius: 17px;
+    border-bottom-left-radius: 17px;
+    transition: background-color 200ms ease-in-out;
+}
+
+.search {
+    display: flex;
+}
+
+#find-button {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+#backward-button {
+    margin-right: 5px;
+}
+
+#forward-button {
+    margin-left: 5px;
+}
+
+form input.standard-input, #descriptionToFind {
+    background-color: #181a1a;
+    color: rgb(247, 226, 223);
+    border-right: 2px solid white;
+}
+
+form input:hover, #descriptionToFind:hover {
+    cursor: text;
+}
+
+form input.standard-input:hover, #descriptionToFind:hover {
+    background-color: rgb(0, 0, 0);
+}
+
+button {
+    border: none;
+    outline: none;
+    transition: box-shadow 200ms ease, background-color 200ms ease-in-out;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+/* Button themes */
+button.standard-button {
+    background-color: rgb(247, 226, 223);
+    color: rgb(0, 0, 0);
+}
+
+button.standard-button:hover {
+    background-color: white;
+    box-shadow: #fff8 0 0 10px;
+}
+
+form button {
+    padding: 10px;
+    font-size: 17px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    min-width: 100px;
+}
+
+#myUnOrdList {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+}
+
+.todo-list {
+    width: 62.5%;
+
+    /* To remove the bullets of unordered list */
+    list-style: none;
+}
+
+.todo {
+    margin: 1rem 1rem 0;
+    font-size: 19px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+    transition: background-color 200ms ease-in-out;
+}
+
+.todo li {
+    padding: 7px;
+    /* word-wrap: break-word; */
+    /* flex-wrap: wrap; */
+    font-size: 20px;
+    flex: 1; /* To push the trash and the check button to the right */
+    border-radius: 30px;
+
+    overflow-wrap: anywhere;
+}
+
+.completed {
+    transition: 0.2s;
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+.fall {
+    transition: 0.5s;
+    transform: translateY(45rem) rotateZ(45deg);
+    opacity: 0;
+}
+
+.check-btn,
+.delete-btn,
+.edit-btn {
+    font-size: 19px;
+    cursor: pointer;
+    width: 2em;
+    height: 2em;
+    border-radius: 80%;
+    margin: 0 5px;
+}
+
+.todo-item {
+    padding: 0 0.5rem;
+}
+
+/* Items themes */
+.standard-todo {
+    background-color: rgb(26, 27, 27);
+    border-radius: 30px;
+}
+
+.fa-trash,
+.fa-check {
+    pointer-events: none;
+}
+
+/* Responsive design */
+@media only screen and (max-width: 1000px) {
+    .flexrow-container {
+        align-self: unset;
+        margin-right: 0;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    #header {
+        font-size: 2rem;
+    }
+
+    #title {
+        animation: animated-text 3s steps(16, end) 0.5s 1 normal both,
+        animated-cursor 750ms steps(16, end) infinite;
+        margin-bottom: 10px;
+        margin-top: 30px;
+        max-width: 330px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    #header {
+        font-size: 1.5rem;
+    }
+
+    #title {
+        animation: animated-text 3.5s steps(16, end) 0.5s 1 normal both,
+        animated-cursor 750ms steps(16, end) infinite;
+        max-width: 255px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    form {
+        align-items: center;
+        flex-direction: column;
+    }
+
+    form input {
+        border-radius: 17px;
+    }
+
+    form button {
+        border-radius: 15px;
+        margin-top: 15px;
+        width: 50%;
+    }
+    form > button.light-button {
+        box-shadow: 0 0 5px lightgray;
+    }
+}
+
+.authors-links {
+    list-style: none;
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding: 10px;
+}
+
+.author-link {
+    font-size: 24px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    font-family: "Work Sans", sans-serif;
+    padding-top: 3%;
+}
+
+.standard-authors-link {
+    color: gray; /* Standard theme text color */
+}
+
+.standard-authors-link:hover {
+    color: white; /* Standard theme text color */
+}
+
+.title-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.description {
+    font-size: 24px;
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.author-name {
+    font-size: 32px;
+    margin-bottom: 4px;
+}
+
+.standard-description,
+.standard-author-name {
+    color: gray; /* Standard theme text color */
+}
+
+.standard-description:hover {
+    color: white; /* Standard theme text color */
+}
+
+.author-img {
+    max-height: 200px;
+    margin-bottom: 10px;
+}
+
+.container {
+    text-align: center;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+.priority-input {
+    border: none;
+    width: 10%;
+    background-color: #181a1a;
+    color: rgb(247, 226, 223);
+    border-right: 2px solid white;
+}
+
+.finish-date-input {
+    border-radius: 0 17px 17px 0;
+    width: 10%;
+    background-color: #181a1a;
+    color: rgb(247, 226, 223);
+}
+
+.priority-input:hover {
+    background-color: rgb(0, 0, 0);
+}
+
+.todo-btn {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    margin-left: 16px;
+}
+
+.todo-item-description {
+    font-weight: 800;
+    width: 70%;
+    margin-bottom: 5px;
+}
+
+.todo-item-priority {
+    width: 10%;
+}
+
+.creation-time {
+    font-size: 14px;
+    padding: 0 0.5rem;
+}
+
+.todo-left-div {
+    width: 56%;
+}
+
+.todo-buttons-div {
+    display: flex;
+    justify-content: flex-end;
+    width: 16%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.sort-buttons {
+    display: flex;
+    width: 40%;
+    justify-content: flex-end;
+    column-gap: 35px;
+    margin: 16px 0;
+}
+
+.sort-button {
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 15px;
+}
