@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -26,4 +26,10 @@ public class Task {
 
     @ManyToOne
     private Priority priority;
+
+    @PrePersist
+    protected void onCreate() {
+        this.isDone = false;
+        this.creationTime = new Date();
+    }
 }
