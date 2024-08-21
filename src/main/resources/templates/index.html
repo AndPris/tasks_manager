@@ -18,7 +18,7 @@
         <h1 id="title">Just do it.</h1>
         <div id="border"></div>
 
-        <form id="form" th:action="@{/tasks}" method="post">
+        <form id="form">
             <input id="description" class="todo-input standard-input" type="text" placeholder="Add a task." name="description">
             <select id="priority" class="priority-input" name="priority">
                 <option value="1">High</option>
@@ -52,8 +52,8 @@
             <button id="finish-date-sort-button" class="sort-button standard-button" onclick="sortTasksByFinishDate()">By finish date</button>
         </div>
         <div id="myUnOrdList">
-            <ul class="todo-list"></ul>
         </div>
+        <ul class="todo-list"></ul>
     </div>
 
     <section class="footer">
@@ -62,7 +62,7 @@
         </ul>
     </section>
 
-    <script src="js/task.js" type="text/javascript"></script>
-    <script src="js/main.js" type="text/javascript"></script>
+<!--    <script src="/js/task.js" type="text/javascript"></script>-->
+    <script src="/js/main.js" type="text/javascript"></script>
 </body>
 </html>
