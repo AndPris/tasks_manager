@@ -31,4 +31,12 @@ public class TasksRestController {
             taskRepository.deleteById(taskId);
         } catch (EmptyResultDataAccessException e) {}
     }
+
+    @PatchMapping("/{taskId}")
+    public Task toggleTaskIsDone(@PathVariable("taskId") Long taskId) {
+        Task taskToUpdate = taskRepository.findById(taskId).get();
+        taskToUpdate.setDone(!taskToUpdate.isDone());
+        return taskRepository.save(taskToUpdate);
+    }
+
 }

@@ -85,14 +85,13 @@ async function checkTask() {
     const taskId = todoElement.getAttribute("id");
 
     try {
-        let response = await fetch(`/tasks/${taskId}`, {
+        let response = await fetch(`/api/tasks/${taskId}`, {
             method: "PATCH",
         });
 
         if (!response.ok) throw new Error("Network response was not ok");
 
-        const responseData = await response.json();
-        if (responseData.redirect) window.location.href = responseData.redirect;
+        window.location.reload();
     } catch (err) {
         console.log(err);
     }
