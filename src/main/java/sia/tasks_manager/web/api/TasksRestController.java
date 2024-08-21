@@ -39,4 +39,9 @@ public class TasksRestController {
         return taskRepository.save(taskToUpdate);
     }
 
+    @PutMapping("/{taskId}")
+    public Task updateTask(@PathVariable("taskId") Long taskId, @RequestBody Task task) {
+        task.setId(taskId);
+        return taskRepository.save(task);
+    }
 }

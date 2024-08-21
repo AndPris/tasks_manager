@@ -18,7 +18,6 @@ async function addTaskToDB(event) {
         finishDate: form.finishDate.value,
         priority: { id: form.priority.value }
     };
-    console.log(data);
 
     try {
         let response = await fetch("/api/tasks", {
@@ -101,20 +100,23 @@ async function checkTask() {
 async function editTaskInDB(event) {
     event.preventDefault();
 
-    const formData = new FormData(this);
     const taskId = this.getAttribute("task-id");
+    const form = event.target;
+    const data = {
+        description: form.description.value,
+        finishDate: form.finishDate.value,
+        priority: { id: form.priority.value }
+    };
 
     try {
-        let response = await fetch(`/tasks/${taskId}`, {
+        let response = await fetch(`/api/tasks/${taskId}`, {
             method: "PUT",
-            body: formData,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
         });
-
-        const responseData = await response.json();
-        if (responseData.redirect)
-            window.location.href = responseData.redirect;
-        if (responseData.error_message)
-            alert(responseData.error_message)
+        window.location.reload();
     } catch (err) {
         console.log(err);
     }
@@ -161,7 +163,6 @@ async function editTask() {
 
 
 function displayTask(task) {
-    console.log(task);
     const taskLi = document.createElement("li");
     const leftDiv = document.createElement("div");
     const creationTimeDiv = document.createElement("div");
@@ -275,7 +276,6 @@ async function loadTasks() {
 
         clearChildren(".todo-list");
         const data = await response.json();
-        console.log(data);
         data.forEach((todo) => {
             displayTask(todo);
         });
