@@ -1,23 +1,35 @@
 package sia.tasks_manager.web.api;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import sia.tasks_manager.data.Task;
 import sia.tasks_manager.repositories.TaskRepository;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping(path = "/api/tasks",
         produces = "application/json")
+@ConfigurationProperties(prefix = "task-manager.tasks")
 public class TasksRestController {
     private final TaskRepository taskRepository;
+    private int pageSize;
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public TasksRestController(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
-    @GetMapping
-    public Iterable<Task> allTasks() {
-        return taskRepository.findAll();
+    @GetMapping("/{pageNumber}")
+    public Iterable<Task> allTasks(@PathVariable("pageNumber") int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return taskRepository.findAll(pageable);
     }
 
     @PostMapping
@@ -42,6 +54,7 @@ public class TasksRestController {
     @PutMapping("/{taskId}")
     public Task updateTask(@PathVariable("taskId") Long taskId, @RequestBody Task task) {
         task.setId(taskId);
+        task.setCreationTime(new Date());
         return taskRepository.save(task);
     }
 }

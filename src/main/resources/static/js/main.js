@@ -1,5 +1,5 @@
 const toDoList = document.querySelector(".todo-list");
-let currentPage = 0;
+let pageNumber = 0;
 const itemsInPage = 5;
 let sortOrders= [];
 let descriptionToFind = '';
@@ -251,38 +251,40 @@ function getTime(timestamp) {
     return `${hours}:${minutes}`;
 }
 
-function updatePaginationButtons(areTasksLeft) {
-    if(currentPage === 0)
-        document.getElementById("backward-button").style.display = 'none';
-    else
-        document.getElementById("backward-button").style.display = '';
-
-    if(areTasksLeft)
-        document.getElementById("forward-button").style.display = '';
-    else
-        document.getElementById("forward-button").style.display = 'none';
-}
-
 async function loadTasks() {
     try {
         // console.log(descriptionToFind);
-        // const queryString = `?sortOrders=${encodeURIComponent(JSON.stringify(sortOrders))}&page=${currentPage}&pageSize=${itemsInPage}&description=${descriptionToFind}`;
-        const response = await fetch("/api/tasks", {
+        // const queryString = `?sortOrders=${encodeURIComponent(JSON.stringify(sortOrders))}&page=${pageNumber}&pageSize=${itemsInPage}&description=${descriptionToFind}`;
+        const response = await fetch(`/api/tasks/${pageNumber}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
             }
         })
+        console.log(response);
 
         clearChildren(".todo-list");
         const data = await response.json();
-        data.forEach((todo) => {
+        console.log(data);
+        data.content.forEach((todo) => {
             displayTask(todo);
         });
-        // updatePaginationButtons(data.areTasksLeft);
+        updatePaginationButtons(data.first, data.last);
     } catch (error) {
         console.error("Error fetching data:", error);
     }
+}
+
+function updatePaginationButtons(isFirst, isLast) {
+    if(isFirst)
+        document.getElementById("backward-button").style.display = 'none';
+    else
+        document.getElementById("backward-button").style.display = '';
+
+    if(isLast)
+        document.getElementById("forward-button").style.display = 'none';
+    else
+        document.getElementById("forward-button").style.display = '';
 }
 
 loadTasks();
@@ -328,7 +330,7 @@ function sortTasksByFinishDate() {
 
 
 async function findTask() {
-    currentPage = 0;
+    pageNumber = 0;
     const descriptionField = document.getElementById("descriptionToFind");
     descriptionToFind = descriptionField.value;
     console.log(descriptionToFind);
@@ -338,12 +340,12 @@ async function findTask() {
 
 
 function goForward() {
-    currentPage += 1;
+    pageNumber += 1;
     loadTasks()
 }
 
 function goBackward() {
-    currentPage -= 1;
+    pageNumber -= 1;
     loadTasks()
 }
 
