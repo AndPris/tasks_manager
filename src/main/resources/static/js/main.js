@@ -253,9 +253,8 @@ function getTime(timestamp) {
 
 async function loadTasks() {
     try {
-        // console.log(descriptionToFind);
-        // const queryString = `?sortOrders=${encodeURIComponent(JSON.stringify(sortOrders))}&page=${pageNumber}&pageSize=${itemsInPage}&description=${descriptionToFind}`;
-        const queryString = `?page=${pageNumber}&size=${pageSize}&sort=done,asc`;//&page=${pageNumber}&pageSize=${itemsInPage}&description=${descriptionToFind}`;
+        let queryString = getQueryString();
+        console.log(queryString);
         const response = await fetch(`/data-api/tasks${queryString}`, {
             method: "GET",
             headers: {
@@ -275,6 +274,20 @@ async function loadTasks() {
     } catch (error) {
         console.error("Error fetching data:", error);
     }
+}
+
+function getQueryString() {
+    let queryString = `?page=${pageNumber}&size=${pageSize}&sort=done,asc`;
+
+    for(sortOrder of sortOrders) {
+        console.log(sortOrder);
+        if(sortOrder[1] === 0)
+            continue;
+
+        queryString += `&sort=${sortOrder[0]},${getSortingOrderByCode(sortOrder[1])}`;
+    }
+
+    return queryString;
 }
 
 function updatePaginationButtons(currentPage, totalPages) {
@@ -328,6 +341,13 @@ function sortTasksByFinishDate() {
         buttonText += " ↑";
 
     button.textContent = buttonText;
+}
+
+function getSortingOrderByCode(code) {
+    if (code === 1)
+        return "asc";
+    if (code === 2)
+        return "desc";
 }
 
 
