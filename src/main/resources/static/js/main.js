@@ -82,10 +82,17 @@ async function deleteTask() {
 async function checkTask() {
     const todoElement = this.closest("li");
     const taskId = todoElement.getAttribute("id");
-
+    const data = {
+        done:  !todoElement.classList.contains('completed')
+    }
     try {
-        let response = await fetch(`/api/tasks/${taskId}`, {
+
+        let response = await fetch(`/data-api/tasks/${taskId}`, {
             method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
         });
 
         if (!response.ok) throw new Error("Network response was not ok");
