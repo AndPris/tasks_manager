@@ -1,6 +1,6 @@
 const toDoList = document.querySelector(".todo-list");
+const pageSize = 5;
 let pageNumber = 0;
-const itemsInPage = 5;
 let sortOrders= [];
 let descriptionToFind = '';
 let prioritySortOrder = 0;
@@ -20,7 +20,7 @@ async function addTaskToDB(event) {
     };
 
     try {
-        let response = await fetch("/api/tasks", {
+        let response = await fetch("/data-api/tasks", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -255,7 +255,8 @@ async function loadTasks() {
     try {
         // console.log(descriptionToFind);
         // const queryString = `?sortOrders=${encodeURIComponent(JSON.stringify(sortOrders))}&page=${pageNumber}&pageSize=${itemsInPage}&description=${descriptionToFind}`;
-        const response = await fetch(`/api/tasks/${pageNumber}`, {
+        const queryString = `?page=${pageNumber}&size=${pageSize}&sort=done,asc`;//&page=${pageNumber}&pageSize=${itemsInPage}&description=${descriptionToFind}`;
+        const response = await fetch(`/data-api/tasks${queryString}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
@@ -266,22 +267,23 @@ async function loadTasks() {
         clearChildren(".todo-list");
         const data = await response.json();
         console.log(data);
-        data.content.forEach((todo) => {
+        console.log(data._embedded.tasks);
+        data._embedded.tasks.forEach((todo) => {
             displayTask(todo);
         });
-        updatePaginationButtons(data.first, data.last);
+        updatePaginationButtons(data.page.number, data.page.totalPages);
     } catch (error) {
         console.error("Error fetching data:", error);
     }
 }
 
-function updatePaginationButtons(isFirst, isLast) {
-    if(isFirst)
+function updatePaginationButtons(currentPage, totalPages) {
+    if(currentPage === 0)
         document.getElementById("backward-button").style.display = 'none';
     else
         document.getElementById("backward-button").style.display = '';
 
-    if(isLast)
+    if(currentPage+1 >= totalPages)
         document.getElementById("forward-button").style.display = 'none';
     else
         document.getElementById("forward-button").style.display = '';

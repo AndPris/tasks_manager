@@ -22,14 +22,14 @@ public class Task {
     private Date creationTime;
 
     @NotNull
-    private boolean isDone;
+    private boolean done;
 
     @ManyToOne
     private Priority priority;
 
     @PrePersist
     protected void onCreate() {
-        this.isDone = false;
+        this.done = false;
         this.creationTime = new Date();
     }
 }

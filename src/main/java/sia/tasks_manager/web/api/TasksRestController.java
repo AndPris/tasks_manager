@@ -29,7 +29,7 @@ public class TasksRestController {
     @GetMapping("/{pageNumber}")
     public Iterable<Task> allTasks(@PathVariable("pageNumber") int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return taskRepository.findAll(pageable);
+        return taskRepository.findAllByOrderByDoneAscPriorityAsc(pageable);
     }
 
     @PostMapping
