@@ -67,7 +67,7 @@ async function deleteTask() {
     const taskId = todoElement.getAttribute("id");
 
     try {
-        let response = await fetch(`/api/tasks/${taskId}`, {
+        let response = await fetch(`/data-api/tasks/${taskId}`, {
             method: "DELETE",
         });
 
