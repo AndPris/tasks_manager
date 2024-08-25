@@ -251,9 +251,9 @@ function getTime(timestamp) {
     return `${hours}:${minutes}`;
 }
 
-async function loadTasks() {
+async function loadTasks(queryString) {
     try {
-        let queryString = getQueryString();
+        queryString = queryString ? queryString : getQueryString();
         console.log(queryString);
         const response = await fetch(`/data-api/tasks${queryString}`, {
             method: "GET",
@@ -270,7 +270,11 @@ async function loadTasks() {
         data._embedded.tasks.forEach((todo) => {
             displayTask(todo);
         });
-        updatePaginationButtons(data.page.number, data.page.totalPages);
+
+        if(data.page)
+            updatePaginationButtons(data.page.number, data.page.totalPages);
+        else
+            updatePaginationButtons(0, 1);
     } catch (error) {
         console.error("Error fetching data:", error);
     }
@@ -280,7 +284,6 @@ function getQueryString() {
     let queryString = `?page=${pageNumber}&size=${pageSize}&sort=done,asc`;
 
     for(sortOrder of sortOrders) {
-        console.log(sortOrder);
         if(sortOrder[1] === 0)
             continue;
 
@@ -356,7 +359,8 @@ async function findTask() {
     const descriptionField = document.getElementById("descriptionToFind");
     descriptionToFind = descriptionField.value;
     console.log(descriptionToFind);
-    await loadTasks();
+    let queryString = `/search/findByDescription?description=${descriptionToFind}`;
+    await loadTasks(queryString);
     descriptionField.value = '';
 }
 
