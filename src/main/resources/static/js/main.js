@@ -116,7 +116,7 @@ async function editTaskInDB(event) {
     };
 
     try {
-        let response = await fetch(`/api/tasks/${taskId}`, {
+        let response = await fetch(`/data-api/tasks/${taskId}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
