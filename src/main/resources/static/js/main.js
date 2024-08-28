@@ -1,3 +1,10 @@
+import {addTaskToDB} from 'backend_interaction.js';
+
+document
+    .getElementById("form")
+    .addEventListener("submit", addTaskToDB);
+
+
 const toDoList = document.querySelector(".todo-list");
 const pageSize = 5;
 let pageNumber = 0;
@@ -5,62 +12,6 @@ let sortOrders= [];
 let descriptionToFind = '';
 let prioritySortOrder = 0;
 let finishDateSortOrder = 0;
-
-
-async function addTaskToDB(event) {
-    event.preventDefault();
-
-    if (!validateForm()) return;
-
-    const form = event.target;
-    const data = {
-        description: form.description.value,
-        finishDate: form.finishDate.value,
-        priority: { id: form.priority.value }
-    };
-
-    try {
-        let response = await fetch("/api/tasks", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (!response.ok) throw new Error("Network response was not ok");
-
-        window.location.reload();
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-document
-    .getElementById("form")
-    .addEventListener("submit", addTaskToDB);
-
-function validateForm() {
-    const description = document.getElementById("description").value;
-    const finishDate = document.getElementById("finishDate").value;
-
-    if (!description) {
-        alert("You must enter description!");
-        return false;
-    }
-
-    if (!finishDate) {
-        alert("You must enter finish date!");
-        return false;
-    }
-
-    if (finishDate < new Date().setHours(0, 0, 0, 0)) {
-        alert("Finish date must be not earlier than current date!");
-        return false;
-    }
-
-    return true;
-}
 
 async function deleteTask() {
     const todoElement = this.closest("li");
