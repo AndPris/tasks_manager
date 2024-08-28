@@ -5,14 +5,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/tasks")
 public class TasksController {
     @GetMapping
     public String loadPage(Model model) {
-        model.addAttribute("currentDate", new Date());
+        model.addAttribute("currentDate", LocalDate.now());
         return "index";
     }
 }
