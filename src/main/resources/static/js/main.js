@@ -237,7 +237,7 @@ async function loadTasks(queryString) {
 function getQueryString() {
     let queryString = `?page=${pageNumber}&size=${pageSize}&sort=done,asc`;
 
-    for(sortOrder of sortOrders) {
+    for(let sortOrder of sortOrders) {
         if(sortOrder[1] === 0)
             continue;
 
@@ -333,3 +333,8 @@ function goBackward() {
     loadTasks()
 }
 
+window.sortTasksByPriority = sortTasksByPriority;
+window.sortTasksByFinishDate = sortTasksByFinishDate;
+window.findTask = findTask;
+window.goForward = goForward;
+window.goBackward = goBackward;
