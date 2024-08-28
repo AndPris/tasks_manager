@@ -20,7 +20,7 @@ async function addTaskToDB(event) {
     };
 
     try {
-        let response = await fetch("/data-api/tasks", {
+        let response = await fetch("/api/tasks", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ async function deleteTask() {
     const taskId = todoElement.getAttribute("id");
 
     try {
-        let response = await fetch(`/data-api/tasks/${taskId}`, {
+        let response = await fetch(`/api/tasks/${taskId}`, {
             method: "DELETE",
         });
 
@@ -87,7 +87,7 @@ async function checkTask() {
     }
     try {
 
-        let response = await fetch(`/data-api/tasks/${taskId}`, {
+        let response = await fetch(`/api/tasks/${taskId}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json'
@@ -116,7 +116,7 @@ async function editTaskInDB(event) {
     };
 
     try {
-        let response = await fetch(`/data-api/tasks/${taskId}`, {
+        let response = await fetch(`/api/tasks/${taskId}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -261,7 +261,7 @@ function getTime(timestamp) {
 async function loadTasks(queryString) {
     try {
         queryString = queryString ? queryString : getQueryString();
-        const response = await fetch(`/data-api/tasks${queryString}`, {
+        const response = await fetch(`/api/tasks${queryString}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
