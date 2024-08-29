@@ -1,4 +1,4 @@
-import {addTaskToDB} from 'backend_interaction.js';
+import {addTaskToDB, deleteTaskFromDB} from 'backend_interaction.js';
 
 document
     .getElementById("form")
@@ -13,22 +13,6 @@ let descriptionToFind = '';
 let prioritySortOrder = 0;
 let finishDateSortOrder = 0;
 
-async function deleteTask() {
-    const todoElement = this.closest("li");
-    const taskId = todoElement.getAttribute("id");
-
-    try {
-        let response = await fetch(`/api/tasks/${taskId}`, {
-            method: "DELETE",
-        });
-
-        if (!response.ok) throw new Error("Network response was not ok");
-
-        window.location.reload();
-    } catch (err) {
-        console.log(err);
-    }
-}
 
 async function checkTask() {
     const todoElement = this.closest("li");
@@ -172,7 +156,7 @@ function displayTask(task) {
     const deleteButton = document.createElement("button");
     deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
     deleteButton.classList.add("delete-btn", `standard-button`);
-    deleteButton.addEventListener("click", deleteTask);
+    deleteButton.addEventListener("click", deleteTaskFromDB);
 
     buttonsDiv.appendChild(deleteButton);
     taskLi.appendChild(buttonsDiv);

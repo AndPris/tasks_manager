@@ -1,5 +1,6 @@
 import {validateForm} from "data_validation.js";
 
+const baseURL = "/api/tasks";
 
 export async function addTaskToDB(event) {
     event.preventDefault();
@@ -22,7 +23,6 @@ export async function addTaskToDB(event) {
     }
 }
 
-
 function getTaskData(form) {
     return {
         description: form.description.value,
@@ -31,14 +31,36 @@ function getTaskData(form) {
     };
 }
 
-
 async function postTask(taskData) {
-    let response = await fetch("/api/tasks", {
+    let response = await fetch(baseURL, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(taskData),
+    });
+
+    if (!response.ok)
+        throw new Error("Network response was not ok");
+}
+
+
+export async function deleteTaskFromDB() {
+    try {
+        await deleteTask(getTaskId(this));
+        window.location.reload();
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function getTaskId(element) {
+    return element.closest("li").getAttribute("id");
+}
+
+async function deleteTask(taskId) {
+    let response = await fetch(`${baseURL}/${taskId}`, {
+        method: "DELETE",
     });
 
     if (!response.ok)
