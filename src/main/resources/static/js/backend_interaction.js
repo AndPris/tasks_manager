@@ -1,5 +1,5 @@
 import {validateForm} from "data_validation.js";
-import {displayTasks} from "dom_interaction.js";
+import {clearForm, displayTasks} from "dom_interaction.js";
 
 const baseURL = "/api/tasks";
 const defaultNetworkErrorMessage = "Network response was not ok";
@@ -27,7 +27,8 @@ export async function addTaskToDB(event) {
 
     try {
         await postTask(taskData);
-        window.location.reload();
+        clearForm(form);
+        await loadTasks();
     } catch (err) {
         console.log(err);
     }
@@ -63,7 +64,7 @@ async function postTask(taskData) {
 export async function deleteTaskFromDB() {
     try {
         await deleteTask(getTaskId(this));
-        window.location.reload();
+        await loadTasks();
     } catch (err) {
         console.log(err);
     }
@@ -91,7 +92,7 @@ async function deleteTask(taskId) {
 export async function checkTask() {
     try {
         await patchTask(getTaskId(this), getTaskDataForPatch(this))
-        window.location.reload();
+        await loadTasks();
     } catch (err) {
         console.log(err);
     }

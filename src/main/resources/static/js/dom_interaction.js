@@ -1,4 +1,4 @@
-import {checkTask, deleteTaskFromDB, editTaskInDB} from "backend_interaction.js";
+import {addTaskToDB, checkTask, deleteTaskFromDB, editTaskInDB} from "backend_interaction.js";
 
 const toDoList = document.querySelector(".todo-list");
 
@@ -55,7 +55,7 @@ function displayTask(task) {
     const editButton = document.createElement("button");
     editButton.innerHTML = '<i class="fa-solid fa-pencil"></i>\n';
     editButton.classList.add("edit-btn", `standard-button`);
-    editButton.addEventListener("click", editTaskInDB);
+    editButton.addEventListener("click", editTask);
     buttonsDiv.appendChild(editButton);
 
     const checkedButton = document.createElement("button");
@@ -102,4 +102,47 @@ function getTime(timestamp) {
         .padStart(2, "0");
 
     return `${hours}:${minutes}`;
+}
+
+function editTask() {
+    showEditTaskMenu(this.closest("li"));
+}
+
+function showEditTaskMenu(taskLiItem) {
+    const taskId = taskLiItem.getAttribute("id");
+    const description = taskLiItem.querySelector('.todo-item-description').textContent;
+    const priority = taskLiItem.querySelector('.todo-item-priority').textContent;
+    const finishDate = taskLiItem.querySelector('.todo-buttons-div').previousElementSibling.textContent;
+
+    const form = document.getElementById("form");
+    form.setAttribute("task-id", taskId);
+
+    const descriptionField = document.getElementById('description');
+    descriptionField.value = description;
+    descriptionField.placeholder = "Edit the task.";
+
+    const prioritySelect = document.getElementById('priority');
+    prioritySelect.value = priority === 'High' ? '1' : priority === 'Medium' ? '2' : '3';
+
+    const [day, month, year] = finishDate.split('.');
+    document.getElementById('finishDate').value = `${year}-${month}-${day}`;
+    document.querySelector('.todo-btn').textContent = "Edit Task!";
+
+    form.method = "put";
+
+    document
+        .getElementById("form")
+        .removeEventListener("submit", addTaskToDB);
+
+    document
+        .getElementById("form")
+        .addEventListener("submit", editTaskInDB);
+    clearChildren('.sort-buttons');
+    clearChildren('.todo-list');
+}
+
+export function clearForm(form) {
+    form.description.value = '';
+    form.finishDate.value = '';
+    form.priority.value = 1;
 }
