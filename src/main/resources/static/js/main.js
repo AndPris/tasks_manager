@@ -1,4 +1,4 @@
-import {addTaskToDB, deleteTaskFromDB, checkTask} from 'backend_interaction.js';
+import {addTaskToDB, deleteTaskFromDB, checkTask, editTaskInDB} from 'backend_interaction.js';
 
 document
     .getElementById("form")
@@ -14,31 +14,7 @@ let prioritySortOrder = 0;
 let finishDateSortOrder = 0;
 
 
-async function editTaskInDB(event) {
-    event.preventDefault();
 
-    const taskId = this.getAttribute("task-id");
-    const form = event.target;
-    const data = {
-        description: form.description.value,
-        finishDate: form.finishDate.value,
-        priority: { id: form.priority.value }
-    };
-
-    try {
-        let response = await fetch(`/api/tasks/${taskId}`, {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-        });
-        window.location.reload();
-    } catch (err) {
-        console.log(err);
-    }
-
-}
 
 function showEditTaskMenu(taskLiItem) {
     const taskId = taskLiItem.getAttribute("id");

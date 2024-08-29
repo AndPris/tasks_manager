@@ -1,11 +1,13 @@
 import {validateForm} from "data_validation.js";
 
 const baseURL = "/api/tasks";
+const defaultNetworkErrorMessage = "Network response was not ok";
 
+//POST
 export async function addTaskToDB(event) {
     event.preventDefault();
-    const form = event.target;
-
+    const form = getForm(event);
+    
     try {
         validateForm(form);
     } catch (error) {
@@ -21,6 +23,10 @@ export async function addTaskToDB(event) {
     } catch (err) {
         console.log(err);
     }
+}
+
+function getForm(event) {
+    return event.target;
 }
 
 function getTaskDataForPost(form) {
@@ -41,10 +47,11 @@ async function postTask(taskData) {
     });
 
     if (!response.ok)
-        throw new Error("Network response was not ok");
+        throw new Error(defaultNetworkErrorMessage);
 }
 
 
+//DELETE
 export async function deleteTaskFromDB() {
     try {
         await deleteTask(getTaskId(this));
@@ -68,10 +75,11 @@ async function deleteTask(taskId) {
     });
 
     if (!response.ok)
-        throw new Error("Network response was not ok");
+        throw new Error(defaultNetworkErrorMessage);
 }
 
 
+//PATCH
 export async function checkTask() {
     try {
         await patchTask(getTaskId(this), getTaskDataForPatch(this))
@@ -97,5 +105,40 @@ async function patchTask(taskId, data) {
     });
 
     if (!response.ok)
-        throw new Error("Network response was not ok");
+        throw new Error(defaultNetworkErrorMessage);
+}
+
+
+//PUT
+export async function editTaskInDB(event) {
+    event.preventDefault();
+
+    try {
+        await putTask(this.getAttribute("task-id"), getTaskDataForPut(getForm(event)));
+        window.location.reload();
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+function getTaskDataForPut(form) {
+    return  {
+        description: form.description.value,
+        finishDate: form.finishDate.value,
+        priority: { id: form.priority.value }
+    };
+}
+
+async function putTask(taskId, data) {
+    let response = await fetch(`${baseURL}/${taskId}`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok)
+        throw new Error(defaultNetworkErrorMessage);
 }
