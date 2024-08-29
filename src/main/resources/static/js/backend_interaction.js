@@ -13,7 +13,7 @@ export async function addTaskToDB(event) {
         return;
     }
 
-    const taskData = getTaskData(form);
+    const taskData = getTaskDataForPost(form);
 
     try {
         await postTask(taskData);
@@ -23,7 +23,7 @@ export async function addTaskToDB(event) {
     }
 }
 
-function getTaskData(form) {
+function getTaskDataForPost(form) {
     return {
         description: form.description.value,
         finishDate: form.finishDate.value,
@@ -55,12 +55,45 @@ export async function deleteTaskFromDB() {
 }
 
 function getTaskId(element) {
-    return element.closest("li").getAttribute("id");
+    return getTaskLi(element).getAttribute("id");
+}
+
+function getTaskLi(element) {
+    return element.closest("li");
 }
 
 async function deleteTask(taskId) {
     let response = await fetch(`${baseURL}/${taskId}`, {
         method: "DELETE",
+    });
+
+    if (!response.ok)
+        throw new Error("Network response was not ok");
+}
+
+
+export async function checkTask() {
+    try {
+        await patchTask(getTaskId(this), getTaskDataForPatch(this))
+        window.location.reload();
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function getTaskDataForPatch(element) {
+    return {
+        done: !getTaskLi(element).classList.contains('completed')
+    };
+}
+
+async function patchTask(taskId, data) {
+    let response = await fetch(`${baseURL}/${taskId}`, {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
     });
 
     if (!response.ok)

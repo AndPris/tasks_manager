@@ -1,4 +1,4 @@
-import {addTaskToDB, deleteTaskFromDB} from 'backend_interaction.js';
+import {addTaskToDB, deleteTaskFromDB, checkTask} from 'backend_interaction.js';
 
 document
     .getElementById("form")
@@ -12,31 +12,6 @@ let sortOrders= [];
 let descriptionToFind = '';
 let prioritySortOrder = 0;
 let finishDateSortOrder = 0;
-
-
-async function checkTask() {
-    const todoElement = this.closest("li");
-    const taskId = todoElement.getAttribute("id");
-    const data = {
-        done:  !todoElement.classList.contains('completed')
-    }
-    try {
-
-        let response = await fetch(`/api/tasks/${taskId}`, {
-            method: "PATCH",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (!response.ok) throw new Error("Network response was not ok");
-
-        window.location.reload();
-    } catch (err) {
-        console.log(err);
-    }
-}
 
 
 async function editTaskInDB(event) {
