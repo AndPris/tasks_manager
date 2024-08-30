@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-</head>
-<body>
 
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/corner.css">
+</head>
+<body class="standard" id="loginBody">
+    <section class="loginContent">
+        <p>New here? Click
+            <a class="link" th:href="@{/register}">here</a> to register.</p>
+
+        <form method="POST" th:action="@{/login}" id="loginForm">
+            <label for="username">Username: </label>
+            <input id="username" type="text" name="username"/>
+
+            <label for="password">Password: </label>
+            <input id="password" type="password" name="password"/><br/>
+
+            <input id="loginSubmit" type="submit" value="Login"/>
+        </form>
+    </section>
 </body>
 </html>

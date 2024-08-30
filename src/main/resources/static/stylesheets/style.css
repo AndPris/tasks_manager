@@ -177,17 +177,17 @@ button, #registerSubmit {
     transition: box-shadow 200ms ease, background-color 200ms ease-in-out;
 }
 
-button:hover, #registerSubmit:hover {
+button:hover, #registerSubmit:hover, #loginSubmit:hover {
     cursor: pointer;
 }
 
 /* Button themes */
-button.standard-button, #registerSubmit {
+button.standard-button, #registerSubmit, #loginSubmit {
     background-color: rgb(247, 226, 223);
     color: rgb(0, 0, 0);
 }
 
-button.standard-button:hover, #registerSubmit:hover {
+button.standard-button:hover, #registerSubmit:hover, #loginSubmit:hover {
     background-color: white;
     box-shadow: #fff8 0 0 10px;
 }
@@ -463,16 +463,36 @@ input::-webkit-inner-spin-button {
     border-radius: 15px;
 }
 
-#registerForm {
+#registerForm, #loginForm {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#registerForm > input {
+#registerForm > input, #loginForm > input {
     border-radius: 17px;
 }
 
-#registerSubmit {
+#registerSubmit, #loginSubmit {
     width: 10%;
+}
+
+.loginContent {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+}
+
+#loginBody {
+    justify-content: center;
+    font-size: 1.7rem;
+}
+
+.link {
+    color: #ffdfdb;
+}
+
+.link:hover {
+    color: rgb(0, 0, 0);
 }
