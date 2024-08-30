@@ -1,9 +1,15 @@
 package sia.tasks_manager.data;
 
+import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Data
 public class RegistrationForm {
+    private String username;
+    private String password;
+    private String fullName;
+
     public User toUser(PasswordEncoder passwordEncoder) {
-        return null;
+        return new User(username, passwordEncoder.encode(password), fullName);
     }
 }
