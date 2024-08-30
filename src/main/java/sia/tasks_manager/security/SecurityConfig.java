@@ -2,10 +2,13 @@ package sia.tasks_manager.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import sia.tasks_manager.data.User;
 import sia.tasks_manager.repositories.UserRepository;
 
@@ -25,5 +28,19 @@ public class SecurityConfig {
 
             throw new UsernameNotFoundException("User '" + username + "' not found");
         };
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth.
+                requestMatchers("/tasks").
+                access(new WebExpressionAuthorizationManager("hasRole('USER')")).
+                requestMatchers("/", "/**").access(new WebExpressionAuthorizationManager("permitAll()"))
+        ).formLogin((form) -> form.
+                loginPage("/login").
+                defaultSuccessUrl("/tasks")
+        ).logout((logout) -> logout.logoutSuccessUrl("/"));
+
+        return http.build();
     }
 }
