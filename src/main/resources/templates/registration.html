@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Welcome to task manager!</title>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/corner.css">
 </head>
-<body>
+<body class="standard">
+    <form method="POST" th:action="@{/register}" id="registerForm">
+        <label for="username">Username: </label>
+        <input id="username" type="text" name="username"/><br/>
 
+        <label for="password">Password: </label>
+        <input id="password" type="password" name="password"/><br/>
+
+        <label for="fullName">Full name: </label>
+        <input id="fullName" type="text" name="fullName"/><br/>
+
+        <input id="registerSubmit" class="" type="submit" value="Register"/>
+    </form>
 </body>
 </html>
