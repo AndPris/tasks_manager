@@ -496,3 +496,17 @@ input::-webkit-inner-spin-button {
 .link:hover {
     color: rgb(0, 0, 0);
 }
+
+.alert-error {
+    color: red;
+}
+
+.logout-corner {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    z-index: 100;
+}

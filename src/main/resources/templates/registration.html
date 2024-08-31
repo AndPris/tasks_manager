@@ -7,18 +7,23 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/corner.css">
 </head>
-<body class="standard">
-    <form method="POST" th:action="@{/register}" id="registerForm">
-        <label for="username">Username: </label>
-        <input id="username" type="text" name="username"/><br/>
+<body class="standard" id="loginBody">
+    <section class="loginContent">
+        <p>Already have an account? Click
+            <a class="link" th:href="@{/login}">here</a> to log in.</p>
 
-        <label for="password">Password: </label>
-        <input id="password" type="password" name="password"/><br/>
+        <form method="POST" th:action="@{/register}" id="registerForm">
+            <label for="username">Username: </label>
+            <input id="username" type="text" name="username"/><br/>
 
-        <label for="fullName">Full name: </label>
-        <input id="fullName" type="text" name="fullName"/><br/>
+            <label for="password">Password: </label>
+            <input id="password" type="password" name="password"/><br/>
 
-        <input id="registerSubmit" type="submit" value="Register"/>
-    </form>
+            <label for="fullName">Full name: </label>
+            <input id="fullName" type="text" name="fullName"/><br/>
+
+            <input id="registerSubmit" type="submit" value="Register"/>
+        </form>
+    </section>
 </body>
 </html>

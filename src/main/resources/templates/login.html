@@ -15,6 +15,14 @@
             <a class="link" th:href="@{/register}">here</a> to register.</p>
 
         <form method="POST" th:action="@{/login}" id="loginForm">
+            <div th:if="${param.error}" class="alert alert-error">
+                Invalid username and password.
+            </div>
+            <br>
+            <div th:if="${param.logout}" class="alert alert-success">
+                You have been logged out.
+            </div>
+            <br>
             <label for="username">Username: </label>
             <input id="username" type="text" name="username"/><br>
 
