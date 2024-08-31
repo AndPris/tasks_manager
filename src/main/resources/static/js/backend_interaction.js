@@ -1,6 +1,8 @@
 import {validateForm} from "data_validation.js";
 import {clearForm, displayTasks} from "dom_interaction.js";
 
+const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 const baseURL = "/api/tasks";
 const defaultNetworkErrorMessage = "Network response was not ok";
 const pageSize = 5;
@@ -50,7 +52,8 @@ async function postTask(taskData) {
     let response = await fetch(baseURL, {
         method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
         },
         body: JSON.stringify(taskData),
     });
@@ -81,6 +84,10 @@ function getTaskLi(element) {
 async function deleteTask(taskId) {
     let response = await fetch(`${baseURL}/${taskId}`, {
         method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
     });
 
     if (!response.ok)
@@ -108,7 +115,8 @@ async function patchTask(taskId, data) {
     let response = await fetch(`${baseURL}/${taskId}`, {
         method: "PATCH",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
         },
         body: JSON.stringify(data),
     });
@@ -143,7 +151,8 @@ async function putTask(taskId, data) {
     let response = await fetch(`${baseURL}/${taskId}`, {
         method: "PUT",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
         },
         body: JSON.stringify(data),
     });
