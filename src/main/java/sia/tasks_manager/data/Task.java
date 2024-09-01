@@ -27,6 +27,9 @@ public class Task {
     @ManyToOne
     private Priority priority;
 
+    @ManyToOne
+    private User user;
+
     @PrePersist
     protected void onCreate() {
         this.done = false;

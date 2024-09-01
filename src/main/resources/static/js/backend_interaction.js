@@ -176,7 +176,7 @@ export async function loadTasks(queryString) {
 }
 
 function getDefaultQueryString() {
-    let queryString = `?page=${pageNumber}&size=${pageSize}&sort=done,asc`;
+    let queryString = `?page=${pageNumber}&size=${pageSize}&sort=done,asc&sort=id,asc`;
 
     for(let sortOrder of sortOrders) {
         if(sortOrder[1] === 0)
@@ -207,7 +207,9 @@ async function getTasks(queryString) {
         throw new Error(defaultNetworkErrorMessage);
 
     const data = await response.json();
-    return [data._embedded.tasks, data.page];
+    console.log(data);
+    console.log(data.page);
+    return [data._embedded ? data._embedded.tasks : [], data.page];
 }
 
 function updatePaginationButtons(pageInfo) {
