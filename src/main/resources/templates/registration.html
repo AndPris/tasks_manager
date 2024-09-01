@@ -12,15 +12,27 @@
         <p>Already have an account? Click
             <a class="link" th:href="@{/login}">here</a> to log in.</p>
 
-        <form method="POST" th:action="@{/register}" id="registerForm">
+        <form method="POST" th:action="@{/register}" th:object="${registrationForm}" id="registerForm">
             <label for="username">Username: </label>
-            <input id="username" type="text" name="username"/><br/>
+            <input id="username" type="text" name="username" th:field="*{username}"/>
+            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="alert alert-error">
+                Invalid username.
+            </div>
+            <br/>
 
             <label for="password">Password: </label>
-            <input id="password" type="password" name="password"/><br/>
+            <input id="password" type="password" name="password" th:field="*{password}"/>
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="alert alert-error">
+                Invalid password.
+            </div>
+            <br/>
 
             <label for="fullName">Full name: </label>
-            <input id="fullName" type="text" name="fullName"/><br/>
+            <input id="fullName" type="text" name="fullName" th:field="*{fullName}"/>
+            <div th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="alert alert-error">
+                Invalid full name.
+            </div>
+            <br/>
 
             <input id="registerSubmit" type="submit" value="Register"/>
         </form>

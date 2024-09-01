@@ -1,7 +1,10 @@
 package sia.tasks_manager.web;
 
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +23,17 @@ public class RegistrationController {
     }
 
     @GetMapping
-    public String registerForm() {
+    public String registerForm(Model model) {
+        model.addAttribute("registrationForm", new RegistrationForm());
         return "registration";
     }
 
     @PostMapping
-    public String processRegistration(RegistrationForm form) {
-        userRepository.save(form.toUser(passwordEncoder));
+    public String processRegistration(@Valid RegistrationForm registrationForm, Errors errors) {
+        if(errors.hasErrors())
+            return "registration";
+
+        userRepository.save(registrationForm.toUser(passwordEncoder));
         return "redirect:/login";
     }
 }
