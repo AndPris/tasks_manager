@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to task manager!</title>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/corner.css">
+</head>
+<body class="standard" id="loginBody">
+    <section class="loginContent">
+        <p>Already have an account? Click
+            <a class="link" th:href="@{/login}">here</a> to log in.</p>
+
+        <form method="POST" th:action="@{/register}" th:object="${registrationForm}" id="registerForm">
+            <label for="username">Username: </label>
+            <input id="username" type="text" name="username" th:field="*{username}"/>
+            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="alert alert-error">
+                Invalid username.
+            </div>
+            <br/>
+
+            <label for="password">Password: </label>
+            <input id="password" type="password" name="password" th:field="*{password}"/>
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="alert alert-error">
+                Invalid password.
+            </div>
+            <br/>
+
+            <label for="fullName">Full name: </label>
+            <input id="fullName" type="text" name="fullName" th:field="*{fullName}"/>
+            <div th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="alert alert-error">
+                Invalid full name.
+            </div>
+            <br/>
+
+            <input id="registerSubmit" type="submit" value="Register"/>
+        </form>
+    </section>
+</body>
+</html>
