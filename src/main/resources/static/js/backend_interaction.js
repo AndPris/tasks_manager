@@ -165,7 +165,7 @@ async function putTask(taskId, data) {
 //GET
 export async function loadTasks(queryString) {
     queryString = queryString ? queryString : getDefaultQueryString();
-
+    console.log(queryString);
     try {
         let [tasks, pageInfo] = await getTasks(queryString);
         displayTasks(tasks);
@@ -176,7 +176,7 @@ export async function loadTasks(queryString) {
 }
 
 function getDefaultQueryString() {
-    let queryString = `?page=${pageNumber}&size=${pageSize}&sort=done,asc&sort=id,asc`;
+    let queryString = `?page=${pageNumber}&size=${pageSize}&sort=done,asc`;
 
     for(let sortOrder of sortOrders) {
         if(sortOrder[1] === 0)
@@ -184,7 +184,7 @@ function getDefaultQueryString() {
 
         queryString += `&sort=${sortOrder[0]},${getSortingOrderByCode(sortOrder[1])}`;
     }
-
+    queryString += `&sort=id,asc`;
     return queryString;
 }
 

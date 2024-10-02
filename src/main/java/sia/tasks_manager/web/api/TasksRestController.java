@@ -47,11 +47,8 @@ public class TasksRestController {
     @GetMapping("/tasks")
     public ResponseEntity<?> getAllTasksByCurrentUser(Principal user,
                                                       Pageable pageable, PagedResourcesAssembler<Task> pagedAssembler) {
-        System.out.println(pageable);
-        System.out.println(pageable.getSort());
         Page<Task> tasksPage = taskRepository.findTasksByUserUsername(user.getName(), pageable);
         PagedModel<EntityModel<Task>> tasksToReturn = pagedAssembler.toModel(tasksPage);
-        System.out.println(tasksToReturn);
         tasksToReturn.add(linkTo(methodOn(TasksRestController.class).getAllTasksByCurrentUser(user, pageable, pagedAssembler)).withSelfRel());
         return ResponseEntity.ok(tasksToReturn);
     }
