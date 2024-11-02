@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import sia.tasks_manager.data.Subtask;
 
-public interface SubtaskRepository extends PagingAndSortingRepository<Subtask, Integer>, CrudRepository<Subtask, Integer> {
+public interface SubtaskRepository extends PagingAndSortingRepository<Subtask, Long>, CrudRepository<Subtask, Long> {
     Page<Subtask> findSubtasksByTaskId(Long taskId, Pageable pageable);
 }

@@ -212,7 +212,7 @@ async function getTasks(queryString) {
     return [data._embedded ? data._embedded.tasks : [], data.page];
 }
 
-function updatePaginationButtons(pageInfo) {
+export function updatePaginationButtons(pageInfo) {
     const backwardButton = document.getElementById("backward-button");
     const forwardButton = document.getElementById("forward-button");
 

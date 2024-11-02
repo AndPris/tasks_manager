@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +28,9 @@ public class Subtask {
     @Min(value = 1, message = "Duration must be 1 day or more")
     private int duration;
 
+    @NotNull
+    private boolean done;
+
     @ManyToMany
     @JoinTable(
             name = "subtask_dependencies",
@@ -34,4 +38,9 @@ public class Subtask {
             inverseJoinColumns = @JoinColumn(name = "previous_subtask_id")
     )
     private Set<Subtask> previousSubtasks = new HashSet<>();
+
+    @PrePersist
+    protected void onCreate() {
+        this.done = false;
+    }
 }

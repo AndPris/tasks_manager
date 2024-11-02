@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/corner.css">
     <title>Tasks manager</title>
+    <script>
+        const taskId = [[${taskId}]];
+    </script>
 </head>
 <body class="standard">
 <div id="header">
@@ -77,13 +80,14 @@
 <script type="importmap">
     {
         "imports": {
-            "backend_interaction.js" : "/js/backend_interaction.js",
-            "data_validation.js" : "/js/data_validation.js",
-            "dom_interaction.js" : "/js/dom_interaction.js"
+                "backend_interaction.js" : "/js/backend_interaction.js",
+                "data_validation.js" : "/js/data_validation.js",
+                "dom_interaction.js" : "/js/dom_interaction.js",
+                "subtasks.js" : "/js/subtasks.js"
         }
     }
 </script>
 
-<script type="module" src="/js/main.js"></script>
+<script type="module" src="/js/subtasks_main.js"></script>
 </body>
 </html>
