@@ -292,3 +292,9 @@ export async function findTask() {
         await loadTasks();
     }
 }
+
+
+export function getSubtasksPage() {
+    const taskId = getTaskId(this);
+    window.location.href = `/tasks/${taskId}/subtasks`;
+}

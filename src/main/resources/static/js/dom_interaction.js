@@ -1,4 +1,4 @@
-import {addTaskToDB, checkTask, deleteTaskFromDB, editTaskInDB} from "backend_interaction.js";
+import {addTaskToDB, checkTask, deleteTaskFromDB, editTaskInDB, getSubtasksPage} from "backend_interaction.js";
 
 const toDoList = document.querySelector(".todo-list");
 
@@ -73,6 +73,7 @@ function displayTask(task) {
     const subtasksButton = document.createElement("button");
     subtasksButton.innerHTML = 'S';
     subtasksButton.classList.add("subtasks-btn", `standard-button`);
+    subtasksButton.addEventListener("click", getSubtasksPage);
     buttonsDiv.appendChild(subtasksButton);
 
     taskLi.appendChild(buttonsDiv);
