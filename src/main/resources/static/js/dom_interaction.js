@@ -68,8 +68,13 @@ function displayTask(task) {
     deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
     deleteButton.classList.add("delete-btn", `standard-button`);
     deleteButton.addEventListener("click", deleteTaskFromDB);
-
     buttonsDiv.appendChild(deleteButton);
+
+    const subtasksButton = document.createElement("button");
+    subtasksButton.innerHTML = 'S';
+    subtasksButton.classList.add("subtasks-btn", `standard-button`);
+    buttonsDiv.appendChild(subtasksButton);
+
     taskLi.appendChild(buttonsDiv);
     toDoList.appendChild(taskLi);
 }

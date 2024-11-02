@@ -249,7 +249,8 @@ form button {
 
 .check-btn,
 .delete-btn,
-.edit-btn {
+.edit-btn,
+.subtasks-btn {
     font-size: 19px;
     cursor: pointer;
     width: 2em;
