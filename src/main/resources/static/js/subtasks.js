@@ -1,6 +1,7 @@
-import {updatePaginationButtons} from "backend_interaction.js";
+import {loadTasks, updatePaginationButtons} from "backend_interaction.js";
 
-
+const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 const pageSize = 5;
 let pageNumber = 0;
 const baseURL = `/api/tasks/${taskId}/subtasks`;
@@ -50,4 +51,57 @@ export async function goForward() {
 export async function goBackward() {
     pageNumber -= 1;
     await loadSubtasks()
+}
+
+
+
+//POST
+export async function addSubtaskToDB(event) {
+    event.preventDefault();
+    // const form = getForm(event);
+    //
+    // try {
+    //     validateForm(form);
+    // } catch (error) {
+    //     alert(error);
+    //     return;
+    // }
+
+    const subtaskData = getSubtaskDataForPost();
+
+    try {
+        await postSubtask(subtaskData);
+        // clearForm(form);
+        await loadSubtasks();
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function getSubtaskDataForPost() {
+    // return {
+    //     "description": "Sample subtask without dependencies",
+    //     "duration": 3,
+    //     "done": false
+    // }
+    return {
+        description: "Sample subtask 2",
+        duration: 2,
+        done: false,
+        previousSubtasks: [{id: 1}]
+    }
+}
+
+async function postSubtask(subtaskData) {
+    let response = await fetch(baseURL, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
+        body: JSON.stringify(subtaskData),
+    });
+
+    if (!response.ok)
+        throw new Error(defaultNetworkErrorMessage);
 }
