@@ -40,7 +40,7 @@ async function getSubtasks(queryString) {
     const data = await response.json();
     console.log(data);
     console.log(data.page);
-    return [data._embedded ? data._embedded.subtasks : [], data.page];
+    return [data._embedded ? data._embedded.subtaskDTOes : [], data.page];
 }
 
 export async function goForward() {
@@ -85,10 +85,10 @@ function getSubtaskDataForPost() {
     //     "done": false
     // }
     return {
-        description: "Sample subtask 2",
-        duration: 2,
+        description: "Subtask with 2 dependencies",
+        duration: 1,
         done: false,
-        previousSubtasks: [{id: 1}]
+        previousSubtasks: [{id: 1}, {id: 2}]
     }
 }
 
