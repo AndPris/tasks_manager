@@ -9,18 +9,18 @@ public class SubtaskDTO {
     private String description;
     private int duration;
     private boolean done;
-    private List<SimpleSubtaskDTO> previousSubtasks;
+    private List<PreviousSubtaskDTO> previousSubtasks;
 
     @Data
-    public static class SimpleSubtaskDTO {
+    public static class PreviousSubtaskDTO {
         private String description;
 
-        public SimpleSubtaskDTO(String description) {
+        public PreviousSubtaskDTO(String description) {
             this.description = description;
         }
     }
 
-    public SubtaskDTO(Long id, String description, int duration, boolean done, List<SimpleSubtaskDTO> previousSubtasks) {
+    public SubtaskDTO(Long id, String description, int duration, boolean done, List<PreviousSubtaskDTO> previousSubtasks) {
         this.id = id;
         this.description = description;
         this.duration = duration;

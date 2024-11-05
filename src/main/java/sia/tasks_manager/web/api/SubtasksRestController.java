@@ -15,6 +15,8 @@ import sia.tasks_manager.web.dto.SubtaskDTO;
 import sia.tasks_manager.repositories.SubtaskRepository;
 import sia.tasks_manager.repositories.TaskRepository;
 
+import java.util.Optional;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -47,13 +49,16 @@ public class SubtasksRestController {
         return ResponseEntity.ok(subtaskToReturn);
     }
 
-    @PatchMapping("/tasks/{taskId}/subtasks/{subtaskId}")
-    public ResponseEntity<?> toggleDoneSubtask(@PathVariable("subtaskId") Long subtaskId, @RequestBody Subtask subtask) {
-        System.out.println("Here");
-        Subtask subtaskToUpdate = subtaskRepository.findById(subtaskId).get();
-        subtaskToUpdate.setDone(subtask.isDone());
-        EntityModel<Subtask> subtaskToReturn = EntityModel.of(subtaskRepository.save(subtask));
-        return ResponseEntity.ok(subtaskToReturn);
+    @PatchMapping(value = "/subtasks/{subtaskId}", consumes = {"application/json"})
+    public ResponseEntity<?> toggleDoneSubtask(@PathVariable("subtaskId") Long subtaskId, @RequestBody SubtaskDTO newSubtaskData) {
+        Optional<Subtask> optionalSubtask = subtaskRepository.findById(subtaskId);
+
+        if(optionalSubtask.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        Subtask subtaskToUpdate = optionalSubtask.get();
+        subtasksService.updateSubtask(subtaskToUpdate, newSubtaskData);
+        return ResponseEntity.ok(subtaskRepository.save(subtaskToUpdate));
     }
 
     @DeleteMapping("/subtasks/{subtaskId}")

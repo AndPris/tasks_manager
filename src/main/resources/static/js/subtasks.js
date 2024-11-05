@@ -190,9 +190,7 @@ function displayPreviousSubtasks(subtask, destination) {
 //PATCH
 async function checkSubtask() {
     try {
-        const data = {done: true};
-        await patchSubtask(getTaskId(this), data);
-        // await patchSubtask(getTaskId(this), getTaskDataForPatch(this));
+        await patchSubtask(getTaskId(this), getTaskDataForPatch(this));
         await loadSubtasks();
     } catch (err) {
         console.log(err);
@@ -202,7 +200,6 @@ async function checkSubtask() {
 async function patchSubtask(subtaskId, data) {
     console.log(data);
     let response = await fetch(`/api/subtasks/${subtaskId}`, {
-    // let response = await fetch(`${baseURL}/${subtaskId}`, {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',

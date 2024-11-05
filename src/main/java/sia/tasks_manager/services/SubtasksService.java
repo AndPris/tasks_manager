@@ -24,9 +24,9 @@ public class SubtasksService {
     }
 
     public SubtaskDTO convertToDTO(Subtask subtask) {
-        List<SubtaskDTO.SimpleSubtaskDTO> previousSubtasks = subtask.getPreviousSubtasks()
+        List<SubtaskDTO.PreviousSubtaskDTO> previousSubtasks = subtask.getPreviousSubtasks()
                 .stream()
-                .map(previous -> new SubtaskDTO.SimpleSubtaskDTO(previous.getDescription()))
+                .map(previous -> new SubtaskDTO.PreviousSubtaskDTO(previous.getDescription()))
                 .collect(Collectors.toList());
 
         return new SubtaskDTO(
@@ -36,5 +36,16 @@ public class SubtasksService {
                 subtask.isDone(),
                 previousSubtasks
         );
+    }
+
+    public void updateSubtask(Subtask subtask, SubtaskDTO newData) {
+        if(newData.getDescription() != null)
+            subtask.setDescription(newData.getDescription());
+        if(newData.getDuration() != 0)
+            subtask.setDuration(newData.getDuration());
+        //todo: implement
+//        if(newData.getPreviousSubtasks() != null)
+//            subtask.setPreviousSubtasks(newData.getPreviousSubtasks());
+        subtask.setDone(newData.isDone());
     }
 }
