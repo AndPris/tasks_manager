@@ -73,11 +73,11 @@ export async function deleteTaskFromDB() {
     }
 }
 
-function getTaskId(element) {
+export function getTaskId(element) {
     return getTaskLi(element).getAttribute("id");
 }
 
-function getTaskLi(element) {
+export function getTaskLi(element) {
     return element.closest("li");
 }
 
@@ -105,13 +105,14 @@ export async function checkTask() {
     }
 }
 
-function getTaskDataForPatch(element) {
+export function getTaskDataForPatch(element) {
     return {
         done: !getTaskLi(element).classList.contains('completed')
     };
 }
 
 async function patchTask(taskId, data) {
+    console.log(`${baseURL}/${taskId}`);
     let response = await fetch(`${baseURL}/${taskId}`, {
         method: "PATCH",
         headers: {

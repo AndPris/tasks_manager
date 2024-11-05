@@ -1,4 +1,8 @@
-import {checkTask, deleteTaskFromDB, getSubtasksPage, loadTasks, updatePaginationButtons} from "backend_interaction.js";
+import {
+    getTaskDataForPatch,
+    getTaskId,
+    updatePaginationButtons
+} from "backend_interaction.js";
 import {clearChildren} from "dom_interaction.js"
 
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
@@ -8,6 +12,61 @@ let pageNumber = 0;
 const baseURL = `/api/tasks/${taskId}/subtasks`;
 const defaultNetworkErrorMessage = "Network response was not ok";
 const toDoList = document.querySelector(".todo-list");
+
+
+
+//POST
+export async function addSubtaskToDB(event) {
+    event.preventDefault();
+    // const form = getForm(event);
+    //
+    // try {
+    //     validateForm(form);
+    // } catch (error) {
+    //     alert(error);
+    //     return;
+    // }
+
+    const subtaskData = getSubtaskDataForPost();
+
+    try {
+        await postSubtask(subtaskData);
+        // clearForm(form);
+        await loadSubtasks();
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function getSubtaskDataForPost() {
+    // return {
+    //     "description": "Sample subtask without dependencies",
+    //     "duration": 3,
+    //     "done": false
+    // }
+    return {
+        description: "Subtask with 2 dependencies",
+        duration: 1,
+        done: false,
+        previousSubtasks: [{id: 1}, {id: 2}]
+    }
+}
+
+async function postSubtask(subtaskData) {
+    let response = await fetch(baseURL, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
+        body: JSON.stringify(subtaskData),
+    });
+
+    if (!response.ok)
+        throw new Error(defaultNetworkErrorMessage);
+}
+
+
 
 //GET
 export async function loadSubtasks(queryString) {
@@ -98,13 +157,13 @@ function displaySubtask(subtask) {
     const checkedButton = document.createElement("button");
     checkedButton.innerHTML = '<i class="fas fa-check"></i>';
     checkedButton.classList.add("check-btn", `standard-button`);
-    // checkedButton.addEventListener("click", checkTask);
+    checkedButton.addEventListener("click", checkSubtask);
     buttonsDiv.appendChild(checkedButton);
 
     const deleteButton = document.createElement("button");
     deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
     deleteButton.classList.add("delete-btn", `standard-button`);
-    // deleteButton.addEventListener("click", deleteTaskFromDB);
+    deleteButton.addEventListener("click", deleteSubtaskFromDB);
     buttonsDiv.appendChild(deleteButton);
 
     subtaskLi.appendChild(buttonsDiv);
@@ -127,51 +186,55 @@ function displayPreviousSubtasks(subtask, destination) {
     destination.appendChild(previousSubtasksDiv);
 }
 
-//POST
-export async function addSubtaskToDB(event) {
-    event.preventDefault();
-    // const form = getForm(event);
-    //
-    // try {
-    //     validateForm(form);
-    // } catch (error) {
-    //     alert(error);
-    //     return;
-    // }
 
-    const subtaskData = getSubtaskDataForPost();
-
+//PATCH
+async function checkSubtask() {
     try {
-        await postSubtask(subtaskData);
-        // clearForm(form);
+        const data = {done: true};
+        await patchSubtask(getTaskId(this), data);
+        // await patchSubtask(getTaskId(this), getTaskDataForPatch(this));
         await loadSubtasks();
     } catch (err) {
         console.log(err);
     }
 }
 
-function getSubtaskDataForPost() {
-    // return {
-    //     "description": "Sample subtask without dependencies",
-    //     "duration": 3,
-    //     "done": false
-    // }
-    return {
-        description: "Subtask with 2 dependencies",
-        duration: 1,
-        done: false,
-        previousSubtasks: [{id: 1}, {id: 2}]
-    }
-}
-
-async function postSubtask(subtaskData) {
-    let response = await fetch(baseURL, {
-        method: "POST",
+async function patchSubtask(subtaskId, data) {
+    console.log(data);
+    let response = await fetch(`/api/subtasks/${subtaskId}`, {
+    // let response = await fetch(`${baseURL}/${subtaskId}`, {
+        method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
             [csrfHeader]: csrfToken
         },
-        body: JSON.stringify(subtaskData),
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok)
+        throw new Error(defaultNetworkErrorMessage);
+}
+
+
+
+//DELETE
+async function deleteSubtaskFromDB() {
+    try {
+        await deleteSubtask(getTaskId(this));
+        await loadSubtasks();
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function deleteSubtask(subtaskId) {
+    let response = await fetch(`/api/subtasks/${subtaskId}`, {
+    // let response = await fetch(`${baseURL}/${subtaskId}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
     });
 
     if (!response.ok)
