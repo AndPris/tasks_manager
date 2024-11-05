@@ -9,7 +9,7 @@ export function displayTasks(tasks) {
     });
 }
 
-function clearChildren(className) {
+export function clearChildren(className) {
     const element = document.querySelector(className);
     while (element.firstChild)
         element.removeChild(element.firstChild);

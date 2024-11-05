@@ -1,4 +1,5 @@
-import {loadTasks, updatePaginationButtons} from "backend_interaction.js";
+import {checkTask, deleteTaskFromDB, getSubtasksPage, loadTasks, updatePaginationButtons} from "backend_interaction.js";
+import {clearChildren} from "dom_interaction.js"
 
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -6,6 +7,7 @@ const pageSize = 5;
 let pageNumber = 0;
 const baseURL = `/api/tasks/${taskId}/subtasks`;
 const defaultNetworkErrorMessage = "Network response was not ok";
+const toDoList = document.querySelector(".todo-list");
 
 //GET
 export async function loadSubtasks(queryString) {
@@ -14,7 +16,7 @@ export async function loadSubtasks(queryString) {
     try {
         let [subtasks, pageInfo] = await getSubtasks(queryString);
         console.log(subtasks);
-        // displayTasks(tasks);
+        displaySubtasks(subtasks);
         updatePaginationButtons(pageInfo);
     } catch (err) {
         console.log(err);
@@ -53,6 +55,58 @@ export async function goBackward() {
     await loadSubtasks()
 }
 
+function displaySubtasks(subtasks) {
+    clearChildren(".todo-list");
+    subtasks.forEach((subtask) => {displaySubtask(subtask)});
+}
+
+function displaySubtask(subtask) {
+    const subtaskLi = document.createElement("li");
+    const descriptionDiv = document.createElement("div");
+    const buttonsDiv = document.createElement("div");
+
+    subtaskLi.classList.add("todo", `standard-todo`);
+    subtaskLi.setAttribute("id", subtask.id);
+    if (subtask.done) subtaskLi.classList.add("completed");
+
+    descriptionDiv.classList.add("todo-left-div");
+    buttonsDiv.classList.add("todo-buttons-div");
+
+    const description = document.createElement("div");
+    const duration = document.createElement("div");
+
+    description.innerText = subtask.description;
+    description.classList.add("todo-item");
+    description.classList.add("todo-item-description");
+    descriptionDiv.appendChild(description);
+
+    subtaskLi.appendChild(descriptionDiv);
+
+    duration.innerText = subtask.duration;
+    duration.classList.add("todo-item");
+    subtaskLi.appendChild(duration);
+
+    const editButton = document.createElement("button");
+    editButton.innerHTML = '<i class="fa-solid fa-pencil"></i>\n';
+    editButton.classList.add("edit-btn", `standard-button`);
+    // editButton.addEventListener("click", editTask);
+    buttonsDiv.appendChild(editButton);
+
+    const checkedButton = document.createElement("button");
+    checkedButton.innerHTML = '<i class="fas fa-check"></i>';
+    checkedButton.classList.add("check-btn", `standard-button`);
+    // checkedButton.addEventListener("click", checkTask);
+    buttonsDiv.appendChild(checkedButton);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteButton.classList.add("delete-btn", `standard-button`);
+    // deleteButton.addEventListener("click", deleteTaskFromDB);
+    buttonsDiv.appendChild(deleteButton);
+
+    subtaskLi.appendChild(buttonsDiv);
+    toDoList.appendChild(subtaskLi);
+}
 
 
 //POST
