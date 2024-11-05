@@ -13,10 +13,10 @@ public class SubtaskDTO {
 
     @Data
     public static class SimpleSubtaskDTO {
-        private Long id;
+        private String description;
 
-        public SimpleSubtaskDTO(Long id) {
-            this.id = id;
+        public SimpleSubtaskDTO(String description) {
+            this.description = description;
         }
     }
 

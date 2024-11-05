@@ -429,7 +429,8 @@ form button {
     width: 10%;
 }
 
-.creation-time {
+.creation-time,
+.previous-subtasks {
     font-size: 14px;
     padding: 0 0.5rem;
 }

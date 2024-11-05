@@ -80,6 +80,9 @@ function displaySubtask(subtask) {
     description.classList.add("todo-item-description");
     descriptionDiv.appendChild(description);
 
+    if(hasPreviousSubtasks(subtask))
+        displayPreviousSubtasks(subtask, descriptionDiv);
+
     subtaskLi.appendChild(descriptionDiv);
 
     duration.innerText = subtask.duration;
@@ -108,6 +111,21 @@ function displaySubtask(subtask) {
     toDoList.appendChild(subtaskLi);
 }
 
+function hasPreviousSubtasks(subtask) {
+    return subtask.previousSubtasks.length !== 0;
+}
+
+function displayPreviousSubtasks(subtask, destination) {
+    const previousSubtasksDiv = document.createElement("div");
+    previousSubtasksDiv.classList.add("previous-subtasks");
+
+    let content = "Previous subtasks: ";
+    subtask.previousSubtasks.forEach((previousSubtask) => content += previousSubtask.description + ", ");
+    content = content.substring(0, content.length-2);
+    previousSubtasksDiv.textContent = content;
+
+    destination.appendChild(previousSubtasksDiv);
+}
 
 //POST
 export async function addSubtaskToDB(event) {

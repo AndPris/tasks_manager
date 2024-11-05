@@ -34,7 +34,7 @@ public class SubtasksRestController {
     private SubtaskDTO convertToDTO(Subtask subtask) {
         List<SubtaskDTO.SimpleSubtaskDTO> previousSubtasks = subtask.getPreviousSubtasks()
                 .stream()
-                .map(previous -> new SubtaskDTO.SimpleSubtaskDTO(previous.getId()))
+                .map(previous -> new SubtaskDTO.SimpleSubtaskDTO(previous.getDescription()))
                 .collect(Collectors.toList());
 
         return new SubtaskDTO(
