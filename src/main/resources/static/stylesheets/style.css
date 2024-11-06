@@ -402,7 +402,20 @@ form button {
     border-right: 2px solid white;
 }
 
-.finish-date-input {
+.previous-subtasks-input {
+    border: none;
+    width: 10%;
+    background-color: #181a1a;
+    color: rgb(247, 226, 223);
+    border-right: 2px solid white;
+}
+
+.previous-subtasks-input::-webkit-scrollbar {
+    display: none;
+}
+
+.finish-date-input,
+.duration-input {
     border-radius: 0 17px 17px 0;
     width: 10%;
     background-color: #181a1a;

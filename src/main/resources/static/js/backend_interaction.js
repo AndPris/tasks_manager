@@ -36,7 +36,7 @@ export async function addTaskToDB(event) {
     }
 }
 
-function getForm(event) {
+export function getForm(event) {
     return event.target;
 }
 

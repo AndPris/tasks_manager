@@ -1,6 +1,5 @@
 package sia.tasks_manager.data;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +36,6 @@ public class Subtask {
             joinColumns = @JoinColumn(name = "subtask_id"),
             inverseJoinColumns = @JoinColumn(name = "previous_subtask_id")
     )
-    @JsonManagedReference
     private Set<Subtask> previousSubtasks = new HashSet<>();
 
     @PrePersist

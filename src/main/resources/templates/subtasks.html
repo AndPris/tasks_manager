@@ -24,17 +24,13 @@
     <div id="border"></div>
 
     <form id="form">
-        <input id="description" class="todo-input standard-input" type="text" placeholder="Add a task." name="description">
-        <select id="priority" class="priority-input" name="priority">
-            <option value="1">High</option>
-            <option value="2">Medium</option>
-            <option value="3">Low</option>
+        <input id="description" class="todo-input standard-input" type="text" placeholder="Subtask description" name="description">
+        <select id="previous-subtasks" multiple="multiple" class="previous-subtasks-input" name="previous-subtasks">
         </select>
-        <input id="finishDate" class="finish-date-input" type="date" min="" name="finishDate" th:attr="min=${currentDate}">
+        <input id="duration" class="duration-input" type="number" placeholder="Enter duration" min="1" name="duration">
         <button class="todo-btn standard-btn" type="submit">Add Subtask!</button>
     </form>
 
-    <!-- div for top left corner -->
     <div class="version"></div>
     <div class="demo version-section">
         <a class="github-corner" href="https://github.com/AndPris/tasks_manager" target="_blank">

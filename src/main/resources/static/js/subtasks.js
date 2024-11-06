@@ -1,4 +1,5 @@
 import {
+    getForm,
     getTaskDataForPatch,
     getTaskId,
     updatePaginationButtons
@@ -18,7 +19,7 @@ const toDoList = document.querySelector(".todo-list");
 //POST
 export async function addSubtaskToDB(event) {
     event.preventDefault();
-    // const form = getForm(event);
+    const form = getForm(event);
     //
     // try {
     //     validateForm(form);
@@ -27,28 +28,23 @@ export async function addSubtaskToDB(event) {
     //     return;
     // }
 
-    const subtaskData = getSubtaskDataForPost();
-
+    const subtaskData = getSubtaskDataForPost(form);
+    console.log(subtaskData);
     try {
         await postSubtask(subtaskData);
-        // clearForm(form);
+        clearSubtasksForm(form);
         await loadSubtasks();
     } catch (err) {
         console.log(err);
     }
 }
 
-function getSubtaskDataForPost() {
-    // return {
-    //     "description": "Sample subtask without dependencies",
-    //     "duration": 3,
-    //     "done": false
-    // }
+function getSubtaskDataForPost(form) {
     return {
-        description: "Subtask with 2 dependencies",
-        duration: 1,
+        description: form.description.value,
+        duration: form.duration.value,
         done: false,
-        previousSubtasks: [{id: 1}, {id: 2}]
+        previousSubtasks: Array.from(form["previous-subtasks"].selectedOptions).map(({ value }) => {return {id: value}})
     }
 }
 
@@ -66,7 +62,10 @@ async function postSubtask(subtaskData) {
         throw new Error(defaultNetworkErrorMessage);
 }
 
-
+function clearSubtasksForm(form) {
+    form.description.value = ''
+    form.duration.value = ''
+}
 
 //GET
 export async function loadSubtasks(queryString) {
@@ -76,6 +75,7 @@ export async function loadSubtasks(queryString) {
         let [subtasks, pageInfo] = await getSubtasks(queryString);
         console.log(subtasks);
         displaySubtasks(subtasks);
+        populatePossiblePreviousSubtasks(subtasks);
         updatePaginationButtons(pageInfo);
     } catch (err) {
         console.log(err);
@@ -116,6 +116,7 @@ export async function goBackward() {
 
 function displaySubtasks(subtasks) {
     clearChildren(".todo-list");
+    clearChildren(".previous-subtasks-input");
     subtasks.forEach((subtask) => {displaySubtask(subtask)});
 }
 
@@ -186,6 +187,17 @@ function displayPreviousSubtasks(subtask, destination) {
     destination.appendChild(previousSubtasksDiv);
 }
 
+function populatePossiblePreviousSubtasks(subtasks) {
+    const possiblePreviousSubtasks = document.getElementById("previous-subtasks");
+    subtasks.forEach((subtask) => {possiblePreviousSubtasks.appendChild(getPreviousSubtaskOption(subtask))});
+}
+
+function getPreviousSubtaskOption(subtask) {
+    const option = document.createElement("option");
+    option.value = subtask.id;
+    option.textContent = subtask.description;
+    return option;
+}
 
 //PATCH
 async function checkSubtask() {
@@ -226,7 +238,6 @@ async function deleteSubtaskFromDB() {
 
 async function deleteSubtask(subtaskId) {
     let response = await fetch(`/api/subtasks/${subtaskId}`, {
-    // let response = await fetch(`${baseURL}/${subtaskId}`, {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
