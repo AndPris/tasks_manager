@@ -15,6 +15,7 @@ import sia.tasks_manager.web.dto.SubtaskDTO;
 import sia.tasks_manager.repositories.SubtaskRepository;
 import sia.tasks_manager.repositories.TaskRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -33,14 +34,30 @@ public class SubtasksRestController {
     }
 
     @GetMapping("/tasks/{taskId}/subtasks")
-    public ResponseEntity<?> getAllSubtasksByTaskId(@PathVariable("taskId") Long taskId,
+    public ResponseEntity<?> getPageOfSubtasksByTaskId(@PathVariable("taskId") Long taskId,
+                                                    @RequestParam(required = false) boolean all,
                                                     Pageable pageable, PagedResourcesAssembler<SubtaskDTO> pagedAssembler) {
+//        if(pageable.) {
+//            List<Subtask> subtasksList = subtaskRepository.findByTaskId(taskId);
+//            List<SubtaskDTO> dtoList = subtasksList.stream().map(subtasksService::convertToDTO).toList();
+//            return ResponseEntity.ok(dtoList);
+//        }
+        if(all)
+            pageable = Pageable.unpaged();
+
         Page<Subtask> subtasksPage = subtaskRepository.findSubtasksByTaskId(taskId, pageable);
         Page<SubtaskDTO> dtoPage = subtasksPage.map(subtasksService::convertToDTO);
         PagedModel<EntityModel<SubtaskDTO>> subtasksToReturn = pagedAssembler.toModel(dtoPage);
-        subtasksToReturn.add(linkTo(methodOn(SubtasksRestController.class).getAllSubtasksByTaskId(taskId, pageable, pagedAssembler)).withSelfRel());
+        subtasksToReturn.add(linkTo(methodOn(SubtasksRestController.class).getPageOfSubtasksByTaskId(taskId, all, pageable, pagedAssembler)).withSelfRel());
         return ResponseEntity.ok(subtasksToReturn);
     }
+
+//    @GetMapping("/tasks/{taskId}/subtasks")
+//    public ResponseEntity<?> getAllSubtasksByTaskId(@PathVariable("taskId") Long taskId) {
+//        List<Subtask> subtasksList = subtaskRepository.findByTaskId(taskId);
+//        List<SubtaskDTO> dtoList = subtasksList.stream().map(subtasksService::convertToDTO).toList();
+//        return ResponseEntity.ok(dtoList);
+//    }
 
     @PostMapping("/tasks/{taskId}/subtasks")
     public ResponseEntity<?> createSubtask(@PathVariable("taskId") Long taskId, @RequestBody Subtask subtask) {

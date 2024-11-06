@@ -75,7 +75,7 @@ export async function loadSubtasks(queryString) {
         let [subtasks, pageInfo] = await getSubtasks(queryString);
         console.log(subtasks);
         displaySubtasks(subtasks);
-        populatePossiblePreviousSubtasks(subtasks);
+        populatePossiblePreviousSubtasks();
         updatePaginationButtons(pageInfo);
     } catch (err) {
         console.log(err);
@@ -187,8 +187,11 @@ function displayPreviousSubtasks(subtask, destination) {
     destination.appendChild(previousSubtasksDiv);
 }
 
-function populatePossiblePreviousSubtasks(subtasks) {
+async function populatePossiblePreviousSubtasks() {
     const possiblePreviousSubtasks = document.getElementById("previous-subtasks");
+    const [subtasks, pageInfo] = await getSubtasks('?all=true');
+    console.log("All subtasks:")
+    console.log(subtasks)
     subtasks.forEach((subtask) => {possiblePreviousSubtasks.appendChild(getPreviousSubtaskOption(subtask))});
 }
 
