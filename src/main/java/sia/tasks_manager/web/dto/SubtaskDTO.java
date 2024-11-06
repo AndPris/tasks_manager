@@ -13,9 +13,11 @@ public class SubtaskDTO {
 
     @Data
     public static class PreviousSubtaskDTO {
+        private Long id;
         private String description;
 
-        public PreviousSubtaskDTO(String description) {
+        public PreviousSubtaskDTO(Long id, String description) {
+            this.id = id;
             this.description = description;
         }
     }

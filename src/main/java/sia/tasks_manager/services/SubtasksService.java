@@ -26,7 +26,7 @@ public class SubtasksService {
     public SubtaskDTO convertToDTO(Subtask subtask) {
         List<SubtaskDTO.PreviousSubtaskDTO> previousSubtasks = subtask.getPreviousSubtasks()
                 .stream()
-                .map(previous -> new SubtaskDTO.PreviousSubtaskDTO(previous.getDescription()))
+                .map(previous -> new SubtaskDTO.PreviousSubtaskDTO(previous.getId(), previous.getDescription()))
                 .collect(Collectors.toList());
 
         return new SubtaskDTO(

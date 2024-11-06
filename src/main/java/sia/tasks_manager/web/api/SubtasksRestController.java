@@ -10,11 +10,14 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sia.tasks_manager.data.Subtask;
+import sia.tasks_manager.data.Task;
 import sia.tasks_manager.services.SubtasksService;
 import sia.tasks_manager.web.dto.SubtaskDTO;
 import sia.tasks_manager.repositories.SubtaskRepository;
 import sia.tasks_manager.repositories.TaskRepository;
 
+import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,11 +40,6 @@ public class SubtasksRestController {
     public ResponseEntity<?> getPageOfSubtasksByTaskId(@PathVariable("taskId") Long taskId,
                                                     @RequestParam(required = false) boolean all,
                                                     Pageable pageable, PagedResourcesAssembler<SubtaskDTO> pagedAssembler) {
-//        if(pageable.) {
-//            List<Subtask> subtasksList = subtaskRepository.findByTaskId(taskId);
-//            List<SubtaskDTO> dtoList = subtasksList.stream().map(subtasksService::convertToDTO).toList();
-//            return ResponseEntity.ok(dtoList);
-//        }
         if(all)
             pageable = Pageable.unpaged();
 
@@ -52,12 +50,14 @@ public class SubtasksRestController {
         return ResponseEntity.ok(subtasksToReturn);
     }
 
-//    @GetMapping("/tasks/{taskId}/subtasks")
-//    public ResponseEntity<?> getAllSubtasksByTaskId(@PathVariable("taskId") Long taskId) {
-//        List<Subtask> subtasksList = subtaskRepository.findByTaskId(taskId);
-//        List<SubtaskDTO> dtoList = subtasksList.stream().map(subtasksService::convertToDTO).toList();
-//        return ResponseEntity.ok(dtoList);
-//    }
+    @GetMapping("/subtasks/{subtaskId}")
+    public ResponseEntity<?> getSubtaskById(@PathVariable("subtaskId") Long subtaskId) {
+        Optional<Subtask> subtask = subtaskRepository.findById(subtaskId);
+        if(subtask.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(subtasksService.convertToDTO(subtask.get()));
+    }
 
     @PostMapping("/tasks/{taskId}/subtasks")
     public ResponseEntity<?> createSubtask(@PathVariable("taskId") Long taskId, @RequestBody Subtask subtask) {
@@ -82,5 +82,16 @@ public class SubtasksRestController {
     public ResponseEntity<?> cascadeDeleteSubtasks(@PathVariable("subtaskId") Long subtaskId) {
         subtasksService.deleteSubtaskWithDependencies(subtaskId);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/tasks/{taskId}/subtasks/{subtaskId}")
+    public ResponseEntity<?> updateSubtask(@PathVariable("taskId") Long taskId, @PathVariable("subtaskId") Long subtaskId, @RequestBody Subtask subtask) {
+        if(taskRepository.findById(taskId).isEmpty())
+            return ResponseEntity.notFound().build();
+
+        subtask.setId(subtaskId);
+        subtask.setTask(taskRepository.findById(taskId).get());
+        EntityModel<Subtask> subtaskToReturn = EntityModel.of(subtaskRepository.save(subtask));
+        return ResponseEntity.ok(subtaskToReturn);
     }
 }

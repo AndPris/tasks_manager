@@ -1,4 +1,5 @@
 import {
+    addTaskToDB, editTaskInDB,
     getForm,
     getTaskDataForPatch,
     getTaskId,
@@ -28,7 +29,7 @@ export async function addSubtaskToDB(event) {
     //     return;
     // }
 
-    const subtaskData = getSubtaskDataForPost(form);
+    const subtaskData = getSubtaskDataFromForm(form);
     console.log(subtaskData);
     try {
         await postSubtask(subtaskData);
@@ -39,7 +40,7 @@ export async function addSubtaskToDB(event) {
     }
 }
 
-function getSubtaskDataForPost(form) {
+function getSubtaskDataFromForm(form) {
     return {
         description: form.description.value,
         duration: form.duration.value,
@@ -75,7 +76,7 @@ export async function loadSubtasks(queryString) {
         let [subtasks, pageInfo] = await getSubtasks(queryString);
         console.log(subtasks);
         displaySubtasks(subtasks);
-        populatePossiblePreviousSubtasks();
+        await populatePossiblePreviousSubtasks();
         updatePaginationButtons(pageInfo);
     } catch (err) {
         console.log(err);
@@ -152,7 +153,7 @@ function displaySubtask(subtask) {
     const editButton = document.createElement("button");
     editButton.innerHTML = '<i class="fa-solid fa-pencil"></i>\n';
     editButton.classList.add("edit-btn", `standard-button`);
-    // editButton.addEventListener("click", editTask);
+    editButton.addEventListener("click", editSubtask);
     buttonsDiv.appendChild(editButton);
 
     const checkedButton = document.createElement("button");
@@ -189,10 +190,15 @@ function displayPreviousSubtasks(subtask, destination) {
 
 async function populatePossiblePreviousSubtasks() {
     const possiblePreviousSubtasks = document.getElementById("previous-subtasks");
-    const [subtasks, pageInfo] = await getSubtasks('?all=true');
+    const subtasks = await getAllSubtasks();
     console.log("All subtasks:")
     console.log(subtasks)
     subtasks.forEach((subtask) => {possiblePreviousSubtasks.appendChild(getPreviousSubtaskOption(subtask))});
+}
+
+async function getAllSubtasks() {
+    const [subtasks, pageInfo] = await getSubtasks('?all=true');
+    return subtasks;
 }
 
 function getPreviousSubtaskOption(subtask) {
@@ -246,6 +252,114 @@ async function deleteSubtask(subtaskId) {
             'Content-Type': 'application/json',
             [csrfHeader]: csrfToken
         },
+    });
+
+    if (!response.ok)
+        throw new Error(defaultNetworkErrorMessage);
+}
+
+
+
+//PUT
+async function editSubtask() {
+    await showEditSubtaskMenu(this.closest("li"));
+}
+
+async function showEditSubtaskMenu(subtaskLiItem) {
+    const subtaskId = subtaskLiItem.getAttribute("id");
+    const subtask = await fetchSubtask(subtaskId);
+
+    const form = document.getElementById("form");
+    form.setAttribute("subtask-id", subtaskId);
+
+    const descriptionField = document.getElementById('description');
+    descriptionField.value = subtask.description;
+    descriptionField.placeholder = "Edit the subtask.";
+
+    document.getElementById('duration').value = subtask.duration;
+    document.querySelector('.todo-btn').textContent = "Edit Subtask!";
+
+    const selectElement = document.getElementById("previous-subtasks");
+    const valuesToSelect = subtask.previousSubtasks.map((subtask) => Number(subtask.id));
+    await removeImpossiblePreviousSubtasksOptions(selectElement, subtaskId);
+    for (let option of selectElement.options) {
+        if (valuesToSelect.includes(Number(option.value))) {
+            option.selected = true;
+        }
+    }
+
+    form.method = "put";
+
+    document
+        .getElementById("form")
+        .removeEventListener("submit", addSubtaskToDB);
+
+    document
+        .getElementById("form")
+        .addEventListener("submit", editSubtaskInDB);
+
+    clearChildren('.todo-list');
+}
+
+async function fetchSubtask(subtaskId) {
+    const response = await fetch(`/api/subtasks/${subtaskId}`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok)
+        throw new Error(defaultNetworkErrorMessage);
+
+    return await response.json();
+}
+
+async function removeImpossiblePreviousSubtasksOptions(selectElement, subtaskId) {
+    removeOptionByValue(selectElement, subtaskId);
+    await removeCircularOptions(selectElement, subtaskId);
+}
+
+function removeOptionByValue(selectElement, valueToRemove) {
+    for (let i = 0; i < selectElement.options.length; i++) {
+        if (Number(selectElement.options[i].value) === Number(valueToRemove)) {
+            selectElement.remove(i);
+            break;
+        }
+    }
+}
+
+async function removeCircularOptions(selectElement, subtaskId) {
+    const allSubtasks = await getAllSubtasks();
+    for(let subtask of allSubtasks) {
+        for(let previousSubtask of subtask.previousSubtasks) {
+            if(previousSubtask.id.toString() === subtaskId)
+                removeOptionByValue(selectElement, subtask.id.toString());
+        }
+    }
+}
+
+
+async function editSubtaskInDB(event) {
+    event.preventDefault();
+
+    try {
+        await putSubtask(this.getAttribute("subtask-id"), getSubtaskDataFromForm(getForm(event)));
+        window.location.reload();
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+async function putSubtask(subtaskId, data) {
+    let response = await fetch(`${baseURL}/${subtaskId}`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+        },
+        body: JSON.stringify(data),
     });
 
     if (!response.ok)
