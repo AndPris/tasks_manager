@@ -1,4 +1,4 @@
-import {addTaskToDB, checkTask, deleteTaskFromDB, editTaskInDB} from "backend_interaction.js";
+import {addTaskToDB, checkTask, deleteTaskFromDB, editTaskInDB, getSubtasksPage} from "backend_interaction.js";
 
 const toDoList = document.querySelector(".todo-list");
 
@@ -9,7 +9,7 @@ export function displayTasks(tasks) {
     });
 }
 
-function clearChildren(className) {
+export function clearChildren(className) {
     const element = document.querySelector(className);
     while (element.firstChild)
         element.removeChild(element.firstChild);
@@ -68,8 +68,14 @@ function displayTask(task) {
     deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
     deleteButton.classList.add("delete-btn", `standard-button`);
     deleteButton.addEventListener("click", deleteTaskFromDB);
-
     buttonsDiv.appendChild(deleteButton);
+
+    const subtasksButton = document.createElement("button");
+    subtasksButton.innerHTML = 'S';
+    subtasksButton.classList.add("subtasks-btn", `standard-button`);
+    subtasksButton.addEventListener("click", getSubtasksPage);
+    buttonsDiv.appendChild(subtasksButton);
+
     taskLi.appendChild(buttonsDiv);
     toDoList.appendChild(taskLi);
 }

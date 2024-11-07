@@ -9,4 +9,5 @@ import sia.tasks_manager.data.Task;
 public interface TaskRepository extends PagingAndSortingRepository<Task, Long>, CrudRepository<Task, Long> {
     Iterable<Task> findByDescription(String description);
     Page<Task> findTasksByUserUsername(String username, Pageable pageable);
+//    Task findById(Long id);
 }

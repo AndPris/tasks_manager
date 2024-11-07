@@ -36,7 +36,7 @@ export async function addTaskToDB(event) {
     }
 }
 
-function getForm(event) {
+export function getForm(event) {
     return event.target;
 }
 
@@ -73,11 +73,11 @@ export async function deleteTaskFromDB() {
     }
 }
 
-function getTaskId(element) {
+export function getTaskId(element) {
     return getTaskLi(element).getAttribute("id");
 }
 
-function getTaskLi(element) {
+export function getTaskLi(element) {
     return element.closest("li");
 }
 
@@ -105,13 +105,14 @@ export async function checkTask() {
     }
 }
 
-function getTaskDataForPatch(element) {
+export function getTaskDataForPatch(element) {
     return {
         done: !getTaskLi(element).classList.contains('completed')
     };
 }
 
 async function patchTask(taskId, data) {
+    console.log(`${baseURL}/${taskId}`);
     let response = await fetch(`${baseURL}/${taskId}`, {
         method: "PATCH",
         headers: {
@@ -212,7 +213,7 @@ async function getTasks(queryString) {
     return [data._embedded ? data._embedded.tasks : [], data.page];
 }
 
-function updatePaginationButtons(pageInfo) {
+export function updatePaginationButtons(pageInfo) {
     const backwardButton = document.getElementById("backward-button");
     const forwardButton = document.getElementById("forward-button");
 
@@ -291,4 +292,10 @@ export async function findTask() {
     } else {
         await loadTasks();
     }
+}
+
+
+export function getSubtasksPage() {
+    const taskId = getTaskId(this);
+    window.location.href = `/tasks/${taskId}/subtasks`;
 }
