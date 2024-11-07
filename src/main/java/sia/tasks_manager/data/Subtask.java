@@ -42,4 +42,8 @@ public class Subtask {
     protected void onCreate() {
         this.done = false;
     }
+
+    public int getAmountOfPreviousSubtasks() {
+        return previousSubtasks.size();
+    }
 }
