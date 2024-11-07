@@ -17,7 +17,7 @@ public class Subtask {
     private Long id;
 
     @NotNull
-    @Size(min = 1, max = 50, message = "Must be from 1 to 50 characters")
+    @Size(min = 1, max = 30, message = "Must be from 1 to 50 characters")
     private String description;
 
     @ManyToOne

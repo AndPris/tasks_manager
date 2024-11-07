@@ -24,10 +24,10 @@
     <div id="border"></div>
 
     <form id="form">
-        <input id="description" class="todo-input standard-input" type="text" placeholder="Subtask description" name="description">
+        <input id="description" class="todo-input standard-input" type="text" minlength="1" maxlength="30" placeholder="Subtask description" name="description" required>
         <select id="previous-subtasks" multiple="multiple" class="previous-subtasks-input" name="previous-subtasks">
         </select>
-        <input id="duration" class="duration-input" type="number" placeholder="Enter duration" min="1" name="duration">
+        <input id="duration" class="duration-input" type="number" placeholder="Enter duration" min="1" name="duration" required>
         <button class="todo-btn standard-btn" type="submit">Add Subtask!</button>
     </form>
 

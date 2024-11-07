@@ -1,5 +1,4 @@
 import {
-    addTaskToDB, editTaskInDB,
     getForm,
     getTaskDataForPatch,
     getTaskId,
@@ -21,13 +20,6 @@ const toDoList = document.querySelector(".todo-list");
 export async function addSubtaskToDB(event) {
     event.preventDefault();
     const form = getForm(event);
-    //
-    // try {
-    //     validateForm(form);
-    // } catch (error) {
-    //     alert(error);
-    //     return;
-    // }
 
     const subtaskData = getSubtaskDataFromForm(form);
     console.log(subtaskData);
