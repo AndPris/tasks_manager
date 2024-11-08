@@ -14,6 +14,10 @@ public class Process {
         this.subtask = subtask;
     }
 
+    public Long getId(){
+        return subtask.getId();
+    }
+
     public int getDuration() {
         return subtask.getDuration();
     }
@@ -55,5 +59,13 @@ public class Process {
                 && finish.getEarliestStartTime() == finish.getLatestStartTime()
                 && ((finish.getLatestStartTime() - start.getLatestStartTime()) == getDuration())
                 && ((finish.getEarliestStartTime() - start.getEarliestStartTime()) == getDuration());
+    }
+
+    public int totalTimeStock() {
+        return finish.getLatestStartTime() - start.getEarliestStartTime() - getDuration();
+    }
+
+    public int freeTimeStock() {
+        return finish.getEarliestStartTime() - start.getEarliestStartTime() - getDuration();
     }
 }

@@ -1,13 +1,8 @@
 package sia.tasks_manager.algorithm;
 
 import lombok.Data;
-import org.springframework.security.core.parameters.P;
-import sia.tasks_manager.data.Task;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 public class TaskNetwork {
@@ -28,7 +23,6 @@ public class TaskNetwork {
         start.setEarliestStartTime(0);
         List<Event> visited = new ArrayList<>();
         calculateEarliestTimes(start, visited);
-        System.out.println("Finish: " + finish.getEarliestStartTime());
     }
 
     private void calculateEarliestTimes(Event event, List<Event> visited) {
@@ -37,7 +31,6 @@ public class TaskNetwork {
         visited.add(event);
 
         for(Process process : event.getStartFor()) {
-            System.out.println("Event " + event.getId() + " ES " + event.getEarliestStartTime() + " process " + process.getDescription() + " duration " + process.getDuration());
             Event finishEvent = process.getFinish();
             int earliestStartTime = event.getEarliestStartTime();
             int earliestFinishTime = earliestStartTime + process.getDuration();
@@ -74,6 +67,27 @@ public class TaskNetwork {
             calculateLatestTimes(process.getStart(), visited);
     }
 
+    public List<ProcessDTO> convertToProcessDTOs() {
+        List<ProcessDTO> processDTOs = new ArrayList<>();
+        List<Event> visited = new ArrayList<>();
+        getProcessDTOs(start, visited, processDTOs);
+        return processDTOs;
+    }
+
+    private void getProcessDTOs(Event event, List<Event> visited, List<ProcessDTO> processDTOs) {
+        if (visited.contains(event))
+            return;
+        visited.add(event);
+
+        for (Process process : event.getStartFor())
+            processDTOs.add(new ProcessDTO(process.getId(), process.getDescription(), process.getStart().getEarliestStartTime(),
+                                            process.getFinish().getLatestStartTime(), process.isCritical(),
+                                            process.totalTimeStock(), process.freeTimeStock()));
+
+        for(Process process : event.getStartFor())
+            getProcessDTOs(process.getFinish(), visited, processDTOs);
+    }
+
     //for test purpose
     public void display() {
         List<Event> visited = new ArrayList<>();
@@ -85,15 +99,13 @@ public class TaskNetwork {
             return;
         visited.add(event);
 
-//        System.out.println(event.getId() + " start for:");
-//        event.getStartFor().stream().map(Process::getDescription).forEach(System.out::println);
-//        System.out.println("=======================================================");
         for(Process process : event.getStartFor()) {
             Event finish = process.getFinish();
-            String output = String.format("ES - %d; LS - %d; slack - %d; process - %s; duration - %d; critical - %b; EF - %d; LF - %d, slack - %d",
+            String output = String.format("ES - %d; LS - %d; slack - %d; process - %s; duration - %d; critical - %b; EF - %d; LF - %d; slack - %d; TF - %d; FF - %d",
                     event.getEarliestStartTime(), event.getLatestStartTime(), event.slackTime(),
                     process.getDescription(), process.getDuration(), process.isCritical(),
-                    finish.getEarliestStartTime(), finish.getLatestStartTime(), finish.slackTime());
+                    finish.getEarliestStartTime(), finish.getLatestStartTime(), finish.slackTime(),
+                    process.totalTimeStock(), process.freeTimeStock());
             System.out.println(output);
         }
 

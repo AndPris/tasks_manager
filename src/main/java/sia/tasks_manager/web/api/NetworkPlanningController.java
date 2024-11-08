@@ -4,8 +4,11 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import sia.tasks_manager.algorithm.ProcessDTO;
 import sia.tasks_manager.algorithm.TaskNetwork;
 import sia.tasks_manager.algorithm.TaskNetworkBuilder;
+
+import java.util.List;
 
 @RepositoryRestController
 public class NetworkPlanningController {
@@ -15,11 +18,12 @@ public class NetworkPlanningController {
         this.taskNetworkBuilder = taskNetworkBuilder;
     }
 
-    @GetMapping("/plan/{taskId}")
+    @GetMapping("/tasks/plan/{taskId}")
     public ResponseEntity<?> createNetworkPlan(@PathVariable("taskId") Long taskId) {
         TaskNetwork taskNetwork = taskNetworkBuilder.build(taskId);
         taskNetwork.display();
-        return ResponseEntity.ok(taskNetwork);
+        List<ProcessDTO> processDTOs = taskNetwork.convertToProcessDTOs();
+        return ResponseEntity.ok(processDTOs);
     }
 
 }
