@@ -18,6 +18,10 @@ public class Process {
         return subtask.getDuration();
     }
 
+    public String getDescription() {
+        return subtask.getDescription();
+    }
+
     public void setStart(Event start) {
         removeStart();
         this.start = start;
@@ -44,5 +48,12 @@ public class Process {
 
         start.removeStartForProcess(this);
         start = null;
+    }
+
+    public boolean isCritical() {
+        return start.getEarliestStartTime() == start.getLatestStartTime()
+                && finish.getEarliestStartTime() == finish.getLatestStartTime()
+                && ((finish.getLatestStartTime() - start.getLatestStartTime()) == getDuration())
+                && ((finish.getEarliestStartTime() - start.getEarliestStartTime()) == getDuration());
     }
 }

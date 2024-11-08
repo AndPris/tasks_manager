@@ -2,12 +2,12 @@ package sia.tasks_manager.algorithm;
 
 import org.springframework.stereotype.Service;
 import sia.tasks_manager.data.Subtask;
-import sia.tasks_manager.data.Task;
 import sia.tasks_manager.repositories.SubtaskRepository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class TaskNetworkBuilder {
@@ -17,9 +17,9 @@ public class TaskNetworkBuilder {
         this.subtaskRepository = subtaskRepository;
     }
 
-    public TaskNetwork build(Task task) {
-        List<Subtask> subtasks = subtaskRepository.findAllByTaskIdOrderById(task.getId());
-        TaskNetwork network = new TaskNetwork(task);
+    public TaskNetwork build(Long taskId) {
+        List<Subtask> subtasks = subtaskRepository.findAllByTaskIdOrderById(taskId);
+        TaskNetwork network = new TaskNetwork(taskId);
         Map<Subtask, Process> subtaskProcesses = getSubtasksProcessesMap(subtasks);
 
         Event taskStart = new Event(0, 0);
@@ -30,17 +30,22 @@ public class TaskNetworkBuilder {
             if(subtask.getAmountOfPreviousSubtasks() == 0) {
                 process.setStart(taskStart);
             } else {
-                Event event = new Event();
+                Event start = getStart(subtask.getPreviousSubtasks(), subtaskProcesses);
                 for (Subtask previousSubtask : subtask.getPreviousSubtasks())
-                    subtaskProcesses.get(previousSubtask).setFinish(event);
-                process.setStart(event);
+                    subtaskProcesses.get(previousSubtask).setFinish(start);
+                process.setStart(start);
             }
+        }
 
-            process.setFinish(taskFinish);
+        for (Subtask subtask : subtasks) {
+            Process process = subtaskProcesses.get(subtask);
+            if(process.getFinish() == null)
+                process.setFinish(taskFinish);
         }
 
         network.setStart(taskStart);
         network.setFinish(taskFinish);
+        network.calculateTimes();
         return network;
     }
 
@@ -49,5 +54,14 @@ public class TaskNetworkBuilder {
         for(Subtask subtask : subtasks)
             subtasksProcesses.put(subtask, new Process(subtask));
         return subtasksProcesses;
+    }
+
+    private Event getStart(Set<Subtask> previousSubtasks, Map<Subtask, Process> subtaskProcesses) {
+        for (Subtask previousSubtask : previousSubtasks) {
+            if(subtaskProcesses.get(previousSubtask).getFinish() != null)
+                return subtaskProcesses.get(previousSubtask).getFinish();
+        }
+
+        return new Event();
     }
 }

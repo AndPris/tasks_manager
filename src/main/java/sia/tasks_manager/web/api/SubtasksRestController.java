@@ -9,6 +9,8 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sia.tasks_manager.algorithm.TaskNetwork;
+import sia.tasks_manager.algorithm.TaskNetworkBuilder;
 import sia.tasks_manager.data.Subtask;
 import sia.tasks_manager.data.Task;
 import sia.tasks_manager.services.SubtasksService;
@@ -29,11 +31,14 @@ public class SubtasksRestController {
     private final SubtaskRepository subtaskRepository;
     private final TaskRepository taskRepository;
     private final SubtasksService subtasksService;
+    private final TaskNetworkBuilder taskNetworkBuilder;
 
-    public SubtasksRestController(SubtaskRepository subtaskRepository, TaskRepository taskRepository, SubtasksService subtasksService) {
+    public SubtasksRestController(SubtaskRepository subtaskRepository, TaskRepository taskRepository,
+                                  SubtasksService subtasksService, TaskNetworkBuilder taskNetworkBuilder) {
         this.subtaskRepository = subtaskRepository;
         this.taskRepository = taskRepository;
         this.subtasksService = subtasksService;
+        this.taskNetworkBuilder = taskNetworkBuilder;
     }
 
     @GetMapping("/tasks/{taskId}/subtasks")
@@ -93,5 +98,12 @@ public class SubtasksRestController {
         subtask.setTask(taskRepository.findById(taskId).get());
         EntityModel<Subtask> subtaskToReturn = EntityModel.of(subtaskRepository.save(subtask));
         return ResponseEntity.ok(subtaskToReturn);
+    }
+
+    @GetMapping("/tasks/plan/{taskId}")
+    public ResponseEntity<?> createNetworkPlan(@PathVariable("taskId") Long taskId) {
+        TaskNetwork taskNetwork = taskNetworkBuilder.build(taskId);
+        taskNetwork.display();
+        return ResponseEntity.ok(taskNetwork);
     }
 }

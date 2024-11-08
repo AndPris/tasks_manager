@@ -173,7 +173,7 @@ function displayPreviousSubtasks(subtask, destination) {
     previousSubtasksDiv.classList.add("previous-subtasks");
 
     let content = "Previous subtasks: ";
-    subtask.previousSubtasks.forEach((previousSubtask) => content += previousSubtask.description + ", ");
+    subtask.previousSubtasks.sort((a, b) => {return a.id - b.id}).forEach((previousSubtask) => content += previousSubtask.description + ", ");
     content = content.substring(0, content.length-2);
     previousSubtasksDiv.textContent = content;
 
@@ -356,4 +356,21 @@ async function putSubtask(subtaskId, data) {
 
     if (!response.ok)
         throw new Error(defaultNetworkErrorMessage);
+}
+
+
+//PLAN
+export async function plan() {
+    const response = await fetch(`/api/tasks/plan/${taskId}`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok)
+        throw new Error(defaultNetworkErrorMessage);
+
+    const data = await response.json();
+    console.log(data);
 }

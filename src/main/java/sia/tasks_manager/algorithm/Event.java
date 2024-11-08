@@ -2,15 +2,19 @@ package sia.tasks_manager.algorithm;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
 public class Event {
     private int earliestStartTime;
     private int latestStartTime;
-    private Set<Process> startFor;
-    private Set<Process> finishFor;
+    private List<Process> startFor;
+    private List<Process> finishFor;
+    private static int amountOfEvents = 0;
+    private int id;
 
     public Event(int earliestStartTime, int latestStartTime) {
         this();
@@ -19,8 +23,9 @@ public class Event {
     }
 
     public Event() {
-        startFor = new HashSet<>();
-        finishFor = new HashSet<>();
+        id = ++amountOfEvents;
+        startFor = new ArrayList<>();
+        finishFor = new ArrayList<>();
     }
 
     public void addStartForProcess(Process process) {
