@@ -375,7 +375,7 @@ export async function plan() {
     const data = await response.json();
     console.log(data);
     clearChildren(".timeGraph");
-
+    console.log(creationTime);
     const graph = new Graph(data, creationTime, document.getElementById("timeGraph"));
     graph.draw();
 }
