@@ -525,3 +525,7 @@ input::-webkit-inner-spin-button {
     padding: 10px;
     z-index: 100;
 }
+
+.timeGraph {
+    background-color: white;
+}

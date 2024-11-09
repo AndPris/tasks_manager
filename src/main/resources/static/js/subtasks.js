@@ -5,7 +5,7 @@ import {
     updatePaginationButtons
 } from "backend_interaction.js";
 import {clearChildren} from "dom_interaction.js"
-import {drawTimeGraph} from "graph.js";
+import {Graph} from "graph.js";
 
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -375,5 +375,7 @@ export async function plan() {
     const data = await response.json();
     console.log(data);
     clearChildren(".timeGraph");
-    drawTimeGraph(data);
+
+    const graph = new Graph(data, creationTime, document.getElementById("timeGraph"));
+    graph.draw();
 }
