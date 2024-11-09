@@ -1,6 +1,5 @@
 package sia.tasks_manager.web.api;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -16,9 +15,6 @@ import sia.tasks_manager.web.dto.SubtaskDTO;
 import sia.tasks_manager.repositories.SubtaskRepository;
 import sia.tasks_manager.repositories.TaskRepository;
 
-import java.security.Principal;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -30,7 +26,8 @@ public class SubtasksRestController {
     private final TaskRepository taskRepository;
     private final SubtasksService subtasksService;
 
-    public SubtasksRestController(SubtaskRepository subtaskRepository, TaskRepository taskRepository, SubtasksService subtasksService) {
+    public SubtasksRestController(SubtaskRepository subtaskRepository, TaskRepository taskRepository,
+                                  SubtasksService subtasksService) {
         this.subtaskRepository = subtaskRepository;
         this.taskRepository = taskRepository;
         this.subtasksService = subtasksService;
@@ -61,7 +58,11 @@ public class SubtasksRestController {
 
     @PostMapping("/tasks/{taskId}/subtasks")
     public ResponseEntity<?> createSubtask(@PathVariable("taskId") Long taskId, @RequestBody Subtask subtask) {
-        subtask.setTask(taskRepository.findById(taskId).get());
+        Optional<Task> task = taskRepository.findById(taskId);
+        if(task.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        subtask.setTask(task.get());
         EntityModel<Subtask> subtaskToReturn = EntityModel.of(subtaskRepository.save(subtask));
         return ResponseEntity.ok(subtaskToReturn);
     }
