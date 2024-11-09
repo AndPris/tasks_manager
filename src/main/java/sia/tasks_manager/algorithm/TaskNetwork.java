@@ -80,9 +80,9 @@ public class TaskNetwork {
         visited.add(event);
 
         for (Process process : event.getStartFor())
-            processDTOs.add(new ProcessDTO(process.getId(), process.getDescription(), process.getStart().getEarliestStartTime(),
-                                            process.getFinish().getLatestStartTime(), process.isCritical(),
-                                            process.totalTimeStock(), process.freeTimeStock()));
+            processDTOs.add(new ProcessDTO(process.getId(), process.getDescription(), process.getDuration(),
+                                            process.getStart().getEarliestStartTime(), process.getFinish().getLatestStartTime(),
+                                            process.isCritical(), process.totalTimeStock(), process.freeTimeStock()));
 
         for(Process process : event.getStartFor())
             getProcessDTOs(process.getFinish(), visited, processDTOs);

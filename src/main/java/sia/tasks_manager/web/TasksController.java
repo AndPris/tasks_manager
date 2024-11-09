@@ -9,7 +9,6 @@ import sia.tasks_manager.data.Task;
 import sia.tasks_manager.repositories.TaskRepository;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/tasks")
@@ -30,6 +29,7 @@ public class TasksController {
         Task task = taskRepository.findById(taskId).get();
         model.addAttribute("taskId", taskId);
         model.addAttribute("description", task.getDescription());
+        model.addAttribute("creationTime", task.getCreationTime());
         return "subtasks";
     }
 }
