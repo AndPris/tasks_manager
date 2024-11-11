@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reminder</title>
+</head>
+<body>
+    <h3>Hello, <span th:text="${fullName}">User</span>!</h3>
+    <p>This is a reminder that your task "<span th:text="${taskDescription}"></span>"
+        <span th:text="${deadlineState}"></span>.<br>
+        Please make sure to complete it.<br>
+        Best regards,<br>
+        Your Task Manager App.</p>
+</body>
+</html>

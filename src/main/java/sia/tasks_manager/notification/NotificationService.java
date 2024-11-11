@@ -20,36 +20,21 @@ public class NotificationService {
         this.emailService = emailService;
     }
 
-    @Scheduled(cron = "0 13 20 * * *")
+    @Scheduled(cron = "0 0 8 * * *")
     public void sendNotifications() {
-        System.out.println("=================================================");
-        System.out.println("Sending notifications");
         sendTomorrowDeadlineNotifications();
         sendTodayDeadlineNotifications();
         sendDeadlineExpiredNotifications();
-        System.out.println("=================================================");
     }
 
     private void sendTomorrowDeadlineNotifications() {
-        Date currentDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        Date nextDay = calendar.getTime();
-
+        Date nextDay = getDateWithShift(new Date(), 1);
         List<Task> tasksDueTomorrow = taskRepository.findByFinishDateAndDone(nextDay, false);
 
         for (Task task : tasksDueTomorrow) {
             User user = task.getUser();
-            if (user != null) {
-                String subject = "Reminder: Task Deadline Approaching";
-                String text = "Hello " + user.getFullName() + ",\n\n" +
-                        "This is a reminder that your task \"" + task.getDescription() +
-                        "\" is due tomorrow.\n\n" +
-                        "Please make sure to complete it in time.\n\n" +
-                        "Best regards,\nYour Task Manager App";
-                emailService.sendEmail(user.getUsername(), subject, text);
-            }
+            if (user != null)
+                sendEmail("Reminder: Task Deadline Approaching", user, task, "is due tomorrow");
         }
     }
 
@@ -59,38 +44,32 @@ public class NotificationService {
 
         for (Task task : tasksDueToday) {
             User user = task.getUser();
-            if (user != null) {
-                String subject = "Reminder: Task Deadline Approached";
-                String text = "Hello " + user.getFullName() + ",\n\n" +
-                        "This is a reminder that your task \"" + task.getDescription() +
-                        "\" is due today.\n\n" +
-                        "Please make sure to complete it in time.\n\n" +
-                        "Best regards,\nYour Task Manager App";
-                emailService.sendEmail(user.getUsername(), subject, text);
-            }
+            if (user != null)
+                sendEmail("Reminder: Task Deadline Approaching", user, task, "is due today");
         }
     }
 
     private void sendDeadlineExpiredNotifications() {
-        Date currentDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.DAY_OF_YEAR, -1);
-        Date previousDay = calendar.getTime();
-
+        Date previousDay = getDateWithShift(new Date(), -1);
         List<Task> tasksDueTomorrow = taskRepository.findByFinishDateAndDone(previousDay, false);
 
         for (Task task : tasksDueTomorrow) {
             User user = task.getUser();
-            if (user != null) {
-                String subject = "Reminder: Task Deadline Expired";
-                String text = "Hello " + user.getFullName() + ",\n\n" +
-                        "This is a reminder that deadline of your task \"" + task.getDescription() +
-                        "\" has expired.\n\n" +
-                        "Please make sure to complete it.\n\n" +
-                        "Best regards,\nYour Task Manager App";
-                emailService.sendEmail(user.getUsername(), subject, text);
-            }
+            if (user != null)
+                sendEmail("Reminder: Task Deadline Expired", user, task, "was due yesterday");
         }
+    }
+
+    private Date getDateWithShift(Date currentDate, int shift) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, shift);
+        return calendar.getTime();
+    }
+
+    private void sendEmail(String subject, User user, Task task, String deadlineState) {
+        String fullName = user.getFullName();
+        String taskDescription = task.getDescription();
+        emailService.sendEmail(user.getUsername(), subject, fullName, taskDescription, deadlineState);
     }
 }
