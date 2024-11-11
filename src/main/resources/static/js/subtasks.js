@@ -5,6 +5,7 @@ import {
     updatePaginationButtons
 } from "backend_interaction.js";
 import {clearChildren} from "dom_interaction.js"
+import {Graph} from "graph.js";
 
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -309,7 +310,9 @@ async function fetchSubtask(subtaskId) {
 
 async function removeImpossiblePreviousSubtasksOptions(selectElement, subtaskId) {
     removeOptionByValue(selectElement, subtaskId);
-    await removeCircularOptions(selectElement, subtaskId);
+    const allSubtasks = await getAllSubtasks();
+    removeCircularOptions(selectElement, allSubtasks, subtaskId);
+    removeNestedOptions(selectElement, allSubtasks, subtaskId);
 }
 
 function removeOptionByValue(selectElement, valueToRemove) {
@@ -321,16 +324,38 @@ function removeOptionByValue(selectElement, valueToRemove) {
     }
 }
 
-async function removeCircularOptions(selectElement, subtaskId) {
-    const allSubtasks = await getAllSubtasks();
-    for(let subtask of allSubtasks) {
-        for(let previousSubtask of subtask.previousSubtasks) {
-            if(previousSubtask.id.toString() === subtaskId)
-                removeOptionByValue(selectElement, subtask.id.toString());
+function removeCircularOptions(selectElement, allSubtasks, subtaskId) {
+    subtaskId = subtaskId.toString();
+    for(let subtask of allSubtasks)
+        checkPreviousSubtasks(selectElement, allSubtasks, subtask, subtaskId);
+}
+
+function checkPreviousSubtasks(selectElement, allSubtasks, subtask, subtaskIdToEdit) {
+    for(let previousSubtask of subtask.previousSubtasks) {
+        if(previousSubtask.id.toString() === subtaskIdToEdit) {
+            removeOptionByValue(selectElement, subtask.id.toString());
+            removeCircularOptions(selectElement, allSubtasks, subtask.id);
         }
     }
 }
 
+function removeNestedOptions(selectElement, allSubtasks, subtaskId) {
+    const subtask = getSubtaskById(allSubtasks, subtaskId);
+    for(let previousSubtask of subtask.previousSubtasks) {
+        removeAllPreviousSubtasksOptions(selectElement, allSubtasks, getSubtaskById(allSubtasks, previousSubtask.id));
+    }
+}
+
+function getSubtaskById(allSubtasks, subtaskId) {
+    return allSubtasks.filter((subtask) => {return subtask.id === Number(subtaskId)})[0];
+}
+
+function removeAllPreviousSubtasksOptions(selectElement, allSubtasks, subtask) {
+    for(let previousSubtask of subtask.previousSubtasks) {
+        removeOptionByValue(selectElement, previousSubtask.id.toString());
+        removeAllPreviousSubtasksOptions(selectElement, allSubtasks, getSubtaskById(allSubtasks, previousSubtask.id));
+    }
+}
 
 async function editSubtaskInDB(event) {
     event.preventDefault();
@@ -373,4 +398,8 @@ export async function plan() {
 
     const data = await response.json();
     console.log(data);
+    clearChildren(".timeGraph");
+    console.log(creationTime);
+    const graph = new Graph(data, creationTime, document.getElementById("timeGraph"));
+    graph.draw();
 }

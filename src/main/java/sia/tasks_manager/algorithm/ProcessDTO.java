@@ -6,16 +6,18 @@ import lombok.Data;
 public class ProcessDTO {
     private Long id;
     private String description;
+    private int duration;
     private int startTime;
     private int finishTime;
     private boolean isCritical;
     private int totalTimeStock;
     private int freeTimeStock;
 
-    public ProcessDTO(Long id, String description, int startTime, int finishTime, boolean isCritical,
+    public ProcessDTO(Long id, String description, int duration, int startTime, int finishTime, boolean isCritical,
                       int totalTimeStock, int freeTimeStock) {
         this.id = id;
         this.description = description;
+        this.duration = duration;
         this.startTime = startTime;
         this.finishTime = finishTime;
         this.isCritical = isCritical;
