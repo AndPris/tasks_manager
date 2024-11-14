@@ -3,3 +3,7 @@
     width: 100%;
     padding: 16px;
 }
+
+.fc-event.task-done .fc-event-title {
+    text-decoration: line-through;
+}

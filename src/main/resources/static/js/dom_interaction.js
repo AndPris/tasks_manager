@@ -22,28 +22,38 @@ function displayTask(task, calendar) {
         start: new Date(task.finishDate),
         allDay: true,
         color: getTaskColor(task),
+        classNames: getClassNames(task),
     };
 
     calendar.addEvent(event);
 }
 
 function getTaskColor(task) {
+    if(task.done)
+        return 'gray';
+
     let color;
     switch (task.priority.name.toLowerCase()) {
         case 'high':
             color = 'red';
             break;
-        case 'medium':
-            color = 'blue';
-            break;
         case 'low':
             color = 'green';
             break;
         default:
-            color = 'gray';
+            color = 'blue';
     }
     return color;
 }
+
+function getClassNames(task) {
+    if(task.done)
+        return 'task-done';
+    return '';
+}
+
+
+
 
 function getDate(timestamp) {
     const date = new Date(timestamp);
