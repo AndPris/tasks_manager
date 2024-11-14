@@ -1,4 +1,6 @@
 import {addTaskToDB, loadTasks, goForward, goBackward, sortTasksByFinishDate, sortTasksByPriority, findTask} from 'backend_interaction.js';
+import {displayTasks} from "dom_interaction.js";
+import {BackendService} from "BackendService.js"
 
 document.addEventListener('DOMContentLoaded', async function() {
     var calendarEl = document.getElementById('calendar');
@@ -15,5 +17,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     window.calendarInstance = calendar;
 
-    await loadTasks();
+    const backendService = new BackendService;
+    displayTasks(await backendService.loadTasks());
 });

@@ -1,11 +1,7 @@
 package sia.tasks_manager.web.api;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sia.tasks_manager.data.Task;
@@ -14,9 +10,6 @@ import sia.tasks_manager.repositories.UserRepository;
 
 import java.security.Principal;
 import java.util.Date;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RepositoryRestController
 public class TasksRestController {
@@ -45,11 +38,8 @@ public class TasksRestController {
     }
 
     @GetMapping("/tasks")
-    public ResponseEntity<?> getAllTasksByCurrentUser(Principal user,
-                                                      Pageable pageable, PagedResourcesAssembler<Task> pagedAssembler) {
-        Page<Task> tasksPage = taskRepository.findTasksByUserUsername(user.getName(), pageable);
-        PagedModel<EntityModel<Task>> tasksToReturn = pagedAssembler.toModel(tasksPage);
-        tasksToReturn.add(linkTo(methodOn(TasksRestController.class).getAllTasksByCurrentUser(user, pageable, pagedAssembler)).withSelfRel());
-        return ResponseEntity.ok(tasksToReturn);
+    public ResponseEntity<?> getAllTasksByCurrentUser(Principal user) {
+        Iterable<Task> tasks = taskRepository.findTasksByUserUsername(user.getName());
+        return ResponseEntity.ok(tasks);
     }
 }
