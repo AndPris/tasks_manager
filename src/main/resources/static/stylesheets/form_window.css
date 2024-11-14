@@ -39,3 +39,59 @@
     margin-bottom: 10px;
     font-size: 1.1em;
 }
+
+.taskForm {
+    display: flex;
+    font-size: 1.4rem;
+    justify-content: center;
+    margin: 15px 0;
+    width: 100%;
+}
+
+.taskForm input {
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    border-top-left-radius: 17px;
+    border-bottom-left-radius: 17px;
+    max-width: 500px;
+    transition: background-color 200ms ease-in-out;
+    width: 100%;
+    background-color: rgb(230, 230, 230);
+    color: rgb(46, 44, 57);
+}
+
+.taskForm select {
+    border: none;
+    background-color: rgb(195, 185, 235);
+}
+
+.taskForm input:hover {
+    cursor: text;
+    background-color: rgb(180, 180, 180);
+}
+
+#submitButton {
+    background-color: rgb(46, 44, 57);
+    padding: 10px;
+    font-size: 14px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    min-width: 90px;
+    border: none;
+    color: rgb(247, 226, 223);
+}
+
+.taskForm select:hover, #submitButton:hover {
+    cursor: pointer;
+}
+
+.taskForm select:hover {
+    background-color: rgb(175, 165, 215);
+}
+
+#submitButton:hover {
+    background-color: rgb(66, 64, 77);
+    color: rgb(197, 176, 173);
+}

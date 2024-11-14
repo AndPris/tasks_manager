@@ -41,6 +41,7 @@ export class FormDOMService {
 
     createForm() {
         const form = document.createElement("form");
+        form.classList.add("taskForm");
 
         const descriptionInput = document.createElement("input");
         descriptionInput.type = "text";
@@ -54,6 +55,7 @@ export class FormDOMService {
         form.appendChild(prioritySelect);
 
         const submitButton = document.createElement("button");
+        submitButton.id = "submitButton";
         submitButton.type = "submit";
         submitButton.textContent = "Add Task!";
         form.appendChild(submitButton);
