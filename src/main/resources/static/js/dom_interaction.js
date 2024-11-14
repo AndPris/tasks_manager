@@ -21,71 +21,28 @@ function displayTask(task, calendar) {
         title: task.description,
         start: new Date(task.finishDate),
         allDay: true,
+        color: getTaskColor(task),
     };
 
     calendar.addEvent(event);
-    // const taskLi = document.createElement("li");
-    // const leftDiv = document.createElement("div");
-    // const creationTimeDiv = document.createElement("div");
-    // const buttonsDiv = document.createElement("div");
-    //
-    // taskLi.classList.add("todo", `standard-todo`);
-    // taskLi.setAttribute("id", task.id);
-    // if (task.done) taskLi.classList.add("completed");
-    //
-    // leftDiv.classList.add("todo-left-div");
-    // buttonsDiv.classList.add("todo-buttons-div");
-    // creationTimeDiv.classList.add("creation-time");
-    // creationTimeDiv.setAttribute("datetime", task.creationTime);
-    //
-    // const newTask = document.createElement("div");
-    // const newPriority = document.createElement("div");
-    // const newFinishDate = document.createElement("div");
-    //
-    // newTask.innerText = task.description;
-    // newTask.classList.add("todo-item");
-    // newTask.classList.add("todo-item-description");
-    // leftDiv.appendChild(newTask);
-    //
-    // creationTimeDiv.innerText = getDate(task.creationTime) + " " + getTime(task.creationTime);
-    // leftDiv.appendChild(creationTimeDiv);
-    // taskLi.appendChild(leftDiv);
-    //
-    // newPriority.innerText = task.priority.name;
-    // newPriority.classList.add("todo-item");
-    // newPriority.classList.add("todo-item-priority");
-    // taskLi.appendChild(newPriority);
-    //
-    // newFinishDate.innerText = getDate(task.finishDate);
-    // newFinishDate.classList.add("todo-item");
-    // taskLi.appendChild(newFinishDate);
-    //
-    // const editButton = document.createElement("button");
-    // editButton.innerHTML = '<i class="fa-solid fa-pencil"></i>\n';
-    // editButton.classList.add("edit-btn", `standard-button`);
-    // editButton.addEventListener("click", editTask);
-    // buttonsDiv.appendChild(editButton);
-    //
-    // const checkedButton = document.createElement("button");
-    // checkedButton.innerHTML = '<i class="fas fa-check"></i>';
-    // checkedButton.classList.add("check-btn", `standard-button`);
-    // checkedButton.addEventListener("click", checkTask);
-    // buttonsDiv.appendChild(checkedButton);
-    //
-    // const deleteButton = document.createElement("button");
-    // deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-    // deleteButton.classList.add("delete-btn", `standard-button`);
-    // deleteButton.addEventListener("click", deleteTaskFromDB);
-    // buttonsDiv.appendChild(deleteButton);
-    //
-    // const subtasksButton = document.createElement("button");
-    // subtasksButton.innerHTML = 'S';
-    // subtasksButton.classList.add("subtasks-btn", `standard-button`);
-    // subtasksButton.addEventListener("click", getSubtasksPage);
-    // buttonsDiv.appendChild(subtasksButton);
-    //
-    // taskLi.appendChild(buttonsDiv);
-    // toDoList.appendChild(taskLi);
+}
+
+function getTaskColor(task) {
+    let color;
+    switch (task.priority.name.toLowerCase()) {
+        case 'high':
+            color = 'red';
+            break;
+        case 'medium':
+            color = 'blue';
+            break;
+        case 'low':
+            color = 'green';
+            break;
+        default:
+            color = 'gray';
+    }
+    return color;
 }
 
 function getDate(timestamp) {
