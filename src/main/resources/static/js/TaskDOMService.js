@@ -1,4 +1,4 @@
-export class DOMService {
+export class TaskDOMService {
     calendar;
 
     constructor(calendar) {
@@ -35,11 +35,14 @@ export class DOMService {
             case 'high':
                 color = 'red';
                 break;
+            case 'medium':
+                color = 'blue'
+                break;
             case 'low':
                 color = 'green';
                 break;
             default:
-                color = 'blue';
+                color = 'yellow';
         }
         return color;
     }
@@ -48,5 +51,9 @@ export class DOMService {
         if(task.done)
             return 'task-done';
         return '';
+    }
+
+    displayForm(dateStr) {
+
     }
 }
