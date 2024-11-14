@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         },
         dateClick: function(info) {
             console.log(info);
-            formDOMService.displayFormWindow(info);
+            formDOMService.displayFormWindow(info.dateStr);
         }
     });
     calendar.render();

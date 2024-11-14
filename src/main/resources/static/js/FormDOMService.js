@@ -1,6 +1,7 @@
 export class FormDOMService {
     date;
     formWindow;
+    dateDisplay;
 
     constructor() {
         this.createFormWindow();
@@ -11,7 +12,8 @@ export class FormDOMService {
         this.formWindow.style.display = "none";
     }
 
-    displayFormWindow() {
+    displayFormWindow(date) {
+        this.dateDisplay.textContent = `Selected Date: ${date}`;
         this.formWindow.style.display = "flex";
     }
 
@@ -19,6 +21,11 @@ export class FormDOMService {
         const body = document.getElementById("body");
         this.formWindow = document.createElement("div");
         this.formWindow.classList.add("formWindow");
+
+        this.dateDisplay = document.createElement("p");
+        this.dateDisplay.classList.add("date-display");
+        this.formWindow.appendChild(this.dateDisplay);
+
         this.createForm();
         this.createCloseButton();
         body.appendChild(this.formWindow);
