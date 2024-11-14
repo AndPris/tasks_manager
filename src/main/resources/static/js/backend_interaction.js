@@ -5,7 +5,7 @@ const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('con
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 const baseURL = "/api/tasks";
 const defaultNetworkErrorMessage = "Network response was not ok";
-const pageSize = 5;
+const pageSize = 50;
 let pageNumber = 0;
 let sortOrders= [];
 let descriptionToFind = '';
@@ -170,7 +170,6 @@ export async function loadTasks(queryString) {
     try {
         let [tasks, pageInfo] = await getTasks(queryString);
         displayTasks(tasks);
-        updatePaginationButtons(pageInfo);
     } catch (err) {
         console.log(err);
     }

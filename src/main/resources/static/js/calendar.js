@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         initialView: 'dayGridMonth',
         selectable: true,
         events: [],
+        eventOrder: "done,title",
         eventClick: function(info) {
             console.log(info.event);
         }

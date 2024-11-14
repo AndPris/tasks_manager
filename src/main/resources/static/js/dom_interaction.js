@@ -5,6 +5,7 @@ export function displayTasks(tasks) {
     const calendar = window.calendarInstance;
     calendar.removeAllEvents();
     tasks.forEach((task) => {
+        console.log(task);
         displayTask(task, calendar);
     });
 }
@@ -20,6 +21,7 @@ function displayTask(task, calendar) {
         id: task.id,
         title: task.description,
         start: new Date(task.finishDate),
+        done: task.done,
         allDay: true,
         color: getTaskColor(task),
         classNames: getClassNames(task),
