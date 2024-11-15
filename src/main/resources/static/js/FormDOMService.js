@@ -98,6 +98,7 @@ export class FormDOMService {
         event.preventDefault();
         await this.backendService.postTask(this.getFormData());
         this.taskDOMService.displayTasks(await this.backendService.loadTasks());
+        this.clearForm();
     }
 
     getFormData() {
@@ -106,5 +107,10 @@ export class FormDOMService {
             finishDate: this.date,
             priority: {id: this.form.priority.value}
         };
+    }
+
+    clearForm() {
+        this.form.description.value = '';
+        this.form.priority.value = 1;
     }
 }
