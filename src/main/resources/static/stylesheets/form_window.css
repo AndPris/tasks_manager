@@ -1,3 +1,7 @@
+body {
+    font-family: "Work Sans", sans-serif;
+}
+
 .formWindow {
     position: fixed;
     top: 20px;

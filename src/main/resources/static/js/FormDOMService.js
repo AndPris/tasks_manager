@@ -1,5 +1,6 @@
 export class FormDOMService {
     date;
+    form;
     formWindow;
     dateDisplay;
 
@@ -13,6 +14,7 @@ export class FormDOMService {
     }
 
     displayFormWindow(date) {
+        this.date = date;
         this.dateDisplay.textContent = `Selected Date: ${date}`;
         this.formWindow.style.display = "flex";
     }
@@ -40,27 +42,32 @@ export class FormDOMService {
     }
 
     createForm() {
-        const form = document.createElement("form");
-        form.classList.add("taskForm");
+        this.form = document.createElement("form");
+        this.form.classList.add("taskForm");
 
         const descriptionInput = document.createElement("input");
         descriptionInput.type = "text";
         descriptionInput.name = "description";
         descriptionInput.placeholder = "Add a task.";
-        form.appendChild(descriptionInput);
+        descriptionInput.minLength = 1;
+        descriptionInput.maxLength = 30;
+        this.form.appendChild(descriptionInput);
 
         const prioritySelect = document.createElement("select");
+        prioritySelect.required = true;
         prioritySelect.name = "priority";
         this.createPriorityOptions(prioritySelect);
-        form.appendChild(prioritySelect);
+        this.form.appendChild(prioritySelect);
 
         const submitButton = document.createElement("button");
         submitButton.id = "submitButton";
         submitButton.type = "submit";
         submitButton.textContent = "Add Task!";
-        form.appendChild(submitButton);
+        this.form.appendChild(submitButton);
 
-        this.formWindow.appendChild(form);
+        this.form.addEventListener("submit", this.getFormData);
+
+        this.formWindow.appendChild(this.form);
     }
 
     createPriorityOptions(prioritySelect) {
@@ -78,5 +85,19 @@ export class FormDOMService {
         low.value = "3";
         low.textContent = "Low"
         prioritySelect.appendChild(low);
+    }
+
+    getFormData(event) {
+        event.preventDefault();
+
+        const data = {
+            description: this.form.description.value,
+            finishDate: this.date,
+            priority: {id: this.form.priority.value}
+        };
+
+        console.log(data);
+
+        return data;
     }
 }
