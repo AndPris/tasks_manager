@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         selectable: true,
+        editable: true,
         events: [],
         eventOrder: "done,title",
         eventClick: function(info) {
@@ -21,6 +22,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         dateClick: function(info) {
             console.log(info);
             formDOMService.displayFormWindow(info.dateStr);
+        },
+        eventMouseEnter: function(info) {
+            info.el.style.cursor = "pointer";
+        },
+        eventDrop: function(info) {
+            console.log("Drop");
+            console.log(info);
         }
     });
     calendar.render();
