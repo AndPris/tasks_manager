@@ -3,10 +3,17 @@ export class FormDOMService {
     form;
     formWindow;
     dateDisplay;
+    backendService;
+    taskDOMService;
 
-    constructor() {
+    constructor(backendService) {
         this.createFormWindow();
         this.hideFormWindow();
+        this.backendService = backendService;
+    }
+
+    setTaskDOMService(taskDOMService) {
+        this.taskDOMService = taskDOMService;
     }
 
     hideFormWindow() {
@@ -65,7 +72,7 @@ export class FormDOMService {
         submitButton.textContent = "Add Task!";
         this.form.appendChild(submitButton);
 
-        this.form.addEventListener("submit", this.getFormData);
+        this.form.addEventListener("submit", this.createTask.bind(this));
 
         this.formWindow.appendChild(this.form);
     }
@@ -87,17 +94,17 @@ export class FormDOMService {
         prioritySelect.appendChild(low);
     }
 
-    getFormData(event) {
+    async createTask(event) {
         event.preventDefault();
+        await this.backendService.postTask(this.getFormData());
+        this.taskDOMService.displayTasks(await this.backendService.loadTasks());
+    }
 
-        const data = {
+    getFormData() {
+        return {
             description: this.form.description.value,
             finishDate: this.date,
             priority: {id: this.form.priority.value}
         };
-
-        console.log(data);
-
-        return data;
     }
 }

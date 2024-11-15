@@ -1,6 +1,13 @@
 export class BackendService {
     baseURL = "/api/tasks";
     defaultNetworkErrorMessage = "Network response was not ok";
+    csrfHeader;
+    csrfToken;
+
+    constructor(csrfHeader, csrfToken) {
+        this.csrfHeader = csrfHeader;
+        this.csrfToken = csrfToken;
+    }
 
     async loadTasks() {
         try {
@@ -24,5 +31,19 @@ export class BackendService {
         const data = await response.json();
         console.log(data);
         return data;
+    }
+
+    async postTask(taskData) {
+        let response = await fetch(this.baseURL, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                [this.csrfHeader]: this.csrfToken
+            },
+            body: JSON.stringify(taskData),
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
     }
 }
