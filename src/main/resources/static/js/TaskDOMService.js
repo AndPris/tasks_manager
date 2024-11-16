@@ -16,6 +16,7 @@ export class TaskDOMService {
         const event = {
             id: task.id,
             title: task.description,
+            priority: task.priority.name,
             start: new Date(task.finishDate),
             done: task.done,
             allDay: true,

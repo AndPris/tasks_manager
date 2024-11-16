@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const popUpWindowDOMService = new PopUpWindowDOMService;
     const backendService = new BackendService(csrfHeader, csrfToken);
     const formDOMService = new FormDOMService(popUpWindowDOMService, backendService);
-    const eventDOMService = new EventDOMService(popUpWindowDOMService, backendService);
+    const eventDOMService = new EventDOMService(popUpWindowDOMService, backendService, formDOMService);
 
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {

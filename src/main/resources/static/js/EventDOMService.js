@@ -5,10 +5,12 @@ export class EventDOMService {
     info;
     isEventDone;
     taskDOMService;
+    formDOMService;
 
-    constructor(popUpWindowDOMService, backendService) {
+    constructor(popUpWindowDOMService, backendService, formDOMService) {
         this.popUpWindowDOMService = popUpWindowDOMService;
         this.backendService = backendService;
+        this.formDOMService = formDOMService;
         this.createEditButtons(this.popUpWindowDOMService.getPopUpWindow());
     }
 
@@ -25,7 +27,7 @@ export class EventDOMService {
         this.editButtonsDiv = document.createElement("div");
         this.editButtonsDiv.classList.add("edit-buttons-div");
 
-        this.createButton('<i class="fa-solid fa-pencil"></i>\n');
+        this.createButton('<i class="fa-solid fa-pencil"></i>\n', this.displayEditForm.bind(this));
         this.createButton('<i class="fas fa-check"></i>', this.toggleTaskCheck.bind(this));
         this.createButton('<i class="fas fa-trash"></i>', this.deleteTask.bind(this));
         this.createButton('S', this.getSubtasksPage.bind(this));
@@ -92,5 +94,11 @@ export class EventDOMService {
 
     getSubtasksPage() {
         window.location.href = `/tasks/${this.getEventId()}/subtasks`;
+    }
+
+    displayEditForm() {
+        this.formDOMService.changeToEditForm(this.info);
+        this.hideEditButtons();
+        this.formDOMService.displayForm();
     }
 }
