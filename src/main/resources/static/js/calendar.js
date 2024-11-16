@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const popUpWindowDOMService = new PopUpWindowDOMService;
     const backendService = new BackendService(csrfHeader, csrfToken);
     const formDOMService = new FormDOMService(popUpWindowDOMService, backendService);
-    const eventDOMService = new EventDOMService;
+    const eventDOMService = new EventDOMService(popUpWindowDOMService, backendService);
 
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -23,11 +23,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         eventClick: function(info) {
             console.log("Event Click");
             console.log(info.event);
+            eventDOMService.displayEditButtonsOnPopUpWindow(info.event.title)
+            formDOMService.hideForm();
         },
         dateClick: function(info) {
             console.log("Date Click");
             console.log(info);
             formDOMService.displayFormOnPopUpWindow(info.dateStr);
+            eventDOMService.hideEditButtons();
         },
         eventMouseEnter: function(info) {
             info.el.style.cursor = "pointer";
