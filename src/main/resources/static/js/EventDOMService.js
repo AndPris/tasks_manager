@@ -28,7 +28,7 @@ export class EventDOMService {
         this.createButton('<i class="fa-solid fa-pencil"></i>\n');
         this.createButton('<i class="fas fa-check"></i>', this.toggleTaskCheck.bind(this));
         this.createButton('<i class="fas fa-trash"></i>', this.deleteTask.bind(this));
-        this.createButton('S');
+        this.createButton('S', this.getSubtasksPage.bind(this));
 
         destination.appendChild(this.editButtonsDiv);
     }
@@ -88,5 +88,9 @@ export class EventDOMService {
         await this.backendService.deleteTask(this.getEventId());
         this.hideEditButtons();
         this.popUpWindowDOMService.hidePopUpWindow();
+    }
+
+    getSubtasksPage() {
+        window.location.href = `/tasks/${this.getEventId()}/subtasks`;
     }
 }
