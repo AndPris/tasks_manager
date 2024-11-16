@@ -2,13 +2,15 @@ import {BackendService} from "BackendService.js"
 import {TaskDOMService} from "TaskDOMService.js"
 import {FormDOMService} from "FormDOMService.js"
 import {EventDOMService} from "EventDOMService.js";
+import {PopUpWindowDOMService} from "PopUpWindowDOMService.js";
 
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
 document.addEventListener('DOMContentLoaded', async function() {
+    const popUpWindowDOMService = new PopUpWindowDOMService;
     const backendService = new BackendService(csrfHeader, csrfToken);
-    const formDOMService = new FormDOMService(backendService);
+    const formDOMService = new FormDOMService(popUpWindowDOMService, backendService);
     const eventDOMService = new EventDOMService;
 
     var calendarEl = document.getElementById('calendar');
@@ -25,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         dateClick: function(info) {
             console.log("Date Click");
             console.log(info);
-            formDOMService.displayFormWindow(info.dateStr);
+            formDOMService.displayFormOnPopUpWindow(info.dateStr);
         },
         eventMouseEnter: function(info) {
             info.el.style.cursor = "pointer";

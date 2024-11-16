@@ -1,54 +1,35 @@
 export class FormDOMService {
     date;
     form;
-    formWindow;
-    dateDisplay;
     backendService;
     taskDOMService;
+    popUpWindowDOMService;
 
-    constructor(backendService) {
-        this.createFormWindow();
-        this.hideFormWindow();
+    constructor(popUpWindowDOMService, backendService) {
+        this.popUpWindowDOMService = popUpWindowDOMService;
         this.backendService = backendService;
+        this.createForm(this.popUpWindowDOMService.getPopUpWindow());
     }
 
     setTaskDOMService(taskDOMService) {
         this.taskDOMService = taskDOMService;
     }
 
-    hideFormWindow() {
-        this.formWindow.style.display = "none";
-    }
-
-    displayFormWindow(date) {
+    displayFormOnPopUpWindow(date) {
         this.date = date;
-        this.dateDisplay.textContent = `Selected Date: ${date}`;
-        this.formWindow.style.display = "flex";
+        this.popUpWindowDOMService.displayPopUpWindow(`Selected Date: ${date}`);
+        this.displayForm();
     }
 
-    createFormWindow() {
-        const body = document.getElementById("body");
-        this.formWindow = document.createElement("div");
-        this.formWindow.classList.add("formWindow");
-
-        this.dateDisplay = document.createElement("p");
-        this.dateDisplay.classList.add("date-display");
-        this.formWindow.appendChild(this.dateDisplay);
-
-        this.createForm();
-        this.createCloseButton();
-        body.appendChild(this.formWindow);
+    displayForm() {
+        this.form.style.display = "flex";
     }
 
-    createCloseButton() {
-        const closeButton = document.createElement("button");
-        closeButton.textContent = "X";
-        closeButton.classList.add("closeButton");
-        closeButton.addEventListener("click", () => {this.hideFormWindow()});
-        this.formWindow.appendChild(closeButton);
+    hideForm() {
+        this.form.style.display = "none";
     }
 
-    createForm() {
+    createForm(destination) {
         this.form = document.createElement("form");
         this.form.classList.add("taskForm");
 
@@ -74,7 +55,7 @@ export class FormDOMService {
 
         this.form.addEventListener("submit", this.createTask.bind(this));
 
-        this.formWindow.appendChild(this.form);
+        destination.appendChild(this.form);
     }
 
     createPriorityOptions(prioritySelect) {
