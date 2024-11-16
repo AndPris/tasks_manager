@@ -27,7 +27,7 @@ export class EventDOMService {
 
         this.createButton('<i class="fa-solid fa-pencil"></i>\n');
         this.createButton('<i class="fas fa-check"></i>', this.toggleTaskCheck.bind(this));
-        this.createButton('<i class="fas fa-trash"></i>');
+        this.createButton('<i class="fas fa-trash"></i>', this.deleteTask.bind(this));
         this.createButton('S');
 
         destination.appendChild(this.editButtonsDiv);
@@ -60,11 +60,16 @@ export class EventDOMService {
         };
     }
 
+    //PATCH
     async toggleTaskCheck() {
         this.taskDOMService.removeEvent(this.info.event);
-        const newTask = await this.backendService.patchTask(this.info.event.id, this.getEventDataForTaskCheck());
+        const newTask = await this.backendService.patchTask(this.getEventId(), this.getEventDataForTaskCheck());
         this.taskDOMService.displayTask(newTask);
         this.updateIsEventDone();
+    }
+
+    getEventId() {
+        return this.info.event.id;
     }
 
     getEventDataForTaskCheck() {
@@ -75,5 +80,13 @@ export class EventDOMService {
 
     updateIsEventDone() {
         this.isEventDone = !this.isEventDone;
+    }
+
+    //DELETE
+    async deleteTask() {
+        this.taskDOMService.removeEvent(this.info.event);
+        await this.backendService.deleteTask(this.getEventId());
+        this.hideEditButtons();
+        this.popUpWindowDOMService.hidePopUpWindow();
     }
 }

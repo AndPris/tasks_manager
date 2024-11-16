@@ -82,4 +82,18 @@ export class BackendService {
         console.log(data);
         return data;
     }
+
+    //DELETE
+    async deleteTask(taskId) {
+        let response = await fetch(`${this.baseURL}/${taskId}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                [this.csrfHeader]: this.csrfToken
+            },
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
+    }
 }
