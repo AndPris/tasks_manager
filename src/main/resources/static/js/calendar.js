@@ -1,6 +1,7 @@
 import {BackendService} from "BackendService.js"
 import {TaskDOMService} from "TaskDOMService.js"
 import {FormDOMService} from "FormDOMService.js"
+import {EventDOMService} from "EventDOMService.js";
 
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -8,6 +9,7 @@ const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttrib
 document.addEventListener('DOMContentLoaded', async function() {
     const backendService = new BackendService(csrfHeader, csrfToken);
     const formDOMService = new FormDOMService(backendService);
+    const eventDOMService = new EventDOMService;
 
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -17,9 +19,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         events: [],
         eventOrder: "done,title",
         eventClick: function(info) {
+            console.log("Event Click");
             console.log(info.event);
         },
         dateClick: function(info) {
+            console.log("Date Click");
             console.log(info);
             formDOMService.displayFormWindow(info.dateStr);
         },
@@ -29,6 +33,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         eventDrop: function(info) {
             console.log("Drop");
             console.log(info);
+            backendService.patchTask(info.event.id, eventDOMService.getEventDataDuringDragNDrop(info));
         }
     });
     calendar.render();

@@ -9,6 +9,7 @@ export class BackendService {
         this.csrfToken = csrfToken;
     }
 
+    //GET
     async loadTasks() {
         try {
             return await this.getTasks();
@@ -33,6 +34,7 @@ export class BackendService {
         return data;
     }
 
+    //POST
     async postTask(taskData) {
         let response = await fetch(this.baseURL, {
             method: "POST",
@@ -41,6 +43,36 @@ export class BackendService {
                 [this.csrfHeader]: this.csrfToken
             },
             body: JSON.stringify(taskData),
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
+    }
+
+    //PUT
+    async putTask(taskId, newTaskData) {
+        let response = await fetch(`${this.baseURL}/${taskId}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                [this.csrfHeader]: this.csrfToken
+            },
+            body: JSON.stringify(newTaskData),
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
+    }
+
+    //PATCH
+    async patchTask(taskId, newTaskData) {
+        let response = await fetch(`${this.baseURL}/${taskId}`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                [this.csrfHeader]: this.csrfToken
+            },
+            body: JSON.stringify(newTaskData),
         });
 
         if (!response.ok)
