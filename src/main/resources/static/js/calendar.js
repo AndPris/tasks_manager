@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log("Event Click");
             console.log(info.event);
             eventDOMService.displayEditButtonsOnPopUpWindow(info.event.title)
+            eventDOMService.setInfo(info);
             formDOMService.hideForm();
         },
         dateClick: function(info) {
@@ -44,6 +45,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     calendar.render();
 
     const taskDOMService = new TaskDOMService(calendar);
+
     formDOMService.setTaskDOMService(taskDOMService);
+    eventDOMService.setTaskDOMService(taskDOMService);
     taskDOMService.displayTasks(await backendService.loadTasks());
 });

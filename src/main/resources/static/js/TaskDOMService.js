@@ -53,7 +53,7 @@ export class TaskDOMService {
         return '';
     }
 
-    displayForm(dateStr) {
-
+    removeEvent(event) {
+        this.calendar.getEventById(event.id).remove();
     }
 }

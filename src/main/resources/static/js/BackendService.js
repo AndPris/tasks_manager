@@ -77,5 +77,9 @@ export class BackendService {
 
         if (!response.ok)
             throw new Error(this.defaultNetworkErrorMessage);
+
+        const data = await response.json();
+        console.log(data);
+        return data;
     }
 }
