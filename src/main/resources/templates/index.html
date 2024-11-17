@@ -17,40 +17,6 @@
 </head>
 <body id="body">
     <div id='calendar'></div>
-
-<!--    <div id="header">-->
-<!--        <form id="form">-->
-<!--            <input id="description" class="todo-input standard-input" type="text" placeholder="Add a task." name="description">-->
-<!--            <select id="priority" class="priority-input" name="priority">-->
-<!--                <option value="1">High</option>-->
-<!--                <option value="2">Medium</option>-->
-<!--                <option value="3">Low</option>-->
-<!--            </select>-->
-<!--            <input id="finishDate" class="finish-date-input" type="date" min="" name="finishDate" th:attr="min=${currentDate}">-->
-<!--            <button class="todo-btn standard-btn" type="submit">Add Task!</button>-->
-<!--        </form>-->
-
-<!--        <form class="logout-corner" method="POST" th:action="@{/logout}">-->
-<!--            <button type="submit" style="background: none; border: none; padding: 0;">-->
-<!--                <img src="/images/logout-icon.png" alt="Logout" style="width: 50px; height: 50px;">-->
-<!--            </button>-->
-<!--        </form>-->
-<!--        </div>-->
-<!--        <div>-->
-<!--            <p></p>-->
-<!--        </div>-->
-<!--        <div class="sort-buttons">-->
-<!--            <div class="search">-->
-<!--                <input id="descriptionToFind" class="todo-input standard-input" type="text" placeholder="Find a task." name="description">-->
-<!--                <button id="find-button" class="sort-button standard-button" onclick="findTask()">Find</button>-->
-<!--            </div>-->
-<!--            <button id="priority-sort-button" class="sort-button standard-button" onclick="sortTasksByPriority()">By priority</button>-->
-<!--            <button id="finish-date-sort-button" class="sort-button standard-button" onclick="sortTasksByFinishDate()">By finish date</button>-->
-<!--        </div>-->
-<!--        <div id="myUnOrdList">-->
-<!--        </div>-->
-<!--        <ul class="todo-list"></ul>-->
-
     <section class="footer">
         <a class="link" href="/">Home page</a>
     </section>
@@ -58,18 +24,15 @@
     <script type="importmap">
         {
             "imports": {
-                "backend_interaction.js" : "/js/backend_interaction.js",
-                "BackendService.js" : "/js/BackendService.js",
-                "TaskDOMService.js" : "/js/TaskDOMService.js",
-                "FormDOMService.js" : "/js/FormDOMService.js",
-                "PopUpWindowDOMService.js" : "/js/PopUpWindowDOMService.js",
-                "EventDOMService.js" : "/js/EventDOMService.js",
-                "data_validation.js" : "/js/data_validation.js",
-                "dom_interaction.js" : "/js/dom_interaction.js"
+                "BackendService.js" : "/js/taskCalendar/BackendService.js",
+                "TaskDOMService.js" : "/js/taskCalendar/TaskDOMService.js",
+                "FormDOMService.js" : "/js/taskCalendar/FormDOMService.js",
+                "PopUpWindowDOMService.js" : "/js/taskCalendar/PopUpWindowDOMService.js",
+                "EventDOMService.js" : "/js/taskCalendar/EventDOMService.js"
             }
         }
     </script>
 
-    <script type="module" src="/js/calendar.js"></script>
+    <script type="module" src="/js/taskCalendar/calendar.js"></script>
 </body>
 </html>
