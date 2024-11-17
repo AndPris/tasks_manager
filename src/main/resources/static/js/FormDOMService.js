@@ -5,7 +5,7 @@ export class FormDOMService {
     backendService;
     taskDOMService;
     popUpWindowDOMService;
-    infoToEdit;
+    eventToEdit;
     postTaskHandler;
     putTaskHandler;
 
@@ -100,13 +100,23 @@ export class FormDOMService {
         this.form.priority.value = 1;
     }
 
-    changeToEditForm(info) {
-        this.infoToEdit = info;
-        this.form.setAttribute("task-id", info.event.id);
+    changeToCreateForm() {
+        this.form.removeAttribute("task-id");
+        this.form.description.placeholder = "Add a task.";
+        this.submitButton.textContent = "Add Task!";
+        this.form.method = "post";
 
-        this.form.description.value = info.event.title;
+        this.form.removeEventListener("submit", this.putTaskHandler);
+        this.form.addEventListener("submit", this.postTaskHandler);
+    }
+
+    changeToEditForm(event) {
+        this.eventToEdit = event;
+        this.form.setAttribute("task-id", event.id);
+
+        this.form.description.value = event.title;
         this.form.description.placeholder = "Edit the task.";
-        this.form.priority.value = this.getPriorityValueByName(info.event.extendedProps.priority);
+        this.form.priority.value = this.getPriorityValueByName(event.extendedProps.priority);
         this.submitButton.textContent = "Edit Task!";
 
         this.form.method = "put";
@@ -125,14 +135,18 @@ export class FormDOMService {
     async editTask(event) {
         event.preventDefault();
         console.log(this.getTaskDataForPut());
-        this.taskDOMService.removeEvent( {id: this.infoToEdit.event.id,});
-        const newTask = await this.backendService.putTask(this.infoToEdit.event.id, this.getTaskDataForPut());
+        this.taskDOMService.removeEvent( {id: this.eventToEdit.id,});
+        const newTask = await this.backendService.putTask(this.eventToEdit.id, this.getTaskDataForPut());
         this.taskDOMService.displayTask(newTask);
+        this.clearForm();
+        this.changeToCreateForm();
+        this.hideForm();
+        this.popUpWindowDOMService.hidePopUpWindow();
     }
 
     getTaskDataForPut() {
         let data = this.getFormData();
-        data.finishDate = this.infoToEdit.event.startStr;
+        data.finishDate = this.eventToEdit.startStr;
         return data;
     }
 }

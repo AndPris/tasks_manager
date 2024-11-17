@@ -97,7 +97,7 @@ export class EventDOMService {
     }
 
     displayEditForm() {
-        this.formDOMService.changeToEditForm(this.info);
+        this.formDOMService.changeToEditForm(this.info.event);
         this.hideEditButtons();
         this.formDOMService.displayForm();
     }
