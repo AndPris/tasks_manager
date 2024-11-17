@@ -15,5 +15,4 @@ public interface TaskRepository extends PagingAndSortingRepository<Task, Long>, 
 
     @Query("SELECT t FROM Task t WHERE DATE(t.finishDate) = DATE(:finishDate) AND t.done = :done")
     List<Task> findByFinishDateAndDone(@Param("finishDate") Date finishDate, @Param("done") boolean done);
-//    Task findById(Long id);
 }

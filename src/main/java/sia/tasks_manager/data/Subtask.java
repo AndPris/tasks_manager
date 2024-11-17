@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +23,7 @@ public class Subtask {
     private String description;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Task task;
 
     @NotNull
@@ -36,6 +39,7 @@ public class Subtask {
             joinColumns = @JoinColumn(name = "subtask_id"),
             inverseJoinColumns = @JoinColumn(name = "previous_subtask_id")
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Subtask> previousSubtasks = new HashSet<>();
 
     @PrePersist
