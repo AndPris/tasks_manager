@@ -82,7 +82,7 @@ public class SubtasksRestController {
     @DeleteMapping("/subtasks/{subtaskId}")
     public ResponseEntity<?> cascadeDeleteSubtasks(@PathVariable("subtaskId") Long subtaskId) {
         subtasksService.deleteSubtaskWithDependencies(subtaskId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/tasks/{taskId}/subtasks/{subtaskId}")
