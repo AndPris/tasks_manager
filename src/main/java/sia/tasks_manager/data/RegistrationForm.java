@@ -1,21 +1,34 @@
 package sia.tasks_manager.data;
 
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import sia.tasks_manager.validation.email.ValidEmail;
+import sia.tasks_manager.validation.password.PasswordMatches;
 
 @Data
+@PasswordMatches
 public class RegistrationForm {
-    @Size(min = 4, message = "Username must be at least 4 characters long")
-    private String username;
+    @NotNull
+    @NotEmpty
+    private String firstName;
 
-    @Size(min = 4, message = "Password must be at least 4 characters long")
+    @NotNull
+    @NotEmpty
+    private String lastName;
+
+    @ValidEmail
+    private String email;
+
+    @NotNull
+    @NotEmpty
     private String password;
+    private String matchingPassword;
 
-    @Size(min = 4, message = "Full name must be at least 4 characters long")
     private String fullName;
 
     public User toUser(PasswordEncoder passwordEncoder) {
-        return new User(username, passwordEncoder.encode(password), fullName);
+        return new User(email, passwordEncoder.encode(password), firstName, lastName, fullName);
     }
 }
