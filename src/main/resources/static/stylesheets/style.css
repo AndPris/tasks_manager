@@ -110,7 +110,7 @@ body {
 
 form {
     display: flex;
-    font-size: 1.7rem;
+    font-size: 1.4rem;
     justify-content: center;
     margin: 15px 0;
     padding: 0.8rem;
@@ -119,10 +119,9 @@ form {
 
 form input {
     padding: 10px;
-    font-size: 17px;
+    font-size: 14px;
     border: none;
     outline: none;
-    /* border-radius: 15; */
     border-top-left-radius: 17px;
     border-bottom-left-radius: 17px;
     max-width: 500px;
@@ -132,7 +131,7 @@ form input {
 
 #descriptionToFind {
     padding: 10px;
-    font-size: 17px;
+    font-size: 14px;
     border: none;
     outline: none;
     border-top-left-radius: 17px;
