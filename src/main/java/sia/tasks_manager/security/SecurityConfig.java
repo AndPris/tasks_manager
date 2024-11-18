@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth.
-                requestMatchers("/tasks/**").
+                requestMatchers("/tasks/**", "/api/**").
                 access(new WebExpressionAuthorizationManager("hasRole('USER')")).
                 requestMatchers("/", "/**").access(new WebExpressionAuthorizationManager("permitAll()"))
         ).formLogin((form) -> form.
