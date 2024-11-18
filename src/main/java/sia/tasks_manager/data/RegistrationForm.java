@@ -11,24 +11,22 @@ import sia.tasks_manager.validation.password.PasswordMatches;
 @PasswordMatches
 public class RegistrationForm {
     @NotNull
-    @NotEmpty
+    @NotEmpty(message = "Provide first name")
     private String firstName;
 
     @NotNull
-    @NotEmpty
+    @NotEmpty(message = "Provide last name")
     private String lastName;
 
     @ValidEmail
     private String email;
 
     @NotNull
-    @NotEmpty
+    @NotEmpty(message = "Provide password name")
     private String password;
     private String matchingPassword;
 
-    private String fullName;
-
     public User toUser(PasswordEncoder passwordEncoder) {
-        return new User(email, passwordEncoder.encode(password), firstName, lastName, fullName);
+        return new User(email, passwordEncoder.encode(password), firstName, lastName);
     }
 }

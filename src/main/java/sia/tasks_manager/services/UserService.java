@@ -5,7 +5,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sia.tasks_manager.data.RegistrationForm;
 import sia.tasks_manager.data.User;
+import sia.tasks_manager.data.VerificationToken;
 import sia.tasks_manager.repositories.UserRepository;
+import sia.tasks_manager.repositories.VerificationTokenRepository;
 import sia.tasks_manager.validation.exceptions.UserAlreadyExistException;
 
 @Service
@@ -13,10 +15,12 @@ import sia.tasks_manager.validation.exceptions.UserAlreadyExistException;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationTokenRepository verificationTokenRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, VerificationTokenRepository verificationTokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.verificationTokenRepository = verificationTokenRepository;
     }
 
     public User registerNewUserAccount(RegistrationForm registrationForm) throws UserAlreadyExistException {
@@ -30,5 +34,22 @@ public class UserService {
 
     private boolean emailExists(String email) {
         return userRepository.findByUsername(email) != null;
+    }
+
+    public User getUser(String verificationToken) {
+        return verificationTokenRepository.findByToken(verificationToken).getUser();
+    }
+
+    public VerificationToken getVerificationToken(String verificationToken) {
+        return verificationTokenRepository.findByToken(verificationToken);
+    }
+
+    public void saveRegisteredUser(User user) {
+        userRepository.save(user);
+    }
+
+    public void createVerificationToken(User user, String token) {
+        VerificationToken myToken = new VerificationToken(token, user);
+        verificationTokenRepository.save(myToken);
     }
 }

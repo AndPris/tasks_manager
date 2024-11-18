@@ -70,6 +70,6 @@ public class NotificationService {
     private void sendEmail(String subject, User user, Task task, String deadlineState) {
         String fullName = user.getFullName();
         String taskDescription = task.getDescription();
-        emailService.sendEmail(user.getUsername(), subject, fullName, taskDescription, deadlineState);
+        emailService.sendNotificationEmail(user.getUsername(), subject, fullName, taskDescription, deadlineState);
     }
 }
