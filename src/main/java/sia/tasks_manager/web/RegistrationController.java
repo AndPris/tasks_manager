@@ -16,11 +16,15 @@ import sia.tasks_manager.data.User;
 import sia.tasks_manager.events.OnRegistrationCompleteEvent;
 import sia.tasks_manager.data.RegistrationForm;
 import sia.tasks_manager.notification.EmailService;
+import sia.tasks_manager.services.SecurityService;
 import sia.tasks_manager.services.UserService;
-import sia.tasks_manager.data.VerificationToken;
+import sia.tasks_manager.data.tokens.imp.VerificationToken;
 import sia.tasks_manager.validation.exceptions.UserAlreadyExistException;
+import sia.tasks_manager.web.dto.PasswordDto;
 
 import java.util.Calendar;
+import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping
@@ -30,11 +34,14 @@ public class RegistrationController {
     private final UserService userService;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final EmailService emailService;
+    private final SecurityService securityService;
 
-    public RegistrationController(UserService userService, ApplicationEventPublisher applicationEventPublisher, EmailService emailService) {
+    public RegistrationController(UserService userService, ApplicationEventPublisher applicationEventPublisher,
+                                  EmailService emailService, SecurityService securityService) {
         this.userService = userService;
         this.applicationEventPublisher = applicationEventPublisher;
         this.emailService = emailService;
+        this.securityService = securityService;
     }
 
     @GetMapping("/register")
@@ -115,10 +122,75 @@ public class RegistrationController {
         return "redirect:/login";
     }
 
+    @PostMapping("/resetPassword")
+    public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail,
+                                RedirectAttributes redirectAttributes) {
+        User user = userService.findUserByEmail(userEmail);
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("message", "User " + userEmail + " not found");
+            return "redirect:/login";
+        }
+
+        String token = UUID.randomUUID().toString();
+        userService.createPasswordResetTokenForUser(user, token);
+        try {
+            String url = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+            sendPasswordResetTokenEmail(url, token, user);
+        } catch (final MailAuthenticationException e) {
+            LOGGER.debug("MailAuthenticationException", e);
+            return "redirect:/emailError";
+        } catch (final Exception e) {
+            LOGGER.debug(e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            return "redirect:/login";
+        }
+
+        redirectAttributes.addFlashAttribute("message", "Password has been successfully reset.");
+        return "redirect:/login";
+    }
+
+    @GetMapping("/changePassword")
+    public String showChangePasswordPage(RedirectAttributes redirectAttributes, @RequestParam("token") String token) {
+        String result = securityService.validatePasswordResetToken(token);
+        if(result != null) {
+            redirectAttributes.addFlashAttribute("message", result);
+            return "redirect:/login";
+        } else {
+            redirectAttributes.addFlashAttribute("token", token);
+            redirectAttributes.addFlashAttribute("passwordDto", new PasswordDto());
+            return "redirect:/updatePassword";
+        }
+    }
+
+    @PostMapping("/savePassword")
+    public String savePassword(@Valid PasswordDto passwordDto, Errors errors,
+                               RedirectAttributes redirectAttributes) {
+        String result = securityService.validatePasswordResetToken(passwordDto.getToken());
+        if(result != null) {
+            redirectAttributes.addFlashAttribute("message", result);
+            return "redirect:/login";
+        }
+
+        Optional<User> user = userService.getUserByPasswordResetToken(passwordDto.getToken());
+        if(user.isPresent()) {
+            userService.changeUserPassword(user.get(), passwordDto.getNewPassword());
+            redirectAttributes.addFlashAttribute("message", "Password successfully changed!");
+            return "redirect:/login";
+        } else {
+            redirectAttributes.addFlashAttribute("message", "User not found");
+            return "redirect:/login";
+        }
+    }
 
     private void sendResetVerificationTokenEmail(String contextPath, VerificationToken newToken, User user) {
         String confirmationUrl = contextPath + "/registrationConfirm?token=" + newToken.getToken();
         String message = "New confirmation url: " + confirmationUrl;
         emailService.sendEmail(user.getUsername(), "Resend Registration Token", message);
+    }
+
+    private void sendPasswordResetTokenEmail(String contextPath, String token, User user) {
+        String url = contextPath + "/changePassword?token=" + token;
+        String message = "New confirmation url: " + url;
+        emailService.sendEmail(user.getUsername(), "Reset Password", message);
     }
 }
