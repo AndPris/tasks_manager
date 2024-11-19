@@ -11,6 +11,8 @@
 </head>
 <body class="standard" id="loginBody">
     <section class="loginContent">
+        <div th:if="${message != null}" class="alert" th:text="${message}">message</div>
+
         <p>New here? Click
             <a class="link" th:href="@{/register}">here</a> to register.</p>
 

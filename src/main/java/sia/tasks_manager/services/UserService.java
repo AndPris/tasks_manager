@@ -10,6 +10,8 @@ import sia.tasks_manager.repositories.UserRepository;
 import sia.tasks_manager.repositories.VerificationTokenRepository;
 import sia.tasks_manager.validation.exceptions.UserAlreadyExistException;
 
+import java.util.UUID;
+
 @Service
 @Transactional
 public class UserService {
@@ -51,5 +53,11 @@ public class UserService {
     public void createVerificationToken(User user, String token) {
         VerificationToken myToken = new VerificationToken(token, user);
         verificationTokenRepository.save(myToken);
+    }
+
+    public VerificationToken generateNewVerificationToken(String existingToken) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(existingToken);
+        verificationToken.updateToken(UUID.randomUUID().toString());
+        return verificationTokenRepository.save(verificationToken);
     }
 }

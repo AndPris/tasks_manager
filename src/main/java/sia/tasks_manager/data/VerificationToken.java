@@ -15,6 +15,7 @@ public class VerificationToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
     private String token;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
@@ -48,6 +49,11 @@ public class VerificationToken {
 
         this.token = token;
         this.user = user;
+        this.expiryDate = calculateExpiryDate(EXPIRATION);
+    }
+
+    public void updateToken(String token) {
+        this.token = token;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
 }
