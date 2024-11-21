@@ -12,6 +12,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sia.tasks_manager.data.GenericResponse;
 import sia.tasks_manager.data.User;
 import sia.tasks_manager.events.OnRegistrationCompleteEvent;
 import sia.tasks_manager.data.RegistrationForm;
@@ -123,30 +124,17 @@ public class RegistrationController {
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail,
-                                RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public GenericResponse resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
         User user = userService.findUserByEmail(userEmail);
-        if (user == null) {
-            redirectAttributes.addFlashAttribute("message", "User " + userEmail + " not found");
-            return "redirect:/login";
-        }
+        if (user == null)
+            return new GenericResponse("User " + userEmail + " not found", "User not found");
 
         String token = UUID.randomUUID().toString();
         userService.createPasswordResetTokenForUser(user, token);
-        try {
-            String url = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-            sendPasswordResetTokenEmail(url, token, user);
-        } catch (final MailAuthenticationException e) {
-            LOGGER.debug("MailAuthenticationException", e);
-            return "redirect:/emailError";
-        } catch (final Exception e) {
-            LOGGER.debug(e.getMessage(), e);
-            redirectAttributes.addFlashAttribute("message", e.getMessage());
-            return "redirect:/login";
-        }
-
-        redirectAttributes.addFlashAttribute("message", "Password has been successfully reset.");
-        return "redirect:/login";
+        String url = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        sendPasswordResetTokenEmail(url, token, user);
+        return new GenericResponse("Password reset token generated. Check your email", null);
     }
 
     @GetMapping("/changePassword")
