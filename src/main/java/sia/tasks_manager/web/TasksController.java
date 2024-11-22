@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import sia.tasks_manager.data.Task;
 import sia.tasks_manager.repositories.TaskRepository;
 
+import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/tasks")
@@ -25,8 +27,12 @@ public class TasksController {
     }
 
     @GetMapping("/{taskId}/subtasks")
-    public String viewSubtasksPage(@PathVariable Long taskId, Model model) {
-        Task task = taskRepository.findById(taskId).get();
+    public String viewSubtasksPage(@PathVariable Long taskId, Model model, Principal user) {
+        Optional<Task> optionalTask = taskRepository.findByIdAndUserUsername(taskId, user.getName());
+        if(optionalTask.isEmpty())
+            return "notFound";
+
+        Task task = optionalTask.get();
         model.addAttribute("taskId", taskId);
         model.addAttribute("description", task.getDescription());
         model.addAttribute("creationTime", task.getCreationTime());
