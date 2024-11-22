@@ -2,6 +2,8 @@ package sia.tasks_manager.data.tokens;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import sia.tasks_manager.data.User;
 
 import java.sql.Timestamp;
@@ -22,6 +24,7 @@ public abstract class Token {
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     @Getter
+    @OnDelete(action = OnDeleteAction.CASCADE)
     protected User user;
 
     @Getter
