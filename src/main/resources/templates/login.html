@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login</title>
 
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/stylesheets/style.css">
@@ -11,6 +11,9 @@
 </head>
 <body class="standard" id="loginBody">
     <section class="loginContent">
+        <div th:if="${param.message}" class="alert" th:text="${param.message}">message</div>
+        <div th:if="${message != null}" class="alert" th:text="${message}">message</div>
+
         <p>New here? Click
             <a class="link" th:href="@{/register}">here</a> to register.</p>
 
@@ -31,6 +34,8 @@
 
             <input id="loginSubmit" type="submit" value="Login"/>
         </form>
+
+        <a class="link" th:href="@{/forgotPassword}">Forgot password</a>
     </section>
 </body>
 </html>

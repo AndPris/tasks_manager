@@ -1,13 +1,7 @@
 package sia.tasks_manager.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +12,6 @@ import java.util.Collection;
 @Entity
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-@RequiredArgsConstructor
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
 
@@ -27,8 +20,19 @@ public class User implements UserDetails {
     private Long id;
 
     private final String username;
-    private final String password;
-    private final String fullName;
+    private String password;
+    private final String firstName;
+    private final String lastName;
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    public User(String username, String password, String firstName, String lastName) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -52,6 +56,10 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 }

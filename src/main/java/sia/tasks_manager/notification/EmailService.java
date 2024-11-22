@@ -2,6 +2,7 @@ package sia.tasks_manager.notification;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class EmailService {
         this.templateEngine = templateEngine;
     }
 
-    public void sendEmail(String to, String subject, String fullName, String taskDescription, String deadlineState) {
+    public void sendNotificationEmail(String to, String subject, String fullName, String taskDescription, String deadlineState) {
         Context context = new Context();
         context.setVariable("fullName", fullName);
         context.setVariable("taskDescription", taskDescription);
@@ -41,6 +42,14 @@ public class EmailService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
 
+    public void sendEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(emailSender);
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
     }
 }

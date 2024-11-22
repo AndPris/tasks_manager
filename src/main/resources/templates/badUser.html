@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bad user</title>
+</head>
+<body>
+    <h1 th:text="${message}">Error Message</h1>
+    <a th:href="@{/register}">Sign up</a>
+    <div th:if="${expired}">
+        <h1>resend</h1>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script th:inline="javascript">
+            let serverContext = [[@{/}]];
+            let token = [[${token}]];
+
+            function resendToken() {
+                $.get(serverContext + "resendRegistrationToken?token="+token, function(data){
+                    window.location.href = serverContext +"login";
+                })
+                    .fail(function(data) {
+                        if(data.responseJSON.error.indexOf("MailError") > -1)
+                        {
+                            window.location.href = serverContext + "emailError.html";
+                        }
+                        else{
+                            window.location.href = serverContext + "login?message=" + data.responseJSON.message;
+                        }
+                    });
+            }
+
+            $(document).ajaxStart(function() {
+                $("title").html("LOADING ...");
+            });
+        </script>
+        <button onclick="resendToken()">resend</button>
+    </div>
+</body>
+</html>

@@ -9,15 +9,29 @@
 </head>
 <body class="standard" id="loginBody">
     <section class="loginContent">
-        <p>Already have an account? Click
-            <a class="link" th:href="@{/login}">here</a> to log in.</p>
-
         <form method="POST" th:action="@{/register}" th:object="${registrationForm}" id="registerForm">
-            <label for="username">Username: </label>
-            <input id="username" type="text" name="username" th:field="*{username}"/>
-            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="alert alert-error">
-                Invalid username.
+            <label for="firstName">First name: </label>
+            <input id="firstName" type="text" name="firstName" th:field="*{firstName}"/>
+            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="alert alert-error">
+                Invalid first name.
             </div>
+            <br/>
+
+            <label for="lastName">Last name: </label>
+            <input id="lastName" type="text" name="lastName" th:field="*{lastName}"/>
+            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="alert alert-error">
+                Invalid last name.
+            </div>
+            <br/>
+
+            <label for="email">Email: </label>
+            <input id="email" type="email" name="email" th:field="*{email}"/>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="alert alert-error">
+                Invalid email has error.
+            </div>
+            <p th:text="${message}" class="alert alert-error">
+                Message.
+            </p>
             <br/>
 
             <label for="password">Password: </label>
@@ -27,15 +41,16 @@
             </div>
             <br/>
 
-            <label for="fullName">Full name: </label>
-            <input id="fullName" type="text" name="fullName" th:field="*{fullName}"/>
-            <div th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" class="alert alert-error">
-                Invalid full name.
+            <label for="matchingPassword">Confirm password: </label>
+            <input id="matchingPassword" type="password" name="matchingPassword" th:field="*{matchingPassword}"/>
+            <div th:if="${#fields.hasGlobalErrors()}" th:text="${#fields.globalErrors()[0]}" class="alert alert-error">
             </div>
             <br/>
-
             <input id="registerSubmit" type="submit" value="Register"/>
         </form>
+
+        <p>Already have an account? Click
+            <a class="link" th:href="@{/login}">here</a> to log in.</p>
     </section>
 </body>
 </html>
