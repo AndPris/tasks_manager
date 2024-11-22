@@ -128,7 +128,7 @@ public class RegistrationController {
     public GenericResponse resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
         User user = userService.findUserByEmail(userEmail);
         if (user == null)
-            return new GenericResponse("User " + userEmail + " not found", "User not found");
+            return new GenericResponse("User " + userEmail + " not found", null);
 
         String token = UUID.randomUUID().toString();
         userService.createPasswordResetTokenForUser(user, token);
@@ -151,22 +151,18 @@ public class RegistrationController {
     }
 
     @PostMapping("/savePassword")
-    public String savePassword(@Valid PasswordDto passwordDto, Errors errors,
-                               RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public GenericResponse savePassword(@Valid PasswordDto passwordDto, Errors errors) {
         String result = securityService.validatePasswordResetToken(passwordDto.getToken());
-        if(result != null) {
-            redirectAttributes.addFlashAttribute("message", result);
-            return "redirect:/login";
-        }
+        if(result != null)
+            return new GenericResponse(result, null);
 
         Optional<User> user = userService.getUserByPasswordResetToken(passwordDto.getToken());
         if(user.isPresent()) {
             userService.changeUserPassword(user.get(), passwordDto.getNewPassword());
-            redirectAttributes.addFlashAttribute("message", "Password successfully changed!");
-            return "redirect:/login";
+            return new GenericResponse("Password has been successfully changed", null);
         } else {
-            redirectAttributes.addFlashAttribute("message", "User not found");
-            return "redirect:/login";
+            return new GenericResponse("User not found", null);
         }
     }
 

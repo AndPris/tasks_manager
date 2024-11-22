@@ -16,8 +16,8 @@ public class SecurityService {
 
     public String validatePasswordResetToken(String token) {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
-        return !isTokenFound(passwordResetToken) ? "invalidToken"
-                : isTokenExpired(passwordResetToken) ? "expired"
+        return !isTokenFound(passwordResetToken) ? "Invalid token"
+                : isTokenExpired(passwordResetToken) ? "Token expired"
                 : null;
     }
 
