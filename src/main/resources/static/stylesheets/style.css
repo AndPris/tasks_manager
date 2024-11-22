@@ -5,7 +5,6 @@
 }
 
 body {
-    /* #363532, rgb(88, 111, 112) */
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -484,15 +483,7 @@ input::-webkit-inner-spin-button {
     color: red;
 }
 
-.logout-corner {
-    display: flex;
-    justify-content: flex-end;
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 10px;
-    z-index: 100;
-}
+
 
 .timeGraph {
     background-color: white;
