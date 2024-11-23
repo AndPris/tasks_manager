@@ -8,7 +8,7 @@
 
 </head>
 <body class="content-holder">
-    <div>
+    <div class="error-holder">
         <h1 class="alert-error" th:text="${message}">Error Message</h1>
         <a class="link" th:href="@{/register}">Sign up</a>
         <div th:if="${expired}">
