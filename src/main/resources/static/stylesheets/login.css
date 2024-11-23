@@ -13,7 +13,7 @@
     font-size: 24px;
 }
 
-#loginForm {
+#loginForm, #registerForm {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,7 +24,7 @@
     padding: 0.8rem;
 }
 
-.text-input {
+.text-input, .name-text-input {
     margin-top: 8px;
     border-radius: 17px;
     padding: 10px;
@@ -32,6 +32,10 @@
     border: none;
     outline: none;
     width: 450px;
+}
+
+.name-text-input {
+    width: 200px;
 }
 
 .password-label {
@@ -43,7 +47,7 @@
     font-size: 1.2rem;
 }
 
-#loginSubmit {
+#loginSubmit, #registerSubmit {
     background-color: rgb(247, 226, 223);
     color: rgb(0, 0, 0);
     width: 20%;
@@ -53,8 +57,22 @@
     min-width: 100px;
 }
 
-#loginSubmit:hover {
+#loginSubmit:hover, #registerSubmit:hover {
     cursor: pointer;
     background-color: white;
     box-shadow: #fff8 0 0 10px;
+}
+
+.name-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.little-font {
+    font-size: 1rem;
+}
+
+.loginContent > p {
+    margin: 16px 0;
 }

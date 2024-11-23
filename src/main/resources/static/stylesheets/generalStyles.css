@@ -37,3 +37,7 @@ body {
 footer {
     margin: 16px;
 }
+
+.alert-error {
+    color: red;
+}
