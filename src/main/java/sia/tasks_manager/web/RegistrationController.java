@@ -174,7 +174,7 @@ public class RegistrationController {
 
     private void sendPasswordResetTokenEmail(String contextPath, String token, User user) {
         String url = contextPath + "/changePassword?token=" + token;
-        String message = "New confirmation url: " + url;
+        String message = "Reset password url: " + url;
         emailService.sendEmail(user.getUsername(), "Reset Password", message);
     }
 }

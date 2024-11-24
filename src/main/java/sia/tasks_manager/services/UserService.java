@@ -73,7 +73,14 @@ public class UserService {
     }
 
     public void createPasswordResetTokenForUser(User user, String token) {
-        PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
+        Optional<PasswordResetToken> optionalPasswordResetToken = passwordResetTokenRepository.findByUserId(user.getId());
+        PasswordResetToken passwordResetToken;
+        if (optionalPasswordResetToken.isPresent()) {
+            passwordResetToken = optionalPasswordResetToken.get();
+            passwordResetToken.updateToken(token);
+        } else {
+            passwordResetToken = new PasswordResetToken(token, user);
+        }
         passwordResetTokenRepository.save(passwordResetToken);
     }
 
