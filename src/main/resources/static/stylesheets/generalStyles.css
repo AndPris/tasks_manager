@@ -42,8 +42,18 @@ footer {
     color: red;
 }
 
+.alert {
+    margin-top: 32px;
+}
+
 .error-holder {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.links-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
 }
