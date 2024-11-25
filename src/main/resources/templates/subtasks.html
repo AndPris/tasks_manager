@@ -25,12 +25,12 @@
 
         <form id="form" class="subtask-form">
             <input id="description" class="subtask-input" type="text" minlength="1" maxlength="30" placeholder="Subtask description" name="description" required>
-            <select id="previous-subtasks" multiple="multiple" class="previous-subtasks-input" name="previous-subtasks"></select>
+            <select id="previous-subtasks" multiple="multiple" class="previous-subtasks-select" name="previous-subtasks"></select>
             <input id="duration" class="duration-input" type="number" placeholder="Enter duration" min="1" name="duration" required>
             <button class="submit-button" type="submit">Add Subtask!</button>
         </form>
 
-        <ul class="subtasks-container"></ul>
+        <ul id="subtasks-container" class="subtasks-container"></ul>
 
         <div>
             <button id="backward-button" class="action-button" onclick="goBackward()"><</button>
@@ -45,24 +45,21 @@
     <div></div>
 
     <section class="footer">
-
         <div id="timeGraph" class="timeGraph"></div>
-
         <a class="link" href="/tasks">Tasks calendar</a>
     </section>
 
 <script type="importmap">
     {
         "imports": {
-                "backend_interaction.js" : "/js/backend_interaction.js",
-                "data_validation.js" : "/js/data_validation.js",
-                "dom_interaction.js" : "/js/dom_interaction.js",
-                "subtasks.js" : "/js/subtasks.js",
-                "graph.js" : "/js/graph.js"
+            "SubtaskBackendService.js" : "/js/subtasks/SubtaskBackendService.js",
+            "SubtaskDOMService.js" : "/js/subtasks/SubtaskDOMService.js",
+            "SubtaskController.js" : "/js/subtasks/SubtaskController.js",
+            "graph.js" : "/js/subtasks/graph.js"
         }
     }
 </script>
 
-<script type="module" src="/js/subtasks_main.js"></script>
+<script type="module" src="/js/subtasks/subtasks_main.js"></script>
 </body>
 </html>
