@@ -483,8 +483,7 @@ input::-webkit-inner-spin-button {
     color: red;
 }
 
-
-
 .timeGraph {
     background-color: white;
+    margin-bottom: 16px;
 }

@@ -16,6 +16,8 @@ export class Graph {
     textMargin = 0.2;
     shiftUp = 1;
     defaultColor = "black";
+    todayColor = "green";
+    today;
 
 
     constructor(processes, creationTime, destination) {
@@ -23,6 +25,8 @@ export class Graph {
         this.creationTime = creationTime;
         this.creationTime.setHours(0, 0, 0, 0);
         this.destination = destination;
+        this.today = new Date();
+        this.today.setHours(0, 0, 0, 0);
     }
 
     draw() {
@@ -57,7 +61,8 @@ export class Graph {
             .call(g => g.selectAll(".domain, .tick line")
                 .attr("stroke", this.defaultColor))
             .call(g => g.selectAll(".tick text")
-                .attr("fill", this.defaultColor));
+                .attr("fill", d => (d.getTime() === this.today.getTime() ? this.todayColor : this.defaultColor))
+                .style("font-weight", d => (d.getTime() === this.today.getTime() ? "bold" : "normal")));
 
         this.svg.append("g")
             .attr("transform", `translate(${this.marginLeft},0)`)
@@ -76,7 +81,8 @@ export class Graph {
             .attr("x2", d => this.x(d))
             .attr("y1", this.marginTop)
             .attr("y2", this.height - this.marginBottom)
-            .attr("stroke", "black")
+            .attr("stroke", d => (d.getTime() === this.today.getTime() ? this.todayColor : this.defaultColor))
+            .attr("stroke-width", d => (d.getTime() === this.today.getTime() ? 2 : 1))
             .attr("stroke-dasharray", "4 2")
             .attr("stroke-opacity", 0.5);
     }

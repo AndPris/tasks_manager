@@ -71,7 +71,7 @@
     margin: 0;
 }
 
-.submit-button {
+.submit-button, #plan-button {
     border-radius: 15px;
     margin-left: 16px;
     padding: 10px;
@@ -80,9 +80,13 @@
     background-color: #ead7d7;
 }
 
-.submit-button:hover {
+.submit-button:hover, #plan-button:hover {
     background-color: white;
     cursor: pointer;
+}
+
+#plan-button {
+    margin: 0;
 }
 
 .subtasks-container {
@@ -160,4 +164,5 @@
 
 .timeGraph {
     background-color: white;
+    margin-bottom: 16px;
 }

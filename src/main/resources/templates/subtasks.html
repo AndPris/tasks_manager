@@ -30,19 +30,22 @@
             <button class="submit-button" type="submit">Add Subtask!</button>
         </form>
 
-    <!--    <button id="plan-button" onclick="plan()">Plan!</button>-->
-
         <ul class="subtasks-container"></ul>
 
         <div>
-            <button id="backward-button" class="sort-button action-button" onclick="goBackward()"><</button>
-            <button id="forward-button" class="sort-button action-button" onclick="goForward()">></button>
+            <button id="backward-button" class="action-button" onclick="goBackward()"><</button>
+            <button id="forward-button" class="action-button" onclick="goForward()">></button>
+        </div>
+
+        <div class="plan-button-container">
+            <button id="plan-button" onclick="plan()">Plan!</button>
         </div>
     </div>
 
     <div></div>
 
     <section class="footer">
+
         <div id="timeGraph" class="timeGraph"></div>
 
         <a class="link" href="/tasks">Tasks calendar</a>

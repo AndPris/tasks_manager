@@ -23,25 +23,12 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return username -> {
-//            boolean enabled = true;
-//            boolean accountNonExpired = true;
-//            boolean credentialsNonExpired = true;
-//            boolean accountNonLocked = true;
-
             try {
                 User user = userRepository.findByUsername(username);
                 if (user == null)
                     throw new UsernameNotFoundException("User '" + username + "' not found");
 
                 return user;
-//                return new org.springframework.security.core.userdetails.User(
-//                        user.getUsername(),
-//                        user.getPassword().toLowerCase(),
-//                        user.isEnabled(),
-//                        accountNonExpired,
-//                        credentialsNonExpired,
-//                        accountNonLocked,
-//                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
