@@ -13,7 +13,7 @@ const pageSize = 5;
 let pageNumber = 0;
 const baseURL = `/api/tasks/${taskId}/subtasks`;
 const defaultNetworkErrorMessage = "Network response was not ok";
-const toDoList = document.querySelector(".todo-list");
+const toDoList = document.querySelector(".subtasks-container");
 
 
 
@@ -109,7 +109,7 @@ export async function goBackward() {
 }
 
 function displaySubtasks(subtasks) {
-    clearChildren(".todo-list");
+    clearChildren(".subtasks-container");
     clearChildren(".previous-subtasks-input");
     subtasks.forEach((subtask) => {displaySubtask(subtask)});
 }
@@ -119,19 +119,19 @@ function displaySubtask(subtask) {
     const descriptionDiv = document.createElement("div");
     const buttonsDiv = document.createElement("div");
 
-    subtaskLi.classList.add("todo", `standard-todo`);
+    subtaskLi.classList.add("subtask",);
     subtaskLi.setAttribute("id", subtask.id);
     if (subtask.done) subtaskLi.classList.add("completed");
 
-    descriptionDiv.classList.add("todo-left-div");
-    buttonsDiv.classList.add("todo-buttons-div");
+    descriptionDiv.classList.add("subtask-left-div");
+    buttonsDiv.classList.add("subtask-buttons-div");
 
     const description = document.createElement("div");
     const duration = document.createElement("div");
 
     description.innerText = subtask.description;
-    description.classList.add("todo-item");
-    description.classList.add("todo-item-description");
+    description.classList.add("subtask-div");
+    description.classList.add("subtask-description");
     descriptionDiv.appendChild(description);
 
     if(hasPreviousSubtasks(subtask))
@@ -140,24 +140,24 @@ function displaySubtask(subtask) {
     subtaskLi.appendChild(descriptionDiv);
 
     duration.innerText = subtask.duration;
-    duration.classList.add("todo-item");
+    duration.classList.add("subtask-div");
     subtaskLi.appendChild(duration);
 
     const editButton = document.createElement("button");
     editButton.innerHTML = '<i class="fa-solid fa-pencil"></i>\n';
-    editButton.classList.add("edit-btn", `standard-button`);
+    editButton.classList.add(`action-button`);
     editButton.addEventListener("click", editSubtask);
     buttonsDiv.appendChild(editButton);
 
     const checkedButton = document.createElement("button");
     checkedButton.innerHTML = '<i class="fas fa-check"></i>';
-    checkedButton.classList.add("check-btn", `standard-button`);
+    checkedButton.classList.add(`action-button`);
     checkedButton.addEventListener("click", checkSubtask);
     buttonsDiv.appendChild(checkedButton);
 
     const deleteButton = document.createElement("button");
     deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-    deleteButton.classList.add("delete-btn", `standard-button`);
+    deleteButton.classList.add(`action-button`);
     deleteButton.addEventListener("click", deleteSubtaskFromDB);
     buttonsDiv.appendChild(deleteButton);
 
