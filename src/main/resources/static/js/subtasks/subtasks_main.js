@@ -1,5 +1,3 @@
-// import {loadSubtasks, goForward, goBackward, addSubtaskToDB, plan} from 'subtasks.js';
-
 import {SubtaskBackendService} from "SubtaskBackendService.js";
 import {SubtaskDOMService} from "SubtaskDOMService.js";
 import {PaginationButtonsDOMService} from "PaginationButtonsDOMService.js";
@@ -25,6 +23,6 @@ await subtaskController.loadSubtasks();
 //
 // await loadSubtasks();
 //
-// window.goForward = goForward;
-// window.goBackward = goBackward;
+window.goForward = subtaskController.goForward.bind(subtaskController);
+window.goBackward = subtaskController.goBackward.bind(subtaskController);
 // window.plan = plan;

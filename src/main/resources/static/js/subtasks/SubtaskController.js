@@ -21,4 +21,13 @@ export class SubtaskController {
         this.subtaskDOMService.populatePossiblePreviousSubtasks(subtasks);
     }
 
+    async goForward() {
+        this.subtaskBackendService.nextPage();
+        await this.loadSubtasks()
+    }
+
+    async goBackward() {
+        this.subtaskBackendService.previousPage();
+        await this.loadSubtasks()
+    }
 }

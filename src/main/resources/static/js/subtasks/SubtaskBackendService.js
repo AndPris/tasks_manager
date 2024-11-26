@@ -15,6 +15,13 @@ export class SubtaskBackendService {
         this.pageNumber = 0;
     }
 
+    nextPage() {
+        this.pageNumber += 1;
+    }
+
+    previousPage() {
+        this.pageNumber -= 1;
+    }
 
     //GET
     async loadSubtasks(queryString) {
