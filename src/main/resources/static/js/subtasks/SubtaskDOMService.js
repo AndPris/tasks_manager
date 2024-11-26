@@ -82,4 +82,16 @@ export class SubtaskDOMService {
         button.addEventListener("click", onClick);
         return button;
     }
+
+
+    async populatePossiblePreviousSubtasks(subtasks) {
+        subtasks.forEach((subtask) => {this.previousSubtasksSelect.appendChild(this.getPreviousSubtaskOption(subtask))});
+    }
+
+    getPreviousSubtaskOption(subtask) {
+        const option = document.createElement("option");
+        option.value = subtask.id;
+        option.textContent = subtask.description;
+        return option;
+    }
 }

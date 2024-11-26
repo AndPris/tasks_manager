@@ -44,4 +44,9 @@ export class SubtaskBackendService {
         const data = await response.json();
         return [data._embedded ? data._embedded.subtaskDTOes : [], data.page];
     }
+
+    async getAllSubtasks() {
+        const [subtasks, pageInfo] = await this.getSubtasks('?all=true');
+        return subtasks;
+    }
 }
