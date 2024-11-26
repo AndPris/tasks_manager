@@ -7,10 +7,10 @@ export class SubtaskDOMService {
         this.previousSubtasksSelect = previousSubtasksSelect;
     }
 
-    displaySubtasks(subtasks, deleteHandler) {
+    displaySubtasks(subtasks, checkHandler, deleteHandler) {
         this.clearChildren(this.subtasksContainer);
         this.clearChildren(this.previousSubtasksSelect);
-        subtasks.forEach((subtask) => {this.displaySubtask(subtask, deleteHandler)});
+        subtasks.forEach((subtask) => {this.displaySubtask(subtask, checkHandler, deleteHandler)});
     }
 
     clearChildren(element) {
@@ -18,7 +18,7 @@ export class SubtaskDOMService {
             element.removeChild(element.firstChild);
     }
 
-    displaySubtask(subtask, deleteHandler) {
+    displaySubtask(subtask, checkHandler, deleteHandler) {
         const subtaskLi = document.createElement("li");
         const descriptionDiv = document.createElement("div");
         const buttonsDiv = document.createElement("div");
@@ -52,8 +52,18 @@ export class SubtaskDOMService {
         // buttonsDiv.appendChild(this.createButton('<i class="fas fa-check"></i>', checkSubtask));
         // buttonsDiv.appendChild(this.createButton('<i class="fas fa-trash"></i>', deleteSubtaskFromDB));
         buttonsDiv.appendChild(this.createButton('<i class="fa-solid fa-pencil"></i>'));
-        buttonsDiv.appendChild(this.createButton('<i class="fas fa-check"></i>'));
-        buttonsDiv.appendChild(this.createButton('<i class="fas fa-trash"></i>', subtask.id, deleteHandler));
+
+        const checkButton = this.createButton('<i class="fas fa-check"></i>');
+        checkButton.addEventListener("click", (event) => {
+            checkHandler(subtask.id, this.getSubtaskDataForPatch(subtask));
+        });
+        buttonsDiv.appendChild(checkButton);
+
+        const deleteButton = this.createButton('<i class="fas fa-trash"></i>');
+        deleteButton.addEventListener("click", (event) => {
+            deleteHandler(subtask.id);
+        });
+        buttonsDiv.appendChild(deleteButton);
 
         subtaskLi.appendChild(buttonsDiv);
         this.subtasksContainer.appendChild(subtaskLi);
@@ -75,16 +85,18 @@ export class SubtaskDOMService {
         destination.appendChild(previousSubtasksDiv);
     }
 
-    createButton(innerHTML, subtaskId, onClickHandler) {
+    createButton(innerHTML) {
         const button = document.createElement("button");
         button.innerHTML = innerHTML;
         button.classList.add("action-button");
-        button.addEventListener("click", (event) => {
-            onClickHandler(subtaskId);
-        });
         return button;
     }
 
+    getSubtaskDataForPatch(subtask) {
+        return {
+            done: !subtask.done
+        };
+    }
 
     async populatePossiblePreviousSubtasks(subtasks) {
         subtasks.forEach((subtask) => {this.previousSubtasksSelect.appendChild(this.getPreviousSubtaskOption(subtask))});

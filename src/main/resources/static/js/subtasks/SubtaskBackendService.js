@@ -72,4 +72,20 @@ export class SubtaskBackendService {
         if (!response.ok)
             throw new Error(this.defaultNetworkErrorMessage);
     }
+
+
+    //PATCH
+    async patchSubtask(subtaskId, data) {
+        let response = await fetch(`/api/subtasks/${subtaskId}`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                [this.csrfHeader]: this.csrfToken
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
+    }
 }

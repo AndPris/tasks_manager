@@ -13,8 +13,9 @@ export class SubtaskController {
     //GET
     async loadSubtasks() {
         let [subtasks, pageInfo] = await this.subtaskBackendService.loadSubtasks();
+        const checkHandler = this.checkSubtask.bind(this);
         const deleteHandler = this.deleteSubtaskFromDB.bind(this);
-        this.subtaskDOMService.displaySubtasks(subtasks, deleteHandler);
+        this.subtaskDOMService.displaySubtasks(subtasks, checkHandler, deleteHandler);
         await this.populatePossiblePreviousSubtasks();
         this.paginationButtonsDOMService.updatePaginationButtons(pageInfo);
     }
@@ -39,6 +40,17 @@ export class SubtaskController {
     async deleteSubtaskFromDB(subtaskId) {
         try {
             await this.subtaskBackendService.deleteSubtask(subtaskId);
+            await this.loadSubtasks();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
+    //PATCH
+    async checkSubtask(subtaskId, subtaskDataForPatch) {
+        try {
+            await this.subtaskBackendService.patchSubtask(subtaskId, subtaskDataForPatch);
             await this.loadSubtasks();
         } catch (err) {
             console.log(err);
