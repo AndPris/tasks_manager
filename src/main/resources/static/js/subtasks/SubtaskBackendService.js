@@ -23,6 +23,7 @@ export class SubtaskBackendService {
         this.pageNumber -= 1;
     }
 
+
     //GET
     async loadSubtasks(queryString) {
         queryString = queryString ? queryString : this.getDefaultQueryString();
@@ -55,5 +56,20 @@ export class SubtaskBackendService {
     async getAllSubtasks() {
         const [subtasks, pageInfo] = await this.getSubtasks('?all=true');
         return subtasks;
+    }
+
+
+    //DELETE
+    async deleteSubtask(subtaskId) {
+        let response = await fetch(`/api/subtasks/${subtaskId}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                [this.csrfHeader]: this.csrfToken
+            },
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
     }
 }

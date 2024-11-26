@@ -7,10 +7,10 @@ export class SubtaskDOMService {
         this.previousSubtasksSelect = previousSubtasksSelect;
     }
 
-    displaySubtasks(subtasks) {
+    displaySubtasks(subtasks, deleteHandler) {
         this.clearChildren(this.subtasksContainer);
         this.clearChildren(this.previousSubtasksSelect);
-        subtasks.forEach((subtask) => {this.displaySubtask(subtask)});
+        subtasks.forEach((subtask) => {this.displaySubtask(subtask, deleteHandler)});
     }
 
     clearChildren(element) {
@@ -18,7 +18,7 @@ export class SubtaskDOMService {
             element.removeChild(element.firstChild);
     }
 
-    displaySubtask(subtask) {
+    displaySubtask(subtask, deleteHandler) {
         const subtaskLi = document.createElement("li");
         const descriptionDiv = document.createElement("div");
         const buttonsDiv = document.createElement("div");
@@ -53,7 +53,7 @@ export class SubtaskDOMService {
         // buttonsDiv.appendChild(this.createButton('<i class="fas fa-trash"></i>', deleteSubtaskFromDB));
         buttonsDiv.appendChild(this.createButton('<i class="fa-solid fa-pencil"></i>'));
         buttonsDiv.appendChild(this.createButton('<i class="fas fa-check"></i>'));
-        buttonsDiv.appendChild(this.createButton('<i class="fas fa-trash"></i>'));
+        buttonsDiv.appendChild(this.createButton('<i class="fas fa-trash"></i>', subtask.id, deleteHandler));
 
         subtaskLi.appendChild(buttonsDiv);
         this.subtasksContainer.appendChild(subtaskLi);
@@ -75,11 +75,13 @@ export class SubtaskDOMService {
         destination.appendChild(previousSubtasksDiv);
     }
 
-    createButton(innerHTML, onClick) {
+    createButton(innerHTML, subtaskId, onClickHandler) {
         const button = document.createElement("button");
         button.innerHTML = innerHTML;
         button.classList.add("action-button");
-        button.addEventListener("click", onClick);
+        button.addEventListener("click", (event) => {
+            onClickHandler(subtaskId);
+        });
         return button;
     }
 

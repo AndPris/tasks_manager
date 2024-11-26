@@ -9,9 +9,12 @@ export class SubtaskController {
         this.paginationButtonsDOMService = paginationButtonsDOMService;
     }
 
+
+    //GET
     async loadSubtasks() {
         let [subtasks, pageInfo] = await this.subtaskBackendService.loadSubtasks();
-        this.subtaskDOMService.displaySubtasks(subtasks);
+        const deleteHandler = this.deleteSubtaskFromDB.bind(this);
+        this.subtaskDOMService.displaySubtasks(subtasks, deleteHandler);
         await this.populatePossiblePreviousSubtasks();
         this.paginationButtonsDOMService.updatePaginationButtons(pageInfo);
     }
@@ -29,5 +32,16 @@ export class SubtaskController {
     async goBackward() {
         this.subtaskBackendService.previousPage();
         await this.loadSubtasks()
+    }
+
+
+    //DELETE
+    async deleteSubtaskFromDB(subtaskId) {
+        try {
+            await this.subtaskBackendService.deleteSubtask(subtaskId);
+            await this.loadSubtasks();
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
