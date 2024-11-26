@@ -27,4 +27,9 @@ export class PaginationButtonsDOMService {
         else
             return [0, 1];
     }
+
+    hidePaginationButtons() {
+        this.backwardButton.style.display = "none";
+        this.forwardButton.style.display = "none";
+    }
 }

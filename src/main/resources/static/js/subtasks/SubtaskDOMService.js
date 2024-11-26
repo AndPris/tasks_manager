@@ -7,12 +7,12 @@ export class SubtaskDOMService {
         this.subtasksContainer = subtasksContainer;
     }
 
-    displaySubtasks(subtasks, checkHandler, deleteHandler) {
+    displaySubtasks(subtasks, editHandler, checkHandler, deleteHandler) {
         clearChildren(this.subtasksContainer);
-        subtasks.forEach((subtask) => {this.displaySubtask(subtask, checkHandler, deleteHandler)});
+        subtasks.forEach((subtask) => {this.displaySubtask(subtask, editHandler, checkHandler, deleteHandler)});
     }
 
-    displaySubtask(subtask, checkHandler, deleteHandler) {
+    displaySubtask(subtask, editHandler, checkHandler, deleteHandler) {
         const subtaskLi = document.createElement("li");
         const descriptionDiv = document.createElement("div");
         const buttonsDiv = document.createElement("div");
@@ -42,7 +42,11 @@ export class SubtaskDOMService {
         duration.classList.add("subtask-div");
         subtaskLi.appendChild(duration);
 
-        buttonsDiv.appendChild(this.createButton('<i class="fa-solid fa-pencil"></i>'));
+        const editButton = this.createButton('<i class="fa-solid fa-pencil"></i>');
+        editButton.addEventListener("click", (event) => {
+            editHandler(editButton.closest("li"));
+        })
+        buttonsDiv.appendChild(editButton);
 
         const checkButton = this.createButton('<i class="fas fa-check"></i>');
         checkButton.addEventListener("click", (event) => {

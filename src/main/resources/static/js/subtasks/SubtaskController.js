@@ -20,9 +20,10 @@ export class SubtaskController {
     async loadSubtasks() {
         let [subtasks, pageInfo] = await this.subtaskBackendService.loadSubtasks();
 
+        const editHandler = this.editSubtask.bind(this);
         const checkHandler = this.checkSubtask.bind(this);
         const deleteHandler = this.deleteSubtaskFromDB.bind(this);
-        this.subtaskDOMService.displaySubtasks(subtasks, checkHandler, deleteHandler);
+        this.subtaskDOMService.displaySubtasks(subtasks, editHandler, checkHandler, deleteHandler);
 
         await this.populatePossiblePreviousSubtasks();
         this.paginationButtonsDOMService.updatePaginationButtons(pageInfo);
@@ -78,6 +79,15 @@ export class SubtaskController {
         } catch (err) {
             console.log(err);
         }
+    }
+
+
+    //PUT
+    async editSubtask(subtaskLi) {
+        const subtaskId = subtaskLi.getAttribute("id");
+        const subtask = await this.subtaskBackendService.fetchSubtask(subtaskId);
+        await this.subtaskFormDOMService.showEditSubtaskMenu(subtask);
+        this.paginationButtonsDOMService.hidePaginationButtons();
     }
 
 

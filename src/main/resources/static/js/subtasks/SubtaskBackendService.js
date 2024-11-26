@@ -58,6 +58,19 @@ export class SubtaskBackendService {
         return subtasks;
     }
 
+    async fetchSubtask(subtaskId) {
+        const response = await fetch(`/api/subtasks/${subtaskId}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
+
+        return await response.json();
+    }
 
     //DELETE
     async deleteSubtask(subtaskId) {

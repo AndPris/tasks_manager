@@ -32,4 +32,33 @@ export class SubtaskFormDOMService {
         option.textContent = subtask.description;
         return option;
     }
+
+
+    async showEditSubtaskMenu(subtask) {
+        const subtaskId = subtask.id;
+        this.form.setAttribute("subtask-id", subtaskId);
+
+        const descriptionField = this.form["description"];
+        descriptionField.value = subtask.description;
+        descriptionField.placeholder = "Edit the subtask.";
+
+        this.form['duration'].value = subtask.duration;
+        this.form['submit-button'].textContent = "Edit Subtask!";
+
+        const selectElement = this.form['previous-subtasks'];
+        const valuesToSelect = subtask.previousSubtasks.map((subtask) => Number(subtask.id));
+        // await removeImpossiblePreviousSubtasksOptions(selectElement, subtaskId);
+        for (let option of selectElement.options) {
+            if (valuesToSelect.includes(Number(option.value))) {
+                option.selected = true;
+            }
+        }
+
+        this.form.method = "put";
+
+        // this.form.removeEventListener("submit", addSubtaskToDB);
+        // this.form.addEventListener("submit", editSubtaskInDB);
+
+        clearChildren(document.getElementById("subtasks-container"));
+    }
 }
