@@ -104,4 +104,20 @@ export class SubtaskBackendService {
         if (!response.ok)
             throw new Error(this.defaultNetworkErrorMessage);
     }
+
+
+    //PLAN
+    async getDataForGraph() {
+        const response = await fetch(`/api/tasks/plan/${this.taskId}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
+
+        return await response.json();
+    }
 }

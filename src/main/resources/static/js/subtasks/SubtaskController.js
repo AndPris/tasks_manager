@@ -3,13 +3,16 @@ export class SubtaskController {
     subtaskDOMService;
     paginationButtonsDOMService;
     subtaskFormDOMService;
+    graph;
 
     constructor(subtaskBackendService, subtaskDOMService,
-                paginationButtonsDOMService, subtaskFormDOMService) {
+                paginationButtonsDOMService, subtaskFormDOMService,
+                graph) {
         this.subtaskBackendService = subtaskBackendService;
         this.subtaskDOMService = subtaskDOMService;
         this.paginationButtonsDOMService = paginationButtonsDOMService;
         this.subtaskFormDOMService = subtaskFormDOMService;
+        this.graph = graph;
     }
 
 
@@ -75,5 +78,12 @@ export class SubtaskController {
         } catch (err) {
             console.log(err);
         }
+    }
+
+
+    //PLAN
+    async plan(creationTime, destination) {
+        const data = await this.subtaskBackendService.getDataForGraph();
+        this.graph.draw(data, creationTime, destination);
     }
 }

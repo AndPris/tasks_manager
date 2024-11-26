@@ -1,4 +1,5 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import {clearChildren} from "utilDOMFunctions.js";
 
 export class Graph {
     width = 640;
@@ -20,16 +21,19 @@ export class Graph {
     today;
 
 
-    constructor(processes, creationTime, destination) {
-        this.processes = processes;
-        this.creationTime = creationTime;
-        this.creationTime.setHours(0, 0, 0, 0);
-        this.destination = destination;
+    constructor() {
         this.today = new Date();
         this.today.setHours(0, 0, 0, 0);
     }
 
-    draw() {
+    draw(processes, creationTime, destination) {
+        this.processes = processes;
+        this.creationTime = creationTime;
+        this.creationTime.setHours(0, 0, 0, 0);
+        this.destination = destination;
+
+        clearChildren(destination);
+
         this.initGraph();
         this.drawCriticalProcesses();
         this.drawNonCriticalProcesses();

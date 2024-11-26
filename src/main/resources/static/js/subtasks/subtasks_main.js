@@ -13,9 +13,11 @@ const subtaskDOMService = new SubtaskDOMService(document.getElementById("subtask
 const paginationButtonsDOMService = new PaginationButtonsDOMService(document.getElementById("backward-button"),
                                                                 document.getElementById("forward-button"));
 const subtaskFormDOMService = new SubtaskFormDOMService(document.getElementById("form"));
+const graph = new Graph();
 
 const subtaskController = new SubtaskController(subtaskBackendService, subtaskDOMService,
-                                                                paginationButtonsDOMService, subtaskFormDOMService);
+                                                                paginationButtonsDOMService, subtaskFormDOMService,
+                                                                graph);
 
 await subtaskController.loadSubtasks();
 
@@ -25,4 +27,8 @@ document
 
 window.goForward = subtaskController.goForward.bind(subtaskController);
 window.goBackward = subtaskController.goBackward.bind(subtaskController);
-// window.plan = plan;
+
+const planHandler = async () => {
+    await subtaskController.plan(creationTime, document.getElementById("timeGraph"));
+}
+window.plan = planHandler;
