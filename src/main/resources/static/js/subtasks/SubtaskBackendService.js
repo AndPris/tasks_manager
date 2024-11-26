@@ -88,4 +88,20 @@ export class SubtaskBackendService {
         if (!response.ok)
             throw new Error(this.defaultNetworkErrorMessage);
     }
+
+
+    //POST
+    async postSubtask(subtaskData) {
+        let response = await fetch(this.baseURL, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                [this.csrfHeader]: this.csrfToken
+            },
+            body: JSON.stringify(subtaskData),
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
+    }
 }

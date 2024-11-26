@@ -2,27 +2,32 @@ export class SubtaskController {
     subtaskBackendService;
     subtaskDOMService;
     paginationButtonsDOMService;
+    subtaskFormDOMService;
 
-    constructor(subtaskBackendService, subtaskDOMService, paginationButtonsDOMService) {
+    constructor(subtaskBackendService, subtaskDOMService,
+                paginationButtonsDOMService, subtaskFormDOMService) {
         this.subtaskBackendService = subtaskBackendService;
         this.subtaskDOMService = subtaskDOMService;
         this.paginationButtonsDOMService = paginationButtonsDOMService;
+        this.subtaskFormDOMService = subtaskFormDOMService;
     }
 
 
     //GET
     async loadSubtasks() {
         let [subtasks, pageInfo] = await this.subtaskBackendService.loadSubtasks();
+
         const checkHandler = this.checkSubtask.bind(this);
         const deleteHandler = this.deleteSubtaskFromDB.bind(this);
         this.subtaskDOMService.displaySubtasks(subtasks, checkHandler, deleteHandler);
+
         await this.populatePossiblePreviousSubtasks();
         this.paginationButtonsDOMService.updatePaginationButtons(pageInfo);
     }
 
     async populatePossiblePreviousSubtasks() {
         const subtasks = await this.subtaskBackendService.getAllSubtasks();
-        this.subtaskDOMService.populatePossiblePreviousSubtasks(subtasks);
+        this.subtaskFormDOMService.populatePossiblePreviousSubtasks(subtasks);
     }
 
     async goForward() {
@@ -51,6 +56,21 @@ export class SubtaskController {
     async checkSubtask(subtaskId, subtaskDataForPatch) {
         try {
             await this.subtaskBackendService.patchSubtask(subtaskId, subtaskDataForPatch);
+            await this.loadSubtasks();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
+    //POST
+    async addSubtaskToDB(event) {
+        event.preventDefault();
+
+        const subtaskData = this.subtaskFormDOMService.getSubtaskData();
+        try {
+            await this.subtaskBackendService.postSubtask(subtaskData);
+            this.subtaskFormDOMService.clearSubtasksForm();
             await this.loadSubtasks();
         } catch (err) {
             console.log(err);

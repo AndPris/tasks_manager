@@ -1,21 +1,15 @@
+import {clearChildren} from "utilDOMFunctions.js";
+
 export class SubtaskDOMService {
     subtasksContainer;
-    previousSubtasksSelect;
 
-    constructor(subtasksContainer, previousSubtasksSelect) {
+    constructor(subtasksContainer) {
         this.subtasksContainer = subtasksContainer;
-        this.previousSubtasksSelect = previousSubtasksSelect;
     }
 
     displaySubtasks(subtasks, checkHandler, deleteHandler) {
-        this.clearChildren(this.subtasksContainer);
-        this.clearChildren(this.previousSubtasksSelect);
+        clearChildren(this.subtasksContainer);
         subtasks.forEach((subtask) => {this.displaySubtask(subtask, checkHandler, deleteHandler)});
-    }
-
-    clearChildren(element) {
-        while (element.firstChild)
-            element.removeChild(element.firstChild);
     }
 
     displaySubtask(subtask, checkHandler, deleteHandler) {
@@ -48,9 +42,6 @@ export class SubtaskDOMService {
         duration.classList.add("subtask-div");
         subtaskLi.appendChild(duration);
 
-        // buttonsDiv.appendChild(this.createButton('<i class="fa-solid fa-pencil"></i>', editSubtask));
-        // buttonsDiv.appendChild(this.createButton('<i class="fas fa-check"></i>', checkSubtask));
-        // buttonsDiv.appendChild(this.createButton('<i class="fas fa-trash"></i>', deleteSubtaskFromDB));
         buttonsDiv.appendChild(this.createButton('<i class="fa-solid fa-pencil"></i>'));
 
         const checkButton = this.createButton('<i class="fas fa-check"></i>');
@@ -96,16 +87,5 @@ export class SubtaskDOMService {
         return {
             done: !subtask.done
         };
-    }
-
-    async populatePossiblePreviousSubtasks(subtasks) {
-        subtasks.forEach((subtask) => {this.previousSubtasksSelect.appendChild(this.getPreviousSubtaskOption(subtask))});
-    }
-
-    getPreviousSubtaskOption(subtask) {
-        const option = document.createElement("option");
-        option.value = subtask.id;
-        option.textContent = subtask.description;
-        return option;
     }
 }
