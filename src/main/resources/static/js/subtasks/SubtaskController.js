@@ -4,6 +4,8 @@ export class SubtaskController {
     paginationButtonsDOMService;
     subtaskFormDOMService;
     graph;
+    postHandler;
+    putHandler;
 
     constructor(subtaskBackendService, subtaskDOMService,
                 paginationButtonsDOMService, subtaskFormDOMService,
@@ -13,8 +15,14 @@ export class SubtaskController {
         this.paginationButtonsDOMService = paginationButtonsDOMService;
         this.subtaskFormDOMService = subtaskFormDOMService;
         this.graph = graph;
+
+        this.postHandler = this.addSubtaskToDB.bind(this);
+        this.putHandler = this.editSubtaskInDB.bind(this);
     }
 
+    getPostHandler() {
+        return this.postHandler;
+    }
 
     //GET
     async loadSubtasks() {
@@ -87,9 +95,23 @@ export class SubtaskController {
         const subtaskId = subtaskLi.getAttribute("id");
         const subtask = await this.subtaskBackendService.fetchSubtask(subtaskId);
         await this.subtaskFormDOMService.showEditSubtaskMenu(subtask);
+        this.subtaskFormDOMService.removePostHandler(this.postHandler);
+        this.subtaskFormDOMService.addPutHandler(this.putHandler);
         this.paginationButtonsDOMService.hidePaginationButtons();
     }
 
+    async editSubtaskInDB(event) {
+        event.preventDefault();
+
+        try {
+            await this.subtaskBackendService.putSubtask(this.subtaskFormDOMService.getSubtaskIdToEdit(),
+                                                        this.subtaskFormDOMService.getSubtaskData());
+            window.location.reload();
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
 
     //PLAN
     async plan(creationTime, destination) {

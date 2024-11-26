@@ -23,7 +23,7 @@ await subtaskController.loadSubtasks();
 
 document
     .getElementById("form")
-    .addEventListener("submit", subtaskController.addSubtaskToDB.bind(subtaskController));
+    .addEventListener("submit", subtaskController.getPostHandler());
 
 window.goForward = subtaskController.goForward.bind(subtaskController);
 window.goBackward = subtaskController.goBackward.bind(subtaskController);

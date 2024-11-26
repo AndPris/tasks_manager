@@ -55,10 +55,18 @@ export class SubtaskFormDOMService {
         }
 
         this.form.method = "put";
-
-        // this.form.removeEventListener("submit", addSubtaskToDB);
-        // this.form.addEventListener("submit", editSubtaskInDB);
-
         clearChildren(document.getElementById("subtasks-container"));
+    }
+
+    removePostHandler(handler) {
+        this.form.removeEventListener("submit", handler);
+    }
+
+    addPutHandler(handler) {
+        this.form.addEventListener("submit", handler);
+    }
+
+    getSubtaskIdToEdit() {
+        return this.form.getAttribute("subtask-id");
     }
 }

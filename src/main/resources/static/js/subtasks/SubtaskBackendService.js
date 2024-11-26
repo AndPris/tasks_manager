@@ -119,6 +119,22 @@ export class SubtaskBackendService {
     }
 
 
+    //PUT
+    async putSubtask(subtaskId, data) {
+        let response = await fetch(`${this.baseURL}/${subtaskId}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                [this.csrfHeader]: this.csrfToken
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
+    }
+
+
     //PLAN
     async getDataForGraph() {
         const response = await fetch(`/api/tasks/plan/${this.taskId}`, {
