@@ -94,6 +94,8 @@ export class SubtaskController {
     async editSubtask(subtaskLi) {
         const subtaskId = subtaskLi.getAttribute("id");
         const subtask = await this.subtaskBackendService.fetchSubtask(subtaskId);
+        const possiblePreviousSubtasks = await this.subtaskBackendService.getAllSubtasksWithIdLessThan(subtaskId);
+        this.subtaskFormDOMService.populatePossiblePreviousSubtasks(possiblePreviousSubtasks);
         await this.subtaskFormDOMService.showEditSubtaskMenu(subtask);
         this.subtaskFormDOMService.removePostHandler(this.postHandler);
         this.subtaskFormDOMService.addPutHandler(this.putHandler);

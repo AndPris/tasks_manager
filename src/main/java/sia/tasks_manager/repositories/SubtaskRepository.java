@@ -14,6 +14,7 @@ import java.util.List;
 public interface SubtaskRepository extends PagingAndSortingRepository<Subtask, Long>, ListCrudRepository<Subtask, Long> {
     Page<Subtask> findSubtasksByTaskId(Long taskId, Pageable pageable);
     List<Subtask> findAllByTaskIdOrderById(Long taskId);
+    Page<Subtask> findAllByTaskIdAndIdLessThan(Long taskId, Long id, Pageable pageable);
 
     @Modifying
     @Query(value = "DELETE FROM subtask_dependencies WHERE subtask_id = ?1 OR previous_subtask_id = ?1", nativeQuery = true)

@@ -13,24 +13,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     const formDOMService = new FormDOMService(popUpWindowDOMService, backendService);
     const eventDOMService = new EventDOMService(popUpWindowDOMService, backendService, formDOMService);
 
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    let calendarEl = document.getElementById('calendar');
+    let calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         firstDay: 1,
         selectable: true,
         editable: true,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+        },
         events: [],
         eventOrder: "done,title",
         eventClick: function(info) {
-            console.log("Event Click");
-            console.log(info.event);
             eventDOMService.displayEditButtonsOnPopUpWindow(info.event.title)
             eventDOMService.setInfo(info);
             formDOMService.hideForm();
         },
         dateClick: function(info) {
-            console.log("Date Click");
-            console.log(info);
             formDOMService.displayFormOnPopUpWindow(info.dateStr);
             eventDOMService.hideEditButtons();
         },
@@ -38,8 +39,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             info.el.style.cursor = "pointer";
         },
         eventDrop: function(info) {
-            console.log("Drop");
-            console.log(info);
             backendService.patchTask(info.event.id, eventDOMService.getEventDataDuringDragNDrop(info));
         }
     });

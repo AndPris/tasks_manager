@@ -58,6 +58,11 @@ export class SubtaskBackendService {
         return subtasks;
     }
 
+    async getAllSubtasksWithIdLessThan(id) {
+        const [subtasks, pageInfo] = await this.getSubtasks(`?all=true&lessThanSubtaskId=${id}`);
+        return subtasks;
+    }
+
     async fetchSubtask(subtaskId) {
         const response = await fetch(`/api/subtasks/${subtaskId}`, {
             method: "GET",
