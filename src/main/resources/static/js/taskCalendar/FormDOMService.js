@@ -21,8 +21,18 @@ export class FormDOMService {
 
     displayFormOnPopUpWindow(date) {
         this.date = date;
-        this.popUpWindowDOMService.displayPopUpWindow(`Selected Date: ${date}`);
+        this.popUpWindowDOMService.displayPopUpWindow(`Selected Date: ${this.getClearDateString(date)}`);
         this.displayForm();
+    }
+
+    getClearDateString(date) {
+        date = date.replace('T', ' ');
+
+        const indexOfDelim = date.indexOf('+');
+        if(indexOfDelim !== -1)
+            date = date.slice(0, indexOfDelim);
+
+        return date;
     }
 
     displayForm() {
