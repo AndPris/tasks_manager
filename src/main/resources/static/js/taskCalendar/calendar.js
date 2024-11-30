@@ -32,6 +32,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             formDOMService.hideForm();
         },
         dateClick: function(info) {
+            popUpWindowDOMService.hidePopUpWindow();
+            const infoDate = new Date(info.dateStr);
+            if(infoDate < currentDate)
+                return;
+
             formDOMService.displayFormOnPopUpWindow(info.dateStr);
             eventDOMService.hideEditButtons();
         },
