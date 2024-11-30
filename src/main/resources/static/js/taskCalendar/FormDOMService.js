@@ -98,11 +98,22 @@ export class FormDOMService {
     }
 
     getFormData() {
+        let date = this.getUTCTime()
+        console.log(date);
         return {
             description: this.form.description.value,
-            finishDate: this.date,
+            finishDate: date,
             priority: {id: this.form.priority.value}
         };
+    }
+
+    getUTCTime() {
+        let date = new Date(this.date);
+        console.log("Offset", date.getTimezoneOffset() / 60);
+        if(this.date.indexOf('+') === -1)
+            date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
+
+        return date.toISOString();
     }
 
     clearForm() {

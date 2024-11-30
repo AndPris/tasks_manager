@@ -29,11 +29,14 @@ export class BackendService {
         if (!response.ok)
             throw new Error(this.defaultNetworkErrorMessage);
 
-        return await response.json();
+        const tasks = await response.json();
+        console.log(tasks);
+        return tasks;
     }
 
     //POST
     async postTask(taskData) {
+        console.log(taskData);
         let response = await fetch(this.baseURL, {
             method: "POST",
             headers: {
