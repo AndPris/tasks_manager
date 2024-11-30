@@ -10,15 +10,30 @@ export class SubtaskFormDOMService {
         this.previousSubtasksSelect = this.form["previous-subtasks"];
     }
 
-    isSelectedPreviousSubtasksCorrect() {
+    isSelectedPreviousSubtasksCorrect(allSubtasks) {
         const selectedSubtasksIds = this.getSubtasksIdsFromSelectedOptions().map((element) => {return element.id});
 
-        for(let subtaskId of selectedSubtasksIds) {
-            if(this.isAncestorsSelected(subtaskId, selectedSubtasksIds)) {
-                const subtask = this.getSubtaskById(subtaskId);
-                console.log(subtask);
+        for(let selectedSubtaskId of selectedSubtasksIds) {
+            if(this.isAncestorsSelected(selectedSubtaskId, selectedSubtasksIds)) {
+                const subtask = this.getSubtaskById(selectedSubtaskId);
                 alert(`You can not select subtask and its ancestors at the same time. Error caused by subtask '${subtask.description}' and it's previous subtasks.`);
                 return false;
+            }
+
+            if(this.form.getAttribute("subtask-id") === null)
+                continue;
+
+            for(let subtask of allSubtasks) {
+                if(!this.hasAncestor(subtask, this.form.getAttribute("subtask-id")))
+                    continue;
+
+                const previousSubtasksIds = subtask.previousSubtasks.map((subtask) => {return subtask.id.toString()});
+
+                if(previousSubtasksIds.includes(selectedSubtaskId.toString()) || this.isAncestorsSelected(selectedSubtaskId, previousSubtasksIds)) {
+                    const errorSubtask = this.getSubtaskById(selectedSubtaskId);
+                    alert(`You can not select subtask and its ancestors at the same time. Error caused by subtask '${errorSubtask.description}' and it's previous subtasks.`);
+                    return false;
+                }
             }
         }
 
@@ -35,6 +50,21 @@ export class SubtaskFormDOMService {
                 return true;
 
             if(this.isAncestorsSelected(previousSubtaskId, allSelectedSubtasksIds))
+                return true;
+        }
+
+        return false;
+    }
+
+    hasAncestor(subtask, potentialAncestorId) {
+        for(let previousSubtask of subtask.previousSubtasks) {
+            const previousSubtaskId = previousSubtask.id;
+
+            if(previousSubtaskId.toString() === potentialAncestorId.toString())
+                return true;
+
+            previousSubtask = this.getSubtaskById(previousSubtaskId);
+            if(this.hasAncestor(previousSubtask, potentialAncestorId))
                 return true;
         }
 

@@ -79,7 +79,7 @@ export class SubtaskController {
     async addSubtaskToDB(event) {
         event.preventDefault();
 
-        if(!this.subtaskFormDOMService.isSelectedPreviousSubtasksCorrect())
+        if(!this.subtaskFormDOMService.isSelectedPreviousSubtasksCorrect(await this.subtaskBackendService.getAllSubtasks()))
             return;
 
         const subtaskData = this.subtaskFormDOMService.getSubtaskData();
@@ -109,7 +109,7 @@ export class SubtaskController {
     async editSubtaskInDB(event) {
         event.preventDefault();
 
-        if(!this.subtaskFormDOMService.isSelectedPreviousSubtasksCorrect())
+        if(!this.subtaskFormDOMService.isSelectedPreviousSubtasksCorrect(await this.subtaskBackendService.getAllSubtasks()))
             return;
 
         try {
