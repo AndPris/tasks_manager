@@ -2,9 +2,43 @@ import {clearChildren} from "utilDOMFunctions.js";
 
 export class SubtaskFormDOMService {
     form;
+    possiblePreviousSubtasks;
+    previousSubtasksSelect;
 
     constructor(form) {
         this.form = form;
+        this.previousSubtasksSelect = this.form["previous-subtasks"];
+    }
+
+    isSelectedPreviousSubtasksCorrect() {
+        const selectedSubtasksIds = this.getSubtasksIdsFromSelectedOptions().map((element) => {return element.id});
+
+        for(let subtaskId of selectedSubtasksIds) {
+            if(this.isAncestorsSelected(subtaskId, selectedSubtasksIds)) {
+                const subtask = this.getSubtaskById(subtaskId);
+                console.log(subtask);
+                alert(`You can not select subtask and its ancestors at the same time. Error caused by subtask '${subtask.description}' and it's previous subtasks.`);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    isAncestorsSelected(currentSubtaskId, allSelectedSubtasksIds) {
+        const currentSubtask = this.getSubtaskById(currentSubtaskId);
+
+        for(let previousSubtask of currentSubtask.previousSubtasks) {
+            const previousSubtaskId = previousSubtask.id;
+
+            if(allSelectedSubtasksIds.includes(previousSubtaskId.toString()))
+                return true;
+
+            if(this.isAncestorsSelected(previousSubtaskId, allSelectedSubtasksIds))
+                return true;
+        }
+
+        return false;
     }
 
     getSubtaskData() {
@@ -12,8 +46,24 @@ export class SubtaskFormDOMService {
             description: this.form.description.value,
             duration: this.form.duration.value,
             done: false,
-            previousSubtasks: Array.from(this.form["previous-subtasks"].selectedOptions).map(({ value }) => {return {id: value}})
+            previousSubtasks: this.getSubtasksIdsFromSelectedOptions()
         }
+    }
+
+    getSubtasksIdsFromSelectedOptions() {
+        return Array.from(this.previousSubtasksSelect.selectedOptions).map(({ value }) => {return {id: value}})
+    }
+
+    getSubtasksFromSelectedOptions() {
+        return Array.from(this.previousSubtasksSelect.selectedOptions).map(({ value }) => {
+            return this.getSubtaskById(value);
+        })
+    }
+
+    getSubtaskById(id) {
+        return this.possiblePreviousSubtasks.find((subtask) => {
+            return subtask.id.toString() === id.toString();
+        });
     }
 
     clearSubtasksForm() {
@@ -22,8 +72,9 @@ export class SubtaskFormDOMService {
     }
 
     populatePossiblePreviousSubtasks(subtasks) {
-        clearChildren(this.form["previous-subtasks"]);
-        subtasks.forEach((subtask) => {this.form["previous-subtasks"].appendChild(this.getPreviousSubtaskOption(subtask))});
+        this.possiblePreviousSubtasks = subtasks;
+        clearChildren(this.previousSubtasksSelect);
+        subtasks.forEach((subtask) => {this.previousSubtasksSelect.appendChild(this.getPreviousSubtaskOption(subtask))});
     }
 
     getPreviousSubtaskOption(subtask) {
@@ -34,7 +85,7 @@ export class SubtaskFormDOMService {
     }
 
 
-    async showEditSubtaskMenu(subtask) {
+    showEditSubtaskMenu(subtask) {
         const subtaskId = subtask.id;
         this.form.setAttribute("subtask-id", subtaskId);
 
@@ -47,7 +98,6 @@ export class SubtaskFormDOMService {
 
         const selectElement = this.form['previous-subtasks'];
         const valuesToSelect = subtask.previousSubtasks.map((subtask) => Number(subtask.id));
-        // await removeImpossiblePreviousSubtasksOptions(selectElement, subtaskId);
         for (let option of selectElement.options) {
             if (valuesToSelect.includes(Number(option.value))) {
                 option.selected = true;

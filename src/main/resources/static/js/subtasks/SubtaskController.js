@@ -79,6 +79,9 @@ export class SubtaskController {
     async addSubtaskToDB(event) {
         event.preventDefault();
 
+        if(!this.subtaskFormDOMService.isSelectedPreviousSubtasksCorrect())
+            return;
+
         const subtaskData = this.subtaskFormDOMService.getSubtaskData();
         try {
             await this.subtaskBackendService.postSubtask(subtaskData);
@@ -95,8 +98,9 @@ export class SubtaskController {
         const subtaskId = subtaskLi.getAttribute("id");
         const subtask = await this.subtaskBackendService.fetchSubtask(subtaskId);
         const possiblePreviousSubtasks = await this.subtaskBackendService.getAllSubtasksWithIdLessThan(subtaskId);
+
         this.subtaskFormDOMService.populatePossiblePreviousSubtasks(possiblePreviousSubtasks);
-        await this.subtaskFormDOMService.showEditSubtaskMenu(subtask);
+        this.subtaskFormDOMService.showEditSubtaskMenu(subtask);
         this.subtaskFormDOMService.removePostHandler(this.postHandler);
         this.subtaskFormDOMService.addPutHandler(this.putHandler);
         this.paginationButtonsDOMService.hidePaginationButtons();
@@ -104,6 +108,9 @@ export class SubtaskController {
 
     async editSubtaskInDB(event) {
         event.preventDefault();
+
+        if(!this.subtaskFormDOMService.isSelectedPreviousSubtasksCorrect())
+            return;
 
         try {
             await this.subtaskBackendService.putSubtask(this.subtaskFormDOMService.getSubtaskIdToEdit(),
