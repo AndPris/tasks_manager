@@ -45,6 +45,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             info.el.style.cursor = "pointer";
         },
         eventDrop: function(info) {
+            const infoDate = new Date(info.event.startStr);
+            if(infoDate < currentDate) {
+                info.revert();
+                return;
+            }
             backendService.patchTask(info.event.id, eventDOMService.getEventDataDuringDragNDrop(info));
         }
     });
