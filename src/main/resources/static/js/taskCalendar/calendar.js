@@ -25,7 +25,21 @@ document.addEventListener('DOMContentLoaded', async function() {
             right: 'dayGridMonth,timeGridWeek'
         },
         events: [],
-        eventOrder: "done,title",
+        eventOrder: "done,allDay,title",
+        views : {
+            timeGridWeek: {
+                dayHeaderFormat: { weekday: 'short', month: '2-digit', day: '2-digit', omitCommas: true,  },
+                slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+                allDaySlot: true,
+                slotDuration: '00:30:00',
+            }
+        },
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        },
+        locale: 'en-GB',
         eventClick: function(info) {
             eventDOMService.displayEditButtonsOnPopUpWindow(info.event.title)
             eventDOMService.setInfo(info);
