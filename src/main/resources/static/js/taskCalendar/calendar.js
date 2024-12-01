@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if(infoDate < currentDate)
                 return;
 
+            formDOMService.setAllDay(info.allDay);
             formDOMService.displayFormOnPopUpWindow(info.dateStr);
             eventDOMService.hideEditButtons();
         },

@@ -8,6 +8,7 @@ export class FormDOMService {
     eventToEdit;
     postTaskHandler;
     putTaskHandler;
+    allDay;
 
     constructor(popUpWindowDOMService, backendService) {
         this.popUpWindowDOMService = popUpWindowDOMService;
@@ -17,6 +18,10 @@ export class FormDOMService {
 
     setTaskDOMService(taskDOMService) {
         this.taskDOMService = taskDOMService;
+    }
+
+    setAllDay(allDay) {
+        this.allDay = allDay;
     }
 
     displayFormOnPopUpWindow(date) {
@@ -98,23 +103,21 @@ export class FormDOMService {
     }
 
     getFormData() {
-        let date = this.getUTCTime()
-        console.log(date);
         return {
             description: this.form.description.value,
-            finishDate: date,
+            finishDate: this.date,
+            allDay: this.allDay,
             priority: {id: this.form.priority.value}
         };
     }
-
-    getUTCTime() {
-        let date = new Date(this.date);
-        console.log("Offset", date.getTimezoneOffset() / 60);
-        if(this.date.indexOf('+') === -1)
-            date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
-
-        return date.toISOString();
-    }
+    //
+    // getUTCTime() {
+    //     let date = new Date(this.date);
+    //     if(this.date.indexOf('+') === -1)
+    //         date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
+    //
+    //     return date.toISOString();
+    // }
 
     clearForm() {
         this.form.description.value = '';

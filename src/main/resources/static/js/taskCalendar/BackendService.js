@@ -30,9 +30,15 @@ export class BackendService {
             throw new Error(this.defaultNetworkErrorMessage);
 
         const tasks = await response.json();
-        console.log(tasks);
+        // tasks.forEach((task) => {task.finishDate = this.convertUTCToLocalTime(task.finishDate);});
         return tasks;
     }
+    //
+    // convertUTCToLocalTime(UTCString) {
+    //     const UTCDate = new Date(UTCString);
+    //     UTCDate.setHours(UTCDate.getHours() - UTCDate.getTimezoneOffset() / 60);
+    //     return UTCDate.toISOString();
+    // }
 
     //POST
     async postTask(taskData) {

@@ -22,6 +22,10 @@ public class Task {
     private String description;
 
     private Date finishDate;
+
+    @NotNull
+    private boolean allDay;
+
     private Date creationTime;
 
     @NotNull
