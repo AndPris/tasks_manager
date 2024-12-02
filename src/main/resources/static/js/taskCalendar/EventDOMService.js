@@ -59,6 +59,7 @@ export class EventDOMService {
     getEventDataDuringDragNDrop(info) {
         return  {
             finishDate: info.event.startStr,
+            allDay: info.event.allDay,
         };
     }
 

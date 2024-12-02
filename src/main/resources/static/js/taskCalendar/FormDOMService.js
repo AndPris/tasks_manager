@@ -8,6 +8,7 @@ export class FormDOMService {
     eventToEdit;
     postTaskHandler;
     putTaskHandler;
+    allDay;
 
     constructor(popUpWindowDOMService, backendService) {
         this.popUpWindowDOMService = popUpWindowDOMService;
@@ -19,10 +20,24 @@ export class FormDOMService {
         this.taskDOMService = taskDOMService;
     }
 
+    setAllDay(allDay) {
+        this.allDay = allDay;
+    }
+
     displayFormOnPopUpWindow(date) {
         this.date = date;
-        this.popUpWindowDOMService.displayPopUpWindow(`Selected Date: ${date}`);
+        this.popUpWindowDOMService.displayPopUpWindow(`Selected Date: ${this.getClearDateString(date)}`);
         this.displayForm();
+    }
+
+    getClearDateString(date) {
+        date = date.replace('T', ' ');
+
+        const indexOfDelim = date.indexOf('+');
+        if(indexOfDelim !== -1)
+            date = date.slice(0, indexOfDelim);
+
+        return date;
     }
 
     displayForm() {
@@ -91,9 +106,18 @@ export class FormDOMService {
         return {
             description: this.form.description.value,
             finishDate: this.date,
+            allDay: this.allDay,
             priority: {id: this.form.priority.value}
         };
     }
+    //
+    // getUTCTime() {
+    //     let date = new Date(this.date);
+    //     if(this.date.indexOf('+') === -1)
+    //         date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
+    //
+    //     return date.toISOString();
+    // }
 
     clearForm() {
         this.form.description.value = '';

@@ -36,14 +36,21 @@ public class SubtasksRestController {
     @GetMapping("/tasks/{taskId}/subtasks")
     public ResponseEntity<?> getPageOfSubtasksByTaskId(@PathVariable("taskId") Long taskId,
                                                     @RequestParam(required = false) boolean all,
+                                                    @RequestParam(required = false) Long lessThanSubtaskId,
                                                     Pageable pageable, PagedResourcesAssembler<SubtaskDTO> pagedAssembler) {
         if(all)
             pageable = Pageable.unpaged();
 
-        Page<Subtask> subtasksPage = subtaskRepository.findSubtasksByTaskId(taskId, pageable);
+        Page<Subtask> subtasksPage;
+
+        if(lessThanSubtaskId != null)
+            subtasksPage = subtaskRepository.findAllByTaskIdAndIdLessThan(taskId, lessThanSubtaskId, pageable);
+        else
+            subtasksPage = subtaskRepository.findSubtasksByTaskId(taskId, pageable);
+
         Page<SubtaskDTO> dtoPage = subtasksPage.map(subtasksService::convertToDTO);
         PagedModel<EntityModel<SubtaskDTO>> subtasksToReturn = pagedAssembler.toModel(dtoPage);
-        subtasksToReturn.add(linkTo(methodOn(SubtasksRestController.class).getPageOfSubtasksByTaskId(taskId, all, pageable, pagedAssembler)).withSelfRel());
+        subtasksToReturn.add(linkTo(methodOn(SubtasksRestController.class).getPageOfSubtasksByTaskId(taskId, all, lessThanSubtaskId, pageable, pagedAssembler)).withSelfRel());
         return ResponseEntity.ok(subtasksToReturn);
     }
 

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -22,6 +23,7 @@ public class EmailService {
         this.templateEngine = templateEngine;
     }
 
+    @Async
     public void sendNotificationEmail(String to, String subject, String fullName, String taskDescription, String deadlineState) {
         Context context = new Context();
         context.setVariable("fullName", fullName);
@@ -44,6 +46,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(emailSender);

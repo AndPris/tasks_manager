@@ -54,7 +54,8 @@ public class RegistrationController {
 
     @PostMapping("/register")
     public String processRegistration(@ModelAttribute("registrationForm") @Valid RegistrationForm registrationForm,
-                                      Errors errors, Model model, HttpServletRequest request) {
+                                      Errors errors, Model model, RedirectAttributes redirectAttributes,
+                                      HttpServletRequest request) {
         if(errors.hasErrors())
             return "registration";
 
@@ -63,6 +64,7 @@ public class RegistrationController {
             final String approvalUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
             applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, approvalUrl));
             LOGGER.info("Begin registration confirmation process");
+            redirectAttributes.addFlashAttribute("message", "We send you confirmation link. Check you email, please.");
             return "redirect:/login";
         } catch (UserAlreadyExistException uaeEx) {
             LOGGER.info("User already exist");
@@ -134,7 +136,7 @@ public class RegistrationController {
         userService.createPasswordResetTokenForUser(user, token);
         String url = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
         sendPasswordResetTokenEmail(url, token, user);
-        return new GenericResponse("Password reset token generated. Check your email", null);
+        return new GenericResponse("Password reset token was generated. Check your email, please.", null);
     }
 
     @GetMapping("/changePassword")
@@ -174,7 +176,7 @@ public class RegistrationController {
 
     private void sendPasswordResetTokenEmail(String contextPath, String token, User user) {
         String url = contextPath + "/changePassword?token=" + token;
-        String message = "New confirmation url: " + url;
+        String message = "Reset password url: " + url;
         emailService.sendEmail(user.getUsername(), "Reset Password", message);
     }
 }

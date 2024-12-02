@@ -13,13 +13,14 @@ export class TaskDOMService {
     }
 
     displayTask(task) {
+        console.log(task);
         const event = {
             id: task.id,
             title: task.description,
             priority: task.priority.name,
             start: new Date(task.finishDate),
             done: task.done,
-            allDay: true,
+            allDay: task.allDay,
             color: this.getTaskColor(task),
             classNames: this.getClassNames(task),
         };
