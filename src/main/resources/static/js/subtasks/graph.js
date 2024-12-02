@@ -18,18 +18,27 @@ export class Graph {
     shiftUp = 1;
     defaultColor = "black";
     todayColor = "green";
+    finishDateColor = "red";
+    defaultStrokeWidth = 1;
+    todayStrokeWidth = 2;
+    finishDateStrokeWidth = 2;
+    defaultFontWeight = "normal";
+    todayFontWeight = "bold";
+    finishDateFontWeight = "bold";
     today;
-
+    finishDate;
 
     constructor() {
         this.today = new Date();
         this.today.setHours(0, 0, 0, 0);
     }
 
-    draw(processes, creationTime, destination) {
+    draw(processes, creationTime, finishDate, destination) {
         this.processes = processes;
         this.creationTime = creationTime;
         this.creationTime.setHours(0, 0, 0, 0);
+        this.finishDate = finishDate;
+        this.finishDate.setHours(0, 0, 0, 0);
         this.destination = destination;
 
         clearChildren(destination);
@@ -65,8 +74,8 @@ export class Graph {
             .call(g => g.selectAll(".domain, .tick line")
                 .attr("stroke", this.defaultColor))
             .call(g => g.selectAll(".tick text")
-                .attr("fill", d => (d.getTime() === this.today.getTime() ? this.todayColor : this.defaultColor))
-                .style("font-weight", d => (d.getTime() === this.today.getTime() ? "bold" : "normal")));
+                .attr("fill", d => (this.getColor(d)))
+                .style("font-weight", d => (this.getFontWeight(d))));
 
         this.svg.append("g")
             .attr("transform", `translate(${this.marginLeft},0)`)
@@ -85,10 +94,40 @@ export class Graph {
             .attr("x2", d => this.x(d))
             .attr("y1", this.marginTop)
             .attr("y2", this.height - this.marginBottom)
-            .attr("stroke", d => (d.getTime() === this.today.getTime() ? this.todayColor : this.defaultColor))
-            .attr("stroke-width", d => (d.getTime() === this.today.getTime() ? 2 : 1))
+            .attr("stroke", d => this.getColor(d))
+            .attr("stroke-width", d => this.getStrokeWidth(d))
             .attr("stroke-dasharray", "4 2")
             .attr("stroke-opacity", 0.5);
+    }
+
+    getColor(d) {
+        if(d.getTime() === this.today.getTime())
+            return this.todayColor;
+
+        if(d.getTime() === this.finishDate.getTime())
+            return this.finishDateColor;
+
+        return this.defaultColor;
+    }
+
+    getStrokeWidth(d) {
+        if(d.getTime() === this.today.getTime())
+            return this.todayStrokeWidth;
+
+        if(d.getTime() === this.finishDate.getTime())
+            return this.finishDateStrokeWidth;
+
+        return this.defaultStrokeWidth;
+    }
+
+    getFontWeight(d) {
+        if(d.getTime() === this.today.getTime())
+            return this.todayFontWeight;
+
+        if(d.getTime() === this.finishDate.getTime())
+            return this.finishDateFontWeight;
+
+        return this.defaultFontWeight;
     }
 
     getProjectTimeline() {

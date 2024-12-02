@@ -123,8 +123,8 @@ export class SubtaskController {
     }
 
     //PLAN
-    async plan(creationTime, destination) {
+    async plan(creationTime, finishDate, destination) {
         const data = await this.subtaskBackendService.getDataForGraph();
-        this.graph.draw(data, creationTime, destination);
+        this.graph.draw(data, creationTime, finishDate, destination);
     }
 }

@@ -29,6 +29,6 @@ window.goForward = subtaskController.goForward.bind(subtaskController);
 window.goBackward = subtaskController.goBackward.bind(subtaskController);
 
 const planHandler = async () => {
-    await subtaskController.plan(creationTime, document.getElementById("timeGraph"));
+    await subtaskController.plan(creationTime, finishDate, document.getElementById("timeGraph"));
 }
 window.plan = planHandler;

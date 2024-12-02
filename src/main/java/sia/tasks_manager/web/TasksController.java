@@ -36,6 +36,7 @@ public class TasksController {
         model.addAttribute("taskId", taskId);
         model.addAttribute("description", task.getDescription());
         model.addAttribute("creationTime", task.getCreationTime());
+        model.addAttribute("finishDate", task.getFinishDate());
         return "subtasks";
     }
 }
