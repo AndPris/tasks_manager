@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import sia.tasks_manager.algorithm.ProcessDTO;
 import sia.tasks_manager.algorithm.TaskNetwork;
 import sia.tasks_manager.algorithm.TaskNetworkBuilder;
+import sia.tasks_manager.data.Subtask;
 
 import java.util.List;
 
@@ -20,10 +21,8 @@ public class NetworkPlanningController {
 
     @GetMapping("/tasks/plan/{taskId}")
     public ResponseEntity<?> createNetworkPlan(@PathVariable("taskId") Long taskId) {
-        TaskNetwork taskNetwork = taskNetworkBuilder.build(taskId);
-        taskNetwork.display();
-        List<ProcessDTO> processDTOs = taskNetwork.convertToProcessDTOs();
-        return ResponseEntity.ok(processDTOs);
+        List<Subtask> plannedSubtasks = taskNetworkBuilder.build(taskId);
+        return ResponseEntity.ok(plannedSubtasks);
     }
 
 }

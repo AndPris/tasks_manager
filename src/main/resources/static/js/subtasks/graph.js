@@ -155,6 +155,7 @@ export class Graph {
     }
 
     drawCriticalProcesses() {
+        this.criticalProcesses.sort((a, b) => {return a.start_time - b.start_time;});
         this.criticalProcesses.forEach((process, index) => {
             this.drawProcess(process, index - this.shiftUp);
         });

@@ -4,10 +4,8 @@ import org.springframework.stereotype.Service;
 import sia.tasks_manager.data.Subtask;
 import sia.tasks_manager.repositories.SubtaskRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskNetworkBuilder {
@@ -17,7 +15,7 @@ public class TaskNetworkBuilder {
         this.subtaskRepository = subtaskRepository;
     }
 
-    public TaskNetwork build(Long taskId) {
+    public List<Subtask> build(Long taskId) {
         List<Subtask> subtasks = subtaskRepository.findAllByTaskIdOrderById(taskId);
         TaskNetwork network = new TaskNetwork(taskId);
         Map<Subtask, Process> subtaskProcesses = getSubtasksProcessesMap(subtasks);
@@ -46,7 +44,10 @@ public class TaskNetworkBuilder {
         network.setStart(taskStart);
         network.setFinish(taskFinish);
         network.calculateTimes();
-        return network;
+        updateSubtasks(subtaskProcesses);
+        //todo: remove
+        network.display();
+        return new ArrayList<>(subtaskProcesses.keySet());
     }
 
     private Map<Subtask, Process> getSubtasksProcessesMap(List<Subtask> subtasks) {
@@ -63,5 +64,15 @@ public class TaskNetworkBuilder {
         }
 
         return new Event();
+    }
+
+    private void updateSubtasks(Map<Subtask, Process> subtaskProcesses) {
+        for (Map.Entry<Subtask, Process> subtaskProcess : subtaskProcesses.entrySet()) {
+            Subtask subtask = subtaskProcess.getKey();
+            Process process = subtaskProcess.getValue();
+
+            subtask.update(process);
+            subtaskRepository.save(subtask);
+        }
     }
 }

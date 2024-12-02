@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import sia.tasks_manager.algorithm.Process;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,6 +43,12 @@ public class Subtask {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Subtask> previousSubtasks = new HashSet<>();
 
+    private int startTime;
+    private int finishTime;
+    private boolean critical;
+    private int totalTimeStock;
+    private int freeTimeStock;
+
     @PrePersist
     protected void onCreate() {
         this.done = false;
@@ -49,5 +56,13 @@ public class Subtask {
 
     public int getAmountOfPreviousSubtasks() {
         return previousSubtasks.size();
+    }
+
+    public void update(Process process) {
+        this.startTime = process.getStart().getEarliestStartTime();
+        this.finishTime = process.getFinish().getLatestStartTime();
+        this.critical = process.isCritical();
+        this.totalTimeStock = process.totalTimeStock();
+        this.freeTimeStock = process.freeTimeStock();
     }
 }
