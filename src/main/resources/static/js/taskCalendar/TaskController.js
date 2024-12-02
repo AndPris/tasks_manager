@@ -48,4 +48,13 @@ export class TaskController {
         this.eventDOMService.setInfo(info);
         this.formDOMService.hideForm();
     }
+
+    async handleEventDrop(info) {
+        const infoDate = new Date(info.event.startStr);
+        if(infoDate < this.currentDate) {
+            info.revert();
+            return;
+        }
+        await this.backendService.patchTask(info.event.id, this.eventDOMService.getEventDataDuringDragNDrop(info));
+    }
 }

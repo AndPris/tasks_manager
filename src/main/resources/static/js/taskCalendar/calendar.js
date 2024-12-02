@@ -54,13 +54,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         eventMouseEnter: function(info) {
             info.el.style.cursor = "pointer";
         },
-        eventDrop: function(info) {
-            const infoDate = new Date(info.event.startStr);
-            if(infoDate < currentDate) {
-                info.revert();
-                return;
-            }
-            backendService.patchTask(info.event.id, eventDOMService.getEventDataDuringDragNDrop(info));
+        eventDrop: async function(info) {
+            await taskController.handleEventDrop(info);
         }
     });
     calendar.render();

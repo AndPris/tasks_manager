@@ -57,7 +57,6 @@ export class BackendService {
 
     //POST
     async postTask(taskData) {
-        console.log(taskData);
         let response = await fetch(this.baseURL, {
             method: "POST",
             headers: {
@@ -85,9 +84,7 @@ export class BackendService {
         if (!response.ok)
             throw new Error(this.defaultNetworkErrorMessage);
 
-        const data = await response.json();
-        console.log(data);
-        return data;
+        return await response.json();
     }
 
     //PATCH
@@ -104,9 +101,7 @@ export class BackendService {
         if (!response.ok)
             throw new Error(this.defaultNetworkErrorMessage);
 
-        const data = await response.json();
-        console.log(data);
-        return data;
+        return await response.json();
     }
 
     //DELETE
