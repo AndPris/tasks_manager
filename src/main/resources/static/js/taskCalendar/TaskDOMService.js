@@ -10,6 +10,7 @@ export class TaskDOMService {
             id: task.id,
             title: task.description,
             priority: task.priority.name,
+            priorityId: task.priority.id,
             start: new Date(task.finishDate),
             done: task.done,
             allDay: task.allDay,
@@ -45,9 +46,5 @@ export class TaskDOMService {
         if(task.done)
             return 'task-done';
         return '';
-    }
-
-    removeEvent(event) {
-        this.calendar.getEventById(event.id).remove();
     }
 }

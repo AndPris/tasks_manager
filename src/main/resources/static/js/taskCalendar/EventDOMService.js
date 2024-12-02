@@ -1,20 +1,37 @@
 export class EventDOMService {
     editButtonsDiv;
-    info;
-    isEventDone;
+    putHandler;
+    checkHandler;
+    deleteHandler;
+    subtasksPageHandler;
 
-    setInfo(info) {
-       this.info = info;
-       this.isEventDone = this.info.event.extendedProps.done;
+    setPutHandler(putHandler) {
+        this.putHandler = putHandler;
+    }
+
+    setCheckHandler(checkHandler) {
+        this.checkHandler = checkHandler;
+    }
+
+    setDeleteHandler(deleteHandler) {
+        this.deleteHandler = deleteHandler;
+    }
+
+    setSubtasksPageHandler(subtasksPageHandler) {
+        this.subtasksPageHandler = subtasksPageHandler;
     }
 
     createEditButtons(destination) {
         this.editButtonsDiv = document.createElement("div");
         this.editButtonsDiv.classList.add("edit-buttons-div");
 
+        // this.createButton('<i class="fa-solid fa-pencil"></i>\n', this.displayEditForm.bind(this));
+        // this.createButton('<i class="fas fa-check"></i>', this.toggleTaskCheck.bind(this));
+        // this.createButton('<i class="fas fa-trash"></i>', this.deleteTask.bind(this));
+        // this.createButton('S', this.getSubtasksPage.bind(this));
         this.createButton('<i class="fa-solid fa-pencil"></i>\n', this.displayEditForm.bind(this));
         this.createButton('<i class="fas fa-check"></i>', this.toggleTaskCheck.bind(this));
-        this.createButton('<i class="fas fa-trash"></i>', this.deleteTask.bind(this));
+        this.createButton('<i class="fas fa-trash"></i>', this.deleteHandler);
         this.createButton('S', this.getSubtasksPage.bind(this));
 
         destination.appendChild(this.editButtonsDiv);
@@ -26,11 +43,6 @@ export class EventDOMService {
         button.classList.add("event-button", `standard-button`);
         button.addEventListener("click", onClick);
         this.editButtonsDiv.appendChild(button);
-    }
-
-    displayEditButtonsOnPopUpWindow(taskDescription) {
-        this.popUpWindowDOMService.displayPopUpWindow(taskDescription);
-        this.displayEditButtons();
     }
 
     displayEditButtons() {
@@ -56,10 +68,6 @@ export class EventDOMService {
         this.updateIsEventDone();
     }
 
-    getEventId() {
-        return this.info.event.id;
-    }
-
     getEventDataForTaskCheck() {
         return  {
             done: !this.isEventDone,
@@ -68,14 +76,6 @@ export class EventDOMService {
 
     updateIsEventDone() {
         this.isEventDone = !this.isEventDone;
-    }
-
-    //DELETE
-    async deleteTask() {
-        this.taskDOMService.removeEvent(this.info.event);
-        await this.backendService.deleteTask(this.getEventId());
-        this.hideEditButtons();
-        this.popUpWindowDOMService.hidePopUpWindow();
     }
 
     getSubtasksPage() {

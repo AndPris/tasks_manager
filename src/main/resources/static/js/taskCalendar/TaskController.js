@@ -8,6 +8,11 @@ export class TaskController {
     calendar;
     postHandler;
     putHandler;
+    checkHandler;
+    deleteHandler;
+    subtasksPageHandler;
+    info;
+    isEventDone;
 
     constructor(backendService, eventDOMService, formDOMService,
                 popUpWindowDOMService, taskDOMService) {
@@ -24,12 +29,20 @@ export class TaskController {
         this.formDOMService.setPostHandler(this.postHandler);
         this.formDOMService.createForm(this.popUpWindowDOMService.getPopUpWindow());
 
+        this.deleteHandler = this.deleteTask.bind(this);
+
+        this.eventDOMService.setDeleteHandler(this.deleteHandler);
         this.eventDOMService.createEditButtons(this.popUpWindowDOMService.getPopUpWindow());
 
     }
 
     setCalendar(calendar) {
         this.calendar = calendar;
+    }
+
+    setInfo(info) {
+        this.info = info;
+        this.isEventDone = this.info.event.extendedProps.done;
     }
 
     //GET
@@ -48,6 +61,22 @@ export class TaskController {
         this.formDOMService.clearForm();
     }
 
+
+    //DELETE
+    async deleteTask() {
+        this.removeEvent(this.info.event);
+        await this.backendService.deleteTask(this.getEventId());
+        this.eventDOMService.hideEditButtons();
+        this.popUpWindowDOMService.hidePopUpWindow();
+    }
+
+    removeEvent(event) {
+        this.calendar.getEventById(event.id).remove();
+    }
+
+    getEventId() {
+        return this.info.event.id;
+    }
 
     //NON API
     handleDateClick(info) {
@@ -75,8 +104,9 @@ export class TaskController {
     }
 
     handleEventClick(info) {
-        this.eventDOMService.displayEditButtonsOnPopUpWindow(info.event.title)
-        this.eventDOMService.setInfo(info);
+        this.popUpWindowDOMService.displayPopUpWindow(info.event.title);
+        this.eventDOMService.displayEditButtons();
+        this.setInfo(info);
         this.formDOMService.hideForm();
     }
 
