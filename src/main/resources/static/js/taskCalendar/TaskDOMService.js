@@ -1,17 +1,11 @@
 export class TaskDOMService {
-    calendar;
-
-    constructor(calendar) {
-        this.calendar = calendar;
-    }
-
-    displayTasks(tasks) {
+    displayTasks(tasks, calendar) {
         tasks.forEach((task) => {
-            this.displayTask(task);
+            this.displayTask(task, calendar);
         });
     }
 
-    displayTask(task) {
+    displayTask(task, calendar) {
         const event = {
             id: task.id,
             title: task.description,
@@ -23,7 +17,7 @@ export class TaskDOMService {
             classNames: this.getClassNames(task),
         };
 
-        this.calendar.addEvent(event);
+        calendar.addEvent(event);
     }
 
     getTaskColor(task) {

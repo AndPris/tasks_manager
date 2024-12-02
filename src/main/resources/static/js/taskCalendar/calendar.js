@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     const backendService = new BackendService(csrfHeader, csrfToken);
     const formDOMService = new FormDOMService(popUpWindowDOMService, backendService);
     const eventDOMService = new EventDOMService(popUpWindowDOMService, backendService, formDOMService);
+    const taskDOMService = new TaskDOMService();
+
+    const taskController = new TaskController(backendService, eventDOMService, formDOMService,
+        popUpWindowDOMService, taskDOMService);
 
     let calendarEl = document.getElementById('calendar');
     let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -42,19 +46,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         },
         locale: 'en-GB',
         eventClick: function(info) {
-            eventDOMService.displayEditButtonsOnPopUpWindow(info.event.title)
-            eventDOMService.setInfo(info);
-            formDOMService.hideForm();
+            taskController.handleEventClick(info);
         },
         dateClick: function(info) {
-            popUpWindowDOMService.hidePopUpWindow();
-            const infoDate = new Date(info.dateStr);
-            if(infoDate < currentDate)
-                return;
-
-            formDOMService.setAllDay(info.allDay);
-            formDOMService.displayFormOnPopUpWindow(info.dateStr);
-            eventDOMService.hideEditButtons();
+            taskController.handleDateClick(info);
         },
         eventMouseEnter: function(info) {
             info.el.style.cursor = "pointer";
@@ -70,14 +65,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     calendar.render();
 
-    const taskDOMService = new TaskDOMService(calendar);
+    taskController.setCalendar(calendar);
 
     formDOMService.setTaskDOMService(taskDOMService);
     eventDOMService.setTaskDOMService(taskDOMService);
-    taskDOMService.displayTasks(await backendService.loadTasks());
+    // taskDOMService.displayTasks(await backendService.loadTasks());
 
-    const taskController = new TaskController(backendService, eventDOMService, formDOMService,
-                                                            popUpWindowDOMService, taskDOMService, calendar);
     await taskController.loadTasks();
 
     console.log(await backendService.loadSubtasks());

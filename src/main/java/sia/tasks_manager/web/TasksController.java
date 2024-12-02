@@ -21,8 +21,7 @@ public class TasksController {
     }
 
     @GetMapping
-    public String loadPage(Model model) {
-        model.addAttribute("currentDate", LocalDate.now());
+    public String loadPage() {
         return "index";
     }
 
