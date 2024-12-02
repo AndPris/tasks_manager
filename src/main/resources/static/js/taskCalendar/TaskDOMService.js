@@ -6,14 +6,12 @@ export class TaskDOMService {
     }
 
     displayTasks(tasks) {
-        this.calendar.removeAllEvents();
         tasks.forEach((task) => {
             this.displayTask(task);
         });
     }
 
     displayTask(task) {
-        console.log(task);
         const event = {
             id: task.id,
             title: task.description,

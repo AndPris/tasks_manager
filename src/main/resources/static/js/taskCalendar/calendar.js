@@ -3,6 +3,7 @@ import {TaskDOMService} from "TaskDOMService.js"
 import {FormDOMService} from "FormDOMService.js"
 import {EventDOMService} from "EventDOMService.js";
 import {PopUpWindowDOMService} from "PopUpWindowDOMService.js";
+import {TaskController} from "TaskController.js";
 
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -75,6 +76,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     eventDOMService.setTaskDOMService(taskDOMService);
     taskDOMService.displayTasks(await backendService.loadTasks());
 
+    const taskController = new TaskController(backendService, eventDOMService, formDOMService,
+                                                            popUpWindowDOMService, taskDOMService, calendar);
+    await taskController.loadTasks();
 
     console.log(await backendService.loadSubtasks());
 });

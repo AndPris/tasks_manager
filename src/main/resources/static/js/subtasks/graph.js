@@ -1,5 +1,6 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import {clearChildren} from "utilDOMFunctions.js";
+import {getDateWithShift} from "utilFunctions.js";
 
 export class Graph {
     width = 640;
@@ -132,7 +133,7 @@ export class Graph {
 
     getProjectTimeline() {
         const start = new Date(creationTime);
-        const finish = this.getDateWithShift(creationTime, this.getProjectDuration());
+        const finish = getDateWithShift(creationTime, this.getProjectDuration());
         return [start, finish];
     }
 
@@ -146,12 +147,6 @@ export class Graph {
 
     get nonCriticalProcesses() {
         return this.processes.filter((process) => !process.critical);
-    }
-
-    getDateWithShift(initialTime, shiftInDays) {
-        const date = new Date(initialTime);
-        date.setDate(date.getDate() + shiftInDays);
-        return date;
     }
 
     drawCriticalProcesses() {
@@ -174,8 +169,8 @@ export class Graph {
     }
 
     drawProcess(process, index) {
-        const startDate = this.getDateWithShift(creationTime, process.startTime);
-        const finishDate = this.getDateWithShift(creationTime, process.finishTime);
+        const startDate = getDateWithShift(creationTime, process.startTime);
+        const finishDate = getDateWithShift(creationTime, process.finishTime);
         const y = this.getProcessY(index);
         const strokeDasharray = this.getStrokeDasharray(process);
 
@@ -215,9 +210,9 @@ export class Graph {
     }
 
     drawTimeStocks(process, index) {
-        const freeTimeStockBegin = this.getDateWithShift(creationTime, process.startTime + process.freeTimeStock);
-        const totalTimeStockBegin = this.getDateWithShift(creationTime, process.startTime + process.totalTimeStock);
-        const processFinish = this.getDateWithShift(creationTime, process.finishTime);
+        const freeTimeStockBegin = getDateWithShift(creationTime, process.startTime + process.freeTimeStock);
+        const totalTimeStockBegin = getDateWithShift(creationTime, process.startTime + process.totalTimeStock);
+        const processFinish = getDateWithShift(creationTime, process.finishTime);
         const y = this.getProcessY(index);
 
         this.drawCircle(totalTimeStockBegin, y, 3, "green");
