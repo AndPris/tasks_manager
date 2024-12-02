@@ -30,8 +30,9 @@ export class TaskController {
         this.formDOMService.createForm(this.popUpWindowDOMService.getPopUpWindow());
 
         this.deleteHandler = this.deleteTask.bind(this);
-
+        this.checkHandler = this.toggleTaskCheck.bind(this);
         this.eventDOMService.setDeleteHandler(this.deleteHandler);
+        this.eventDOMService.setCheckHandler(this.checkHandler);
         this.eventDOMService.createEditButtons(this.popUpWindowDOMService.getPopUpWindow());
 
     }
@@ -64,19 +65,39 @@ export class TaskController {
 
     //DELETE
     async deleteTask() {
-        this.removeEvent(this.info.event);
+        this.removeEvent();
         await this.backendService.deleteTask(this.getEventId());
         this.eventDOMService.hideEditButtons();
         this.popUpWindowDOMService.hidePopUpWindow();
     }
 
-    removeEvent(event) {
-        this.calendar.getEventById(event.id).remove();
+    removeEvent() {
+        this.calendar.getEventById(this.getEventId()).remove();
     }
 
     getEventId() {
         return this.info.event.id;
     }
+
+
+    //PATCH
+    async toggleTaskCheck() {
+        this.removeEvent();
+        const newTask = await this.backendService.patchTask(this.getEventId(), this.getEventDataForTaskCheck());
+        this.taskDOMService.displayTask(newTask, this.calendar);
+        this.updateIsEventDone();
+    }
+
+    getEventDataForTaskCheck() {
+        return  {
+            done: !this.isEventDone,
+        };
+    }
+
+    updateIsEventDone() {
+        this.isEventDone = !this.isEventDone;
+    }
+
 
     //NON API
     handleDateClick(info) {
