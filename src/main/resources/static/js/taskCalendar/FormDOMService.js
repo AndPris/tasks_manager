@@ -2,42 +2,22 @@ export class FormDOMService {
     date;
     form;
     submitButton;
-    backendService;
-    taskDOMService;
-    popUpWindowDOMService;
     eventToEdit;
     postTaskHandler;
     putTaskHandler;
     allDay;
+    postHandler;
 
-    constructor(popUpWindowDOMService, backendService) {
-        this.popUpWindowDOMService = popUpWindowDOMService;
-        this.backendService = backendService;
-        this.createForm(this.popUpWindowDOMService.getPopUpWindow());
-    }
-
-    setTaskDOMService(taskDOMService) {
-        this.taskDOMService = taskDOMService;
+    setPostHandler(postHandler) {
+        this.postHandler = postHandler;
     }
 
     setAllDay(allDay) {
         this.allDay = allDay;
     }
 
-    displayFormOnPopUpWindow(date) {
+    setDate(date) {
         this.date = date;
-        this.popUpWindowDOMService.displayPopUpWindow(`Selected Date: ${this.getClearDateString(date)}`);
-        this.displayForm();
-    }
-
-    getClearDateString(date) {
-        date = date.replace('T', ' ');
-
-        const indexOfDelim = date.indexOf('+');
-        if(indexOfDelim !== -1)
-            date = date.slice(0, indexOfDelim);
-
-        return date;
     }
 
     displayForm() {
@@ -72,8 +52,7 @@ export class FormDOMService {
         this.submitButton.textContent = "Add Task!";
         this.form.appendChild(this.submitButton);
 
-        this.postTaskHandler = this.createTask.bind(this);
-        this.form.addEventListener("submit", this.postTaskHandler);
+        this.form.addEventListener("submit", this.postHandler);
 
         destination.appendChild(this.form);
     }
@@ -95,13 +74,6 @@ export class FormDOMService {
         prioritySelect.appendChild(low);
     }
 
-    async createTask(event) {
-        event.preventDefault();
-        await this.backendService.postTask(this.getFormData());
-        this.taskDOMService.displayTasks(await this.backendService.loadTasks());
-        this.clearForm();
-    }
-
     getFormData() {
         return {
             description: this.form.description.value,
@@ -110,14 +82,6 @@ export class FormDOMService {
             priority: {id: this.form.priority.value}
         };
     }
-    //
-    // getUTCTime() {
-    //     let date = new Date(this.date);
-    //     if(this.date.indexOf('+') === -1)
-    //         date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
-    //
-    //     return date.toISOString();
-    // }
 
     clearForm() {
         this.form.description.value = '';

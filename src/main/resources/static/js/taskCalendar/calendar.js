@@ -9,10 +9,10 @@ const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('con
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
 document.addEventListener('DOMContentLoaded', async function() {
-    const popUpWindowDOMService = new PopUpWindowDOMService;
+    const popUpWindowDOMService = new PopUpWindowDOMService();
     const backendService = new BackendService(csrfHeader, csrfToken);
-    const formDOMService = new FormDOMService(popUpWindowDOMService, backendService);
-    const eventDOMService = new EventDOMService(popUpWindowDOMService, backendService, formDOMService);
+    const formDOMService = new FormDOMService();
+    const eventDOMService = new EventDOMService();
     const taskDOMService = new TaskDOMService();
 
     const taskController = new TaskController(backendService, eventDOMService, formDOMService,
@@ -61,12 +61,5 @@ document.addEventListener('DOMContentLoaded', async function() {
     calendar.render();
 
     taskController.setCalendar(calendar);
-
-    formDOMService.setTaskDOMService(taskDOMService);
-    eventDOMService.setTaskDOMService(taskDOMService);
-    // taskDOMService.displayTasks(await backendService.loadTasks());
-
     await taskController.loadTasks();
-
-    console.log(await backendService.loadSubtasks());
 });

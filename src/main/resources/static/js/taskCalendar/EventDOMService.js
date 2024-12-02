@@ -1,26 +1,11 @@
 export class EventDOMService {
-    popUpWindowDOMService;
-    backendService;
     editButtonsDiv;
     info;
     isEventDone;
-    taskDOMService;
-    formDOMService;
-
-    constructor(popUpWindowDOMService, backendService, formDOMService) {
-        this.popUpWindowDOMService = popUpWindowDOMService;
-        this.backendService = backendService;
-        this.formDOMService = formDOMService;
-        this.createEditButtons(this.popUpWindowDOMService.getPopUpWindow());
-    }
 
     setInfo(info) {
        this.info = info;
        this.isEventDone = this.info.event.extendedProps.done;
-    }
-
-    setTaskDOMService(taskDOMService) {
-        this.taskDOMService = taskDOMService;
     }
 
     createEditButtons(destination) {

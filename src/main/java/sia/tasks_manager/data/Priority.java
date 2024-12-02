@@ -7,16 +7,19 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force=true)
-@RequiredArgsConstructor
 public class Priority {
     @Id
     private final Long id;
 
     @NotNull
-    private final String name;
+    private String name;
+
+    public Priority(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

@@ -68,6 +68,8 @@ export class BackendService {
 
         if (!response.ok)
             throw new Error(this.defaultNetworkErrorMessage);
+
+        return await response.json();
     }
 
     //PUT
