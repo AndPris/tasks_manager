@@ -15,6 +15,8 @@ import sia.tasks_manager.web.dto.SubtaskDTO;
 import sia.tasks_manager.repositories.SubtaskRepository;
 import sia.tasks_manager.repositories.TaskRepository;
 
+import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -101,5 +103,11 @@ public class SubtasksRestController {
         subtask.setTask(taskRepository.findById(taskId).get());
         EntityModel<Subtask> subtaskToReturn = EntityModel.of(subtaskRepository.save(subtask));
         return ResponseEntity.ok(subtaskToReturn);
+    }
+
+    @GetMapping("/subtasks")
+    public ResponseEntity<?> getAllSubtasksByCurrentUser(Principal user) {
+        List<Subtask> subtasks = subtaskRepository.findAllByTask_User_Username(user.getName());
+        return ResponseEntity.ok(subtasks);
     }
 }

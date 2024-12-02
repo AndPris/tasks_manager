@@ -74,4 +74,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     formDOMService.setTaskDOMService(taskDOMService);
     eventDOMService.setTaskDOMService(taskDOMService);
     taskDOMService.displayTasks(await backendService.loadTasks());
+
+
+    console.log(await backendService.loadSubtasks());
 });

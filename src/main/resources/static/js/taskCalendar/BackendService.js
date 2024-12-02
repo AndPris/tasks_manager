@@ -29,16 +29,31 @@ export class BackendService {
         if (!response.ok)
             throw new Error(this.defaultNetworkErrorMessage);
 
-        const tasks = await response.json();
-        // tasks.forEach((task) => {task.finishDate = this.convertUTCToLocalTime(task.finishDate);});
-        return tasks;
+        return await response.json();
     }
-    //
-    // convertUTCToLocalTime(UTCString) {
-    //     const UTCDate = new Date(UTCString);
-    //     UTCDate.setHours(UTCDate.getHours() - UTCDate.getTimezoneOffset() / 60);
-    //     return UTCDate.toISOString();
-    // }
+
+    async loadSubtasks() {
+        try {
+            return await this.getSubtasks();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async getSubtasks() {
+        const response = await fetch(`/api/subtasks`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok)
+            throw new Error(this.defaultNetworkErrorMessage);
+
+        return await response.json();
+    }
+
 
     //POST
     async postTask(taskData) {

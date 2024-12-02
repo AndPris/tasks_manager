@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import sia.tasks_manager.algorithm.Process;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,9 +50,12 @@ public class Subtask {
     private int totalTimeStock;
     private int freeTimeStock;
 
+    private Date earliestPossibleStartTime;
+
     @PrePersist
     protected void onCreate() {
         this.done = false;
+        this.earliestPossibleStartTime = this.task.getCreationTime();
     }
 
     public int getAmountOfPreviousSubtasks() {
