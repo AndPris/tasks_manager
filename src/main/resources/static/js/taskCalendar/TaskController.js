@@ -31,10 +31,13 @@ export class TaskController {
 
         this.deleteHandler = this.deleteTask.bind(this);
         this.checkHandler = this.toggleTaskCheck.bind(this);
+        this.subtasksPageHandler = this.getSubtasksPage.bind(this);
+
         this.eventDOMService.setDeleteHandler(this.deleteHandler);
         this.eventDOMService.setCheckHandler(this.checkHandler);
-        this.eventDOMService.createEditButtons(this.popUpWindowDOMService.getPopUpWindow());
+        this.eventDOMService.setSubtasksPageHandler(this.subtasksPageHandler);
 
+        this.eventDOMService.createEditButtons(this.popUpWindowDOMService.getPopUpWindow());
     }
 
     setCalendar(calendar) {
@@ -98,6 +101,11 @@ export class TaskController {
         this.isEventDone = !this.isEventDone;
     }
 
+
+    //SUBTASKS
+    getSubtasksPage() {
+        window.location.href = `/tasks/${this.getEventId()}/subtasks`;
+    }
 
     //NON API
     handleDateClick(info) {
