@@ -4,10 +4,15 @@ export class SubtaskFormDOMService {
     form;
     possiblePreviousSubtasks;
     previousSubtasksSelect;
+    allSubtasks;
 
     constructor(form) {
         this.form = form;
         this.previousSubtasksSelect = this.form["previous-subtasks"];
+    }
+
+    setAllSubtasks(allSubtasks) {
+        this.allSubtasks = allSubtasks;
     }
 
     isSelectedPreviousSubtasksCorrect(allSubtasks) {
@@ -91,7 +96,7 @@ export class SubtaskFormDOMService {
     }
 
     getSubtaskById(id) {
-        return this.possiblePreviousSubtasks.find((subtask) => {
+        return this.allSubtasks.find((subtask) => {
             return subtask.id.toString() === id.toString();
         });
     }

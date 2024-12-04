@@ -39,9 +39,12 @@ public class Task {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    private Date earliestPossibleStartTime;
+
     @PrePersist
     protected void onCreate() {
         this.done = false;
         this.creationTime = new Date();
+        this.earliestPossibleStartTime = this.creationTime;
     }
 }

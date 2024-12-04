@@ -50,12 +50,9 @@ public class Subtask {
     private int totalTimeStock;
     private int freeTimeStock;
 
-    private Date earliestPossibleStartTime;
-
     @PrePersist
     protected void onCreate() {
         this.done = false;
-        this.earliestPossibleStartTime = this.task.getCreationTime();
     }
 
     public int getAmountOfPreviousSubtasks() {

@@ -28,6 +28,8 @@ export class Graph {
     finishDateFontWeight = "bold";
     today;
     finishDate;
+    criticalProcesses;
+    nonCriticalProcesses;
 
     constructor() {
         this.today = new Date();
@@ -36,6 +38,8 @@ export class Graph {
 
     draw(processes, creationTime, finishDate, destination) {
         this.processes = processes;
+        this.criticalProcesses = this.processes.filter((process) => process.critical);
+        this.nonCriticalProcesses = this.processes.filter((process) => !process.critical);
         this.creationTime = creationTime;
         this.creationTime.setHours(0, 0, 0, 0);
         this.finishDate = finishDate;
@@ -141,16 +145,8 @@ export class Graph {
         return this.criticalProcesses.reduce((accumulator, currentValue) => accumulator + currentValue.duration, 0);
     }
 
-    get criticalProcesses() {
-        return this.processes.filter((process) => process.critical);
-    }
-
-    get nonCriticalProcesses() {
-        return this.processes.filter((process) => !process.critical);
-    }
-
     drawCriticalProcesses() {
-        this.criticalProcesses.sort((a, b) => {return a.start_time - b.start_time;});
+        this.criticalProcesses.sort((a, b) => {return a.startTime - b.startTime;});
         this.criticalProcesses.forEach((process, index) => {
             this.drawProcess(process, index - this.shiftUp);
         });
@@ -159,6 +155,7 @@ export class Graph {
     }
 
     drawNonCriticalProcesses() {
+        this.nonCriticalProcesses.sort((a, b) => {return a.startTime - b.startTime;});
         this.nonCriticalProcesses.forEach((process, index) => {
             index = this.amountOfCriticalProcesses + index - this.shiftUp;
             this.drawProcess(process, index);

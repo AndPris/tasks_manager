@@ -39,6 +39,7 @@ export class SubtaskController {
 
     async populatePossiblePreviousSubtasks() {
         const subtasks = await this.subtaskBackendService.getAllSubtasks();
+        this.subtaskFormDOMService.setAllSubtasks(subtasks);
         this.subtaskFormDOMService.populatePossiblePreviousSubtasks(subtasks);
     }
 
