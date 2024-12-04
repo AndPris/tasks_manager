@@ -1,3 +1,5 @@
+import {getColorByPriority} from "../utilFunctions.js";
+
 export class TaskDOMService {
     displayTasks(tasks, calendar) {
         tasks.forEach((task) => {
@@ -8,6 +10,7 @@ export class TaskDOMService {
     displayTask(task, calendar) {
         const event = {
             id: task.id,
+            isSubtask: false,
             title: task.description,
             priority: task.priority.name,
             priorityId: task.priority.id,
@@ -25,21 +28,7 @@ export class TaskDOMService {
         if(task.done)
             return 'gray';
 
-        let color;
-        switch (task.priority.name.toLowerCase()) {
-            case 'high':
-                color = 'red';
-                break;
-            case 'medium':
-                color = 'blue'
-                break;
-            case 'low':
-                color = 'green';
-                break;
-            default:
-                color = 'yellow';
-        }
-        return color;
+        return getColorByPriority(task.priority);
     }
 
     getClassNames(task) {

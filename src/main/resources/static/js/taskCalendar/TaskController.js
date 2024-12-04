@@ -5,6 +5,7 @@ export class TaskController {
     formDOMService;
     popUpWindowDOMService;
     taskDOMService;
+    subtaskCalendarDOMService;
     calendar;
     postHandler;
     editButtonHandler;
@@ -15,7 +16,7 @@ export class TaskController {
     isEventDone;
 
     constructor(backendService, eventDOMService, formDOMService,
-                popUpWindowDOMService, taskDOMService) {
+                popUpWindowDOMService, taskDOMService, subtaskCalendarDOMService) {
         this.currentDate = new Date();
         this.currentDate.setHours(0, 0, 0, 0);
 
@@ -24,6 +25,7 @@ export class TaskController {
         this.formDOMService = formDOMService;
         this.popUpWindowDOMService = popUpWindowDOMService;
         this.taskDOMService = taskDOMService;
+        this.subtaskCalendarDOMService = subtaskCalendarDOMService;
 
         this.postHandler = this.createTask.bind(this);
         this.putTaskHandler = this.editTask.bind(this);
@@ -61,6 +63,10 @@ export class TaskController {
         this.taskDOMService.displayTasks(tasks, this.calendar);
     }
 
+    async loadSubtasks() {
+        let subtasks = await this.backendService.loadSubtasks();
+        this.subtaskCalendarDOMService.displaySubtasks(subtasks, this.calendar);
+    }
 
     //POST
     async createTask(event) {
@@ -160,6 +166,9 @@ export class TaskController {
     }
 
     handleEventClick(info) {
+        if(info.event.extendedProps.isSubtask)
+            return;
+
         this.popUpWindowDOMService.displayPopUpWindow(info.event.title);
         this.eventDOMService.displayEditButtons();
         this.setInfo(info);
@@ -168,7 +177,7 @@ export class TaskController {
 
     async handleEventDrop(info) {
         const infoDate = new Date(info.event.startStr);
-        if(infoDate < this.currentDate) {
+        if(infoDate < this.currentDate || info.event.extendedProps.isSubtask) {
             info.revert();
             return;
         }

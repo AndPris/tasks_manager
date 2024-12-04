@@ -4,6 +4,7 @@ import {FormDOMService} from "FormDOMService.js"
 import {EventDOMService} from "EventDOMService.js";
 import {PopUpWindowDOMService} from "PopUpWindowDOMService.js";
 import {TaskController} from "TaskController.js";
+import {SubtaskCalendarDOMService} from "SubtaskCalendarDOMService.js";
 
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -14,9 +15,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     const formDOMService = new FormDOMService();
     const eventDOMService = new EventDOMService();
     const taskDOMService = new TaskDOMService();
+    const subtaskCalendarDOMService = new SubtaskCalendarDOMService();
 
     const taskController = new TaskController(backendService, eventDOMService, formDOMService,
-        popUpWindowDOMService, taskDOMService);
+        popUpWindowDOMService, taskDOMService, subtaskCalendarDOMService);
 
     let calendarEl = document.getElementById('calendar');
     let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -62,6 +64,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     taskController.setCalendar(calendar);
     await taskController.loadTasks();
+    await taskController.loadSubtasks();
 
     console.log(await backendService.loadSubtasks());
 });
