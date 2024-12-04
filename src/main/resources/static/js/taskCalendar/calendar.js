@@ -62,4 +62,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     taskController.setCalendar(calendar);
     await taskController.loadTasks();
+
+    console.log(await backendService.loadSubtasks());
 });

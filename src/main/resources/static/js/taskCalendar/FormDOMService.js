@@ -3,13 +3,16 @@ export class FormDOMService {
     form;
     submitButton;
     eventToEdit;
-    postTaskHandler;
-    putTaskHandler;
+    putHandler;
     allDay;
     postHandler;
 
     setPostHandler(postHandler) {
         this.postHandler = postHandler;
+    }
+
+    setPutHandler(putHandler) {
+        this.putHandler = putHandler;
     }
 
     setAllDay(allDay) {
@@ -94,8 +97,8 @@ export class FormDOMService {
         this.submitButton.textContent = "Add Task!";
         this.form.method = "post";
 
-        this.form.removeEventListener("submit", this.putTaskHandler);
-        this.form.addEventListener("submit", this.postTaskHandler);
+        this.form.removeEventListener("submit", this.putHandler);
+        this.form.addEventListener("submit", this.postHandler);
     }
 
     changeToEditForm(event) {
@@ -108,9 +111,8 @@ export class FormDOMService {
         this.submitButton.textContent = "Edit Task!";
 
         this.form.method = "put";
-        this.form.removeEventListener("submit", this.postTaskHandler);
-        this.putTaskHandler = this.editTask.bind(this);
-        this.form.addEventListener("submit", this.putTaskHandler);
+        this.form.removeEventListener("submit", this.postHandler);
+        this.form.addEventListener("submit", this.putHandler);
     }
 
     getPriorityValueByName(name) {
@@ -118,18 +120,6 @@ export class FormDOMService {
             if (this.form.priority.options[i].textContent === name)
                 return i+1;
         }
-    }
-
-    async editTask(event) {
-        event.preventDefault();
-        console.log(this.getTaskDataForPut());
-        this.taskDOMService.removeEvent( {id: this.eventToEdit.id,});
-        const newTask = await this.backendService.putTask(this.eventToEdit.id, this.getTaskDataForPut());
-        this.taskDOMService.displayTask(newTask);
-        this.clearForm();
-        this.changeToCreateForm();
-        this.hideForm();
-        this.popUpWindowDOMService.hidePopUpWindow();
     }
 
     getTaskDataForPut() {

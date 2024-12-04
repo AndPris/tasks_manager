@@ -1,12 +1,12 @@
 export class EventDOMService {
     editButtonsDiv;
-    putHandler;
+    editButtonHandler;
     checkHandler;
     deleteHandler;
     subtasksPageHandler;
 
-    setPutHandler(putHandler) {
-        this.putHandler = putHandler;
+    setEditButtonHandler(editButtonHandler) {
+        this.editButtonHandler = editButtonHandler;
     }
 
     setCheckHandler(checkHandler) {
@@ -25,9 +25,7 @@ export class EventDOMService {
         this.editButtonsDiv = document.createElement("div");
         this.editButtonsDiv.classList.add("edit-buttons-div");
 
-        // this.createButton('<i class="fa-solid fa-pencil"></i>\n', this.displayEditForm.bind(this));
-        // this.createButton('S', this.getSubtasksPage.bind(this));
-        this.createButton('<i class="fa-solid fa-pencil"></i>\n', this.displayEditForm.bind(this));
+        this.createButton('<i class="fa-solid fa-pencil"></i>\n', this.editButtonHandler);
         this.createButton('<i class="fas fa-check"></i>', this.checkHandler);
         this.createButton('<i class="fas fa-trash"></i>', this.deleteHandler);
         this.createButton('S', this.subtasksPageHandler);
@@ -56,11 +54,5 @@ export class EventDOMService {
             finishDate: info.event.startStr,
             allDay: info.event.allDay,
         };
-    }
-
-    displayEditForm() {
-        this.formDOMService.changeToEditForm(this.info.event);
-        this.hideEditButtons();
-        this.formDOMService.displayForm();
     }
 }

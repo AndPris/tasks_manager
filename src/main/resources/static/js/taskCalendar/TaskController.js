@@ -7,7 +7,7 @@ export class TaskController {
     taskDOMService;
     calendar;
     postHandler;
-    putHandler;
+    editButtonHandler;
     checkHandler;
     deleteHandler;
     subtasksPageHandler;
@@ -26,16 +26,20 @@ export class TaskController {
         this.taskDOMService = taskDOMService;
 
         this.postHandler = this.createTask.bind(this);
+        this.putTaskHandler = this.editTask.bind(this);
         this.formDOMService.setPostHandler(this.postHandler);
+        this.formDOMService.setPutHandler(this.putTaskHandler);
         this.formDOMService.createForm(this.popUpWindowDOMService.getPopUpWindow());
 
         this.deleteHandler = this.deleteTask.bind(this);
         this.checkHandler = this.toggleTaskCheck.bind(this);
         this.subtasksPageHandler = this.getSubtasksPage.bind(this);
+        this.editButtonHandler = this.displayEditForm.bind(this);
 
         this.eventDOMService.setDeleteHandler(this.deleteHandler);
         this.eventDOMService.setCheckHandler(this.checkHandler);
         this.eventDOMService.setSubtasksPageHandler(this.subtasksPageHandler);
+        this.eventDOMService.setEditButtonHandler(this.editButtonHandler);
 
         this.eventDOMService.createEditButtons(this.popUpWindowDOMService.getPopUpWindow());
     }
@@ -48,6 +52,7 @@ export class TaskController {
         this.info = info;
         this.isEventDone = this.info.event.extendedProps.done;
     }
+
 
     //GET
     async loadTasks() {
@@ -102,10 +107,30 @@ export class TaskController {
     }
 
 
+    //PUT
+    displayEditForm() {
+        this.formDOMService.changeToEditForm(this.info.event);
+        this.eventDOMService.hideEditButtons();
+        this.formDOMService.displayForm();
+    }
+
+    async editTask(event) {
+        event.preventDefault();
+        this.removeEvent( {id: this.info.event.id,});
+        const newTask = await this.backendService.putTask(this.info.event.id, this.formDOMService.getTaskDataForPut());
+        this.taskDOMService.displayTask(newTask, this.calendar);
+        this.formDOMService.clearForm();
+        this.formDOMService.changeToCreateForm();
+        this.formDOMService.hideForm();
+        this.popUpWindowDOMService.hidePopUpWindow();
+    }
+
+
     //SUBTASKS
     getSubtasksPage() {
         window.location.href = `/tasks/${this.getEventId()}/subtasks`;
     }
+
 
     //NON API
     handleDateClick(info) {
@@ -118,6 +143,8 @@ export class TaskController {
         this.formDOMService.setAllDay(info.allDay);
         this.formDOMService.setDate(date);
         this.popUpWindowDOMService.displayPopUpWindow(`Selected Date: ${this.getClearDateString(date)}`);
+        this.formDOMService.changeToCreateForm();
+        this.formDOMService.clearForm();
         this.formDOMService.displayForm();
         this.eventDOMService.hideEditButtons();
     }
