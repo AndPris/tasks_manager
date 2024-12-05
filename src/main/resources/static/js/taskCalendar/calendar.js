@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             right: 'dayGridMonth,timeGridWeek'
         },
         events: [],
-        eventOrder: "done,allDay,priorityId,title",
+        eventOrder: "done,isSubtask,allDay,priorityId,title",
         views : {
             timeGridWeek: {
                 dayHeaderFormat: { weekday: 'short', month: '2-digit', day: '2-digit', omitCommas: true,  },

@@ -8,30 +8,69 @@ export class SubtaskCalendarDOMService {
     }
 
     displaySubtask(subtask, calendar) {
-        const event = {
-            id: subtask.id,
-            isSubtask: true,
-            title: "Subtask " + subtask.description,
-            start: getDateWithShift(subtask.task.earliestPossibleStartTime, subtask.startTime),
-            done: subtask.done,
-            allDay: true,
-            color: this.getSubtaskColor(subtask),
-            classNames: this.getClassNames(subtask),
-        };
+        if(subtask.finishTime === 0)
+            return;
 
-        calendar.addEvent(event);
+        this.displayEarliestPossibleStartEvent(subtask, calendar);
+        this.displayStartWithoutShiftsEvent(subtask, calendar);
+        this.displayMustStartEvent(subtask, calendar);
+        this.displayDeadlineEvent(subtask, calendar);
     }
 
-    getSubtaskColor(subtask) {
-        if(subtask.done)
-            return 'gray';
+    displayEarliestPossibleStartEvent(subtask, calendar) {
+        const earliestPossibleStartEvent = this.getSubtaskEvent(subtask,
+            `Earliest start for subtask ${subtask.description}`,
+            subtask.startTime,
+            "green");
+        calendar.addEvent(earliestPossibleStartEvent);
+    }
 
-        return getColorByPriority(subtask.task.priority);
+    displayStartWithoutShiftsEvent(subtask, calendar) {
+        if(subtask.freeTimeStock >= subtask.totalTimeStock)
+            return;
+
+        const startWithoutShiftsEvent = this.getSubtaskEvent(subtask,
+            `Start without shifts for subtask ${subtask.description}`,
+            subtask.startTime + subtask.freeTimeStock,
+            "rgb(166, 209, 67)");
+        calendar.addEvent(startWithoutShiftsEvent);
+    }
+
+    displayMustStartEvent(subtask, calendar) {
+        if(subtask.critical)
+            return;
+
+        const mustHaveStartEvent = this.getSubtaskEvent(subtask,
+            `Must start subtask ${subtask.description}`,
+            subtask.startTime + subtask.totalTimeStock,
+            "orange");
+        calendar.addEvent(mustHaveStartEvent);
+    }
+
+    displayDeadlineEvent(subtask, calendar) {
+        const deadlineEvent = this.getSubtaskEvent(subtask,
+            `Deadline of subtask ${subtask.description}`,
+            subtask.finishTime,
+            "red");
+        calendar.addEvent(deadlineEvent);
+    }
+
+    getSubtaskEvent(subtask, title, startShift, color) {
+        return {
+            id: subtask.id,
+            isSubtask: true,
+            title: title,
+            start: getDateWithShift(subtask.task.earliestPossibleStartTime, startShift),
+            done: subtask.done,
+            allDay: true,
+            color: subtask.done ? "grey" : color,
+            classNames: this.getClassNames(subtask),
+        };
     }
 
     getClassNames(subtask) {
         if(subtask.done)
-            return 'task-done';
-        return '';
+            return 'task-done shift-right';
+        return 'shift-right';
     }
 }

@@ -7,3 +7,15 @@
 .fc-event.task-done .fc-event-title {
     text-decoration: line-through;
 }
+
+.fc-event-title-container {
+    white-space: normal !important;
+}
+
+.fc-daygrid-event {
+    height: auto !important;
+}
+
+.shift-right {
+    margin-left: 20px !important;
+}

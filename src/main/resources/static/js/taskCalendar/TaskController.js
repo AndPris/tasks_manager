@@ -166,10 +166,13 @@ export class TaskController {
     }
 
     handleEventClick(info) {
-        if(info.event.extendedProps.isSubtask)
-            return;
-
         this.popUpWindowDOMService.displayPopUpWindow(info.event.title);
+        if(info.event.extendedProps.isSubtask) {
+            this.formDOMService.hideForm();
+            this.eventDOMService.hideEditButtons();
+            return;
+        }
+
         this.eventDOMService.displayEditButtons();
         this.setInfo(info);
         this.formDOMService.hideForm();
