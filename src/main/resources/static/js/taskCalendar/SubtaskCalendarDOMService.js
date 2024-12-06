@@ -58,6 +58,7 @@ export class SubtaskCalendarDOMService {
     getSubtaskEvent(subtask, title, startShift, color) {
         return {
             id: subtask.id,
+            taskId: subtask.task.id,
             isSubtask: true,
             title: title,
             start: getDateWithShift(subtask.task.earliestPossibleStartTime, startShift),

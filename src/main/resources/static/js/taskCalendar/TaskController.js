@@ -80,6 +80,7 @@ export class TaskController {
     //DELETE
     async deleteTask() {
         this.removeEvent();
+        this.removeSubtasksEvents(this.getEventId());
         await this.backendService.deleteTask(this.getEventId());
         this.eventDOMService.hideEditButtons();
         this.popUpWindowDOMService.hidePopUpWindow();
@@ -87,6 +88,13 @@ export class TaskController {
 
     removeEvent() {
         this.calendar.getEventById(this.getEventId()).remove();
+    }
+
+    removeSubtasksEvents(taskId) {
+        this.calendar.getEvents()
+            .filter(event => event.extendedProps.taskId !== undefined)
+            .filter(event => event.extendedProps.taskId.toString() === taskId.toString())
+            .forEach(event => event.remove());
     }
 
     getEventId() {
