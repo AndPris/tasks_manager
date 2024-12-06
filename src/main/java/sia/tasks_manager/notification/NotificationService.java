@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import sia.tasks_manager.data.Task;
 import sia.tasks_manager.data.User;
 import sia.tasks_manager.repositories.TaskRepository;
+import static sia.tasks_manager.utils.DateUtils.getDateWithShift;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -58,13 +58,6 @@ public class NotificationService {
             if (user != null)
                 sendEmail("Reminder: Task Deadline Expired", user, task, "was due yesterday");
         }
-    }
-
-    private Date getDateWithShift(Date currentDate, int shift) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.DAY_OF_YEAR, shift);
-        return calendar.getTime();
     }
 
     private void sendEmail(String subject, User user, Task task, String deadlineState) {

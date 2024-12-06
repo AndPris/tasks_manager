@@ -1,18 +1,28 @@
 package sia.tasks_manager.algorithm;
 
 import org.springframework.stereotype.Service;
+import sia.tasks_manager.algorithm.heuristic.TasksArrangementHeuristic;
 import sia.tasks_manager.data.Subtask;
+import sia.tasks_manager.data.Task;
 import sia.tasks_manager.repositories.SubtaskRepository;
+import sia.tasks_manager.repositories.TaskRepository;
+import sia.tasks_manager.repositories.UserRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class TaskNetworkBuilder {
+    private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final SubtaskRepository subtaskRepository;
+    private final TasksArrangementHeuristic heuristic;
 
-    public TaskNetworkBuilder(SubtaskRepository subtaskRepository) {
+    public TaskNetworkBuilder(UserRepository userRepository, TaskRepository taskRepository,
+                              SubtaskRepository subtaskRepository, TasksArrangementHeuristic heuristic) {
+        this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
         this.subtaskRepository = subtaskRepository;
+        this.heuristic = heuristic;
     }
 
     public List<Subtask> build(Long taskId) {
@@ -45,6 +55,8 @@ public class TaskNetworkBuilder {
         network.setFinish(taskFinish);
         network.calculateTimes();
         updateSubtasks(subtaskProcesses);
+        applyHeuristics(userRepository.findUsernameByTaskId(taskId));
+
         //todo: remove
         network.display();
         return new ArrayList<>(subtaskProcesses.keySet());
@@ -74,5 +86,34 @@ public class TaskNetworkBuilder {
             subtask.update(process);
             subtaskRepository.save(subtask);
         }
+    }
+
+    private void applyHeuristics(String username) {
+        Map<Task, Integer> tasksWithDuration = getTasksWithDuration(username);
+        heuristic.arrangeTasks(tasksWithDuration);
+        taskRepository.saveAll(tasksWithDuration.keySet());
+    }
+
+    private Map<Task, Integer> getTasksWithDuration(String username) {
+        Iterable<Task> tasks = taskRepository.findTasksByUserUsername(username);
+        Map<Task, Integer> tasksWithDuration = new HashMap<>();
+
+        for(Task task : tasks) {
+            Integer taskDuration = getTaskDuration(task);
+            if(taskDuration == 0)
+                continue;
+            tasksWithDuration.put(task, taskDuration);
+        }
+
+        return tasksWithDuration;
+    }
+
+    private Integer getTaskDuration(Task task) {
+        List<Subtask> subtasks = subtaskRepository.findAllByTaskIdOrderById(task.getId());
+        if(subtasks.isEmpty())
+            return 0;
+
+        Optional<Integer> taskDuration = subtasks.stream().filter(Subtask::isCritical).map(Subtask::getFinishTime).max(Integer::compare);
+        return taskDuration.orElse(0);
     }
 }

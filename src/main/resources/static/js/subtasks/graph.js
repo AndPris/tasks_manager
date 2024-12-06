@@ -12,7 +12,7 @@ export class Graph {
     x;
     y;
     svg;
-    creationTime;
+    earliestPossibleStartTime;
     destination;
     fontSize = "20px";
     textMargin = 0.2;
@@ -36,12 +36,12 @@ export class Graph {
         this.today.setHours(0, 0, 0, 0);
     }
 
-    draw(processes, creationTime, finishDate, destination) {
+    draw(processes, earliestPossibleStartTime, finishDate, destination) {
         this.processes = processes;
         this.criticalProcesses = this.processes.filter((process) => process.critical);
         this.nonCriticalProcesses = this.processes.filter((process) => !process.critical);
-        this.creationTime = creationTime;
-        this.creationTime.setHours(0, 0, 0, 0);
+        this.earliestPossibleStartTime = earliestPossibleStartTime;
+        this.earliestPossibleStartTime.setHours(0, 0, 0, 0);
         this.finishDate = finishDate;
         this.finishDate.setHours(0, 0, 0, 0);
         this.destination = destination;
@@ -136,8 +136,8 @@ export class Graph {
     }
 
     getProjectTimeline() {
-        const start = new Date(creationTime);
-        const finish = getDateWithShift(creationTime, this.getProjectDuration());
+        const start = new Date(earliestPossibleStartTime);
+        const finish = getDateWithShift(earliestPossibleStartTime, this.getProjectDuration());
         return [start, finish];
     }
 
@@ -166,8 +166,8 @@ export class Graph {
     }
 
     drawProcess(process, index) {
-        const startDate = getDateWithShift(creationTime, process.startTime);
-        const finishDate = getDateWithShift(creationTime, process.finishTime);
+        const startDate = getDateWithShift(earliestPossibleStartTime, process.startTime);
+        const finishDate = getDateWithShift(earliestPossibleStartTime, process.finishTime);
         const y = this.getProcessY(index);
         const strokeDasharray = this.getStrokeDasharray(process);
 
@@ -207,9 +207,9 @@ export class Graph {
     }
 
     drawTimeStocks(process, index) {
-        const freeTimeStockBegin = getDateWithShift(creationTime, process.startTime + process.freeTimeStock);
-        const totalTimeStockBegin = getDateWithShift(creationTime, process.startTime + process.totalTimeStock);
-        const processFinish = getDateWithShift(creationTime, process.finishTime);
+        const freeTimeStockBegin = getDateWithShift(earliestPossibleStartTime, process.startTime + process.freeTimeStock);
+        const totalTimeStockBegin = getDateWithShift(earliestPossibleStartTime, process.startTime + process.totalTimeStock);
+        const processFinish = getDateWithShift(earliestPossibleStartTime, process.finishTime);
         const y = this.getProcessY(index);
 
         this.drawCircle(totalTimeStockBegin, y, 3, "green");

@@ -27,7 +27,6 @@ export class SubtaskController {
     //GET
     async loadSubtasks() {
         let [subtasks, pageInfo] = await this.subtaskBackendService.loadSubtasks();
-
         const editHandler = this.editSubtask.bind(this);
         const checkHandler = this.checkSubtask.bind(this);
         const deleteHandler = this.deleteSubtaskFromDB.bind(this);
@@ -124,8 +123,9 @@ export class SubtaskController {
     }
 
     //PLAN
-    async plan(creationTime, finishDate, destination) {
+    async plan(earliestPossibleStartTime, finishDate, destination) {
         const data = await this.subtaskBackendService.getDataForGraph();
-        this.graph.draw(data, creationTime, finishDate, destination);
+        console.log(data);
+        this.graph.draw(data, earliestPossibleStartTime, finishDate, destination);
     }
 }

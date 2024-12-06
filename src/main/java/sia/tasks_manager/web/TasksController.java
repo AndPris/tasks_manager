@@ -34,7 +34,7 @@ public class TasksController {
         Task task = optionalTask.get();
         model.addAttribute("taskId", taskId);
         model.addAttribute("description", task.getDescription());
-        model.addAttribute("creationTime", task.getCreationTime());
+        model.addAttribute("earliestPossibleStartTime", task.getEarliestPossibleStartTime());
         model.addAttribute("finishDate", task.getFinishDate());
         return "subtasks";
     }

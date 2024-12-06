@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TaskRepository extends PagingAndSortingRepository<Task, Long>, ListCrudRepository<Task, Long> {
-    Iterable<Task> findByDescription(String description);
     Iterable<Task> findTasksByUserUsername(String username);
     Optional<Task> findByIdAndUserUsername(Long id, String username);
 

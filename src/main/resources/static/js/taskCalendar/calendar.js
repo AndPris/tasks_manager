@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         },
         locale: 'en-GB',
         eventClick: function(info) {
-            console.log(info);
             taskController.handleEventClick(info);
         },
         dateClick: function(info) {
