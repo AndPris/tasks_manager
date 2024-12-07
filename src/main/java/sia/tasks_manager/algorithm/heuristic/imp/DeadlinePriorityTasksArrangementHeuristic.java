@@ -12,6 +12,8 @@ import java.util.Map;
 
 @Component
 public class DeadlinePriorityTasksArrangementHeuristic implements TasksArrangementHeuristic {
+    private static final int TASKS_GAP = 1;
+
     @Override
     public void arrangeTasks(Map<Task, Integer> tasksWithDuration) {
         if(tasksWithDuration.isEmpty())
@@ -19,11 +21,13 @@ public class DeadlinePriorityTasksArrangementHeuristic implements TasksArrangeme
 
         List<Task> tasks = sortTasksByFinishDateAndPriority(tasksWithDuration);
 
-        int totalDuration = 0;
-        Date firstTaskEarliestStartTime = tasks.get(0).getCreationTime();
+        Date previousTaskEarliestStartTime = tasks.get(0).getCreationTime();
+        int previousTaskDuration = 0;
         for (Task task : tasks) {
-            Date earliestPossibleStartTime = getEarliestPossibleStartTime(task, tasksWithDuration.get(task), totalDuration, firstTaskEarliestStartTime);
-            totalDuration += tasksWithDuration.get(task) + 1;
+            Date earliestPossibleStartTime = getEarliestPossibleStartTime(task, tasksWithDuration.get(task),
+                    previousTaskEarliestStartTime, previousTaskDuration);
+            previousTaskEarliestStartTime = earliestPossibleStartTime;
+            previousTaskDuration = tasksWithDuration.get(task) + TASKS_GAP;
             task.setEarliestPossibleStartTime(earliestPossibleStartTime);
         }
     }
@@ -46,14 +50,15 @@ public class DeadlinePriorityTasksArrangementHeuristic implements TasksArrangeme
         return tasks;
     }
 
-    private Date getEarliestPossibleStartTime(Task task, int taskDuration, int totalDuration, Date firstTaskEarliestStartTime) {
-        if(getDateWithShift(firstTaskEarliestStartTime, totalDuration).compareTo(task.getFinishDate()) > 0) {
+    private Date getEarliestPossibleStartTime(Task task, int taskDuration,
+                                              Date previousTaskEarliestStartTime, int previousTaskDuration) {
+        if(getDateWithShift(previousTaskEarliestStartTime, previousTaskDuration + taskDuration).compareTo(task.getFinishDate()) > 0) {
             if(getDateWithShift(task.getFinishDate(), -taskDuration).compareTo(task.getCreationTime()) < 0)
                 return task.getCreationTime();
 
             return getDateWithShift(task.getFinishDate(), -taskDuration);
         }
 
-        return getDateWithShift(firstTaskEarliestStartTime, totalDuration);
+        return getDateWithShift(previousTaskEarliestStartTime, previousTaskDuration);
     }
 }

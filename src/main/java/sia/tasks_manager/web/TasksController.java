@@ -9,7 +9,6 @@ import sia.tasks_manager.data.Task;
 import sia.tasks_manager.repositories.TaskRepository;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Controller
