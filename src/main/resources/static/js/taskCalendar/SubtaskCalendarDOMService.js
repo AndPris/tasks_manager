@@ -18,6 +18,9 @@ export class SubtaskCalendarDOMService {
     }
 
     displayEarliestPossibleStartEvent(subtask, calendar) {
+        if(subtask.critical)
+            return;
+
         const earliestPossibleStartEvent = this.getSubtaskEvent(subtask,
             `Earliest start for subtask ${subtask.description}`,
             subtask.startTime,
@@ -37,9 +40,6 @@ export class SubtaskCalendarDOMService {
     }
 
     displayMustStartEvent(subtask, calendar) {
-        if(subtask.critical)
-            return;
-
         const mustHaveStartEvent = this.getSubtaskEvent(subtask,
             `Must start subtask ${subtask.description}`,
             subtask.startTime + subtask.totalTimeStock,

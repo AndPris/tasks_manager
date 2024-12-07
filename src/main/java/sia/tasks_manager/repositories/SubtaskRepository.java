@@ -16,6 +16,7 @@ public interface SubtaskRepository extends PagingAndSortingRepository<Subtask, L
     List<Subtask> findAllByTaskIdOrderById(Long taskId);
     List<Subtask> findAllByTask_User_Username(String username);
     Page<Subtask> findAllByTaskIdAndIdLessThan(Long taskId, Long id, Pageable pageable);
+    List<Subtask> findAllByDone(boolean done);
 
     @Modifying
     @Query(value = "DELETE FROM subtask_dependencies WHERE subtask_id = ?1 OR previous_subtask_id = ?1", nativeQuery = true)
