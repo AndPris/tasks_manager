@@ -2,42 +2,25 @@ export class FormDOMService {
     date;
     form;
     submitButton;
-    backendService;
-    taskDOMService;
-    popUpWindowDOMService;
     eventToEdit;
-    postTaskHandler;
-    putTaskHandler;
+    putHandler;
     allDay;
+    postHandler;
 
-    constructor(popUpWindowDOMService, backendService) {
-        this.popUpWindowDOMService = popUpWindowDOMService;
-        this.backendService = backendService;
-        this.createForm(this.popUpWindowDOMService.getPopUpWindow());
+    setPostHandler(postHandler) {
+        this.postHandler = postHandler;
     }
 
-    setTaskDOMService(taskDOMService) {
-        this.taskDOMService = taskDOMService;
+    setPutHandler(putHandler) {
+        this.putHandler = putHandler;
     }
 
     setAllDay(allDay) {
         this.allDay = allDay;
     }
 
-    displayFormOnPopUpWindow(date) {
+    setDate(date) {
         this.date = date;
-        this.popUpWindowDOMService.displayPopUpWindow(`Selected Date: ${this.getClearDateString(date)}`);
-        this.displayForm();
-    }
-
-    getClearDateString(date) {
-        date = date.replace('T', ' ');
-
-        const indexOfDelim = date.indexOf('+');
-        if(indexOfDelim !== -1)
-            date = date.slice(0, indexOfDelim);
-
-        return date;
     }
 
     displayForm() {
@@ -72,8 +55,7 @@ export class FormDOMService {
         this.submitButton.textContent = "Add Task!";
         this.form.appendChild(this.submitButton);
 
-        this.postTaskHandler = this.createTask.bind(this);
-        this.form.addEventListener("submit", this.postTaskHandler);
+        this.form.addEventListener("submit", this.postHandler);
 
         destination.appendChild(this.form);
     }
@@ -95,13 +77,6 @@ export class FormDOMService {
         prioritySelect.appendChild(low);
     }
 
-    async createTask(event) {
-        event.preventDefault();
-        await this.backendService.postTask(this.getFormData());
-        this.taskDOMService.displayTasks(await this.backendService.loadTasks());
-        this.clearForm();
-    }
-
     getFormData() {
         return {
             description: this.form.description.value,
@@ -110,14 +85,6 @@ export class FormDOMService {
             priority: {id: this.form.priority.value}
         };
     }
-    //
-    // getUTCTime() {
-    //     let date = new Date(this.date);
-    //     if(this.date.indexOf('+') === -1)
-    //         date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
-    //
-    //     return date.toISOString();
-    // }
 
     clearForm() {
         this.form.description.value = '';
@@ -130,8 +97,8 @@ export class FormDOMService {
         this.submitButton.textContent = "Add Task!";
         this.form.method = "post";
 
-        this.form.removeEventListener("submit", this.putTaskHandler);
-        this.form.addEventListener("submit", this.postTaskHandler);
+        this.form.removeEventListener("submit", this.putHandler);
+        this.form.addEventListener("submit", this.postHandler);
     }
 
     changeToEditForm(event) {
@@ -144,9 +111,8 @@ export class FormDOMService {
         this.submitButton.textContent = "Edit Task!";
 
         this.form.method = "put";
-        this.form.removeEventListener("submit", this.postTaskHandler);
-        this.putTaskHandler = this.editTask.bind(this);
-        this.form.addEventListener("submit", this.putTaskHandler);
+        this.form.removeEventListener("submit", this.postHandler);
+        this.form.addEventListener("submit", this.putHandler);
     }
 
     getPriorityValueByName(name) {
@@ -154,18 +120,6 @@ export class FormDOMService {
             if (this.form.priority.options[i].textContent === name)
                 return i+1;
         }
-    }
-
-    async editTask(event) {
-        event.preventDefault();
-        console.log(this.getTaskDataForPut());
-        this.taskDOMService.removeEvent( {id: this.eventToEdit.id,});
-        const newTask = await this.backendService.putTask(this.eventToEdit.id, this.getTaskDataForPut());
-        this.taskDOMService.displayTask(newTask);
-        this.clearForm();
-        this.changeToCreateForm();
-        this.hideForm();
-        this.popUpWindowDOMService.hidePopUpWindow();
     }
 
     getTaskDataForPut() {

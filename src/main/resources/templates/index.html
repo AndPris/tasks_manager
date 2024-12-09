@@ -14,11 +14,6 @@
     <link rel="stylesheet" href="/stylesheets/eventButtonsWindow.css">
     <title>Calendar</title>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-
-    <script>
-        const currentDate = new Date(`[[${currentDate}]]`);
-        currentDate.setHours(0, 0, 0, 0);
-    </script>
 </head>
 <body id="body">
     <div id='calendar'></div>
@@ -33,7 +28,9 @@
                 "TaskDOMService.js" : "/js/taskCalendar/TaskDOMService.js",
                 "FormDOMService.js" : "/js/taskCalendar/FormDOMService.js",
                 "PopUpWindowDOMService.js" : "/js/taskCalendar/PopUpWindowDOMService.js",
-                "EventDOMService.js" : "/js/taskCalendar/EventDOMService.js"
+                "EventDOMService.js" : "/js/taskCalendar/EventDOMService.js",
+                "TaskController.js" : "/js/taskCalendar/TaskController.js",
+                "SubtaskCalendarDOMService.js" : "/js/taskCalendar/SubtaskCalendarDOMService.js"
             }
         }
     </script>
