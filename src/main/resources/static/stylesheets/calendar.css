@@ -19,3 +19,7 @@
 .shift-right {
     margin-left: 20px !important;
 }
+
+.past-day {
+    background-color: #f0f0f0 !important;
+}

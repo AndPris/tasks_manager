@@ -58,6 +58,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         },
         eventDrop: async function(info) {
             await taskController.handleEventDrop(info);
+        },
+        dayCellClassNames: function (info) {
+            const today = new Date();
+            const day = info.date;
+            if (day < today.setHours(0, 0, 0, 0)) {
+                return ['past-day'];
+            }
+            return [];
         }
     });
     calendar.render();
@@ -65,6 +73,4 @@ document.addEventListener('DOMContentLoaded', async function() {
     taskController.setCalendar(calendar);
     await taskController.loadTasks();
     await taskController.loadSubtasks();
-
-    console.log(await backendService.loadSubtasks());
 });
