@@ -4,17 +4,19 @@ export class SubtaskController {
     paginationButtonsDOMService;
     subtaskFormDOMService;
     graph;
+    planButtonDOMService;
     postHandler;
     putHandler;
 
     constructor(subtaskBackendService, subtaskDOMService,
                 paginationButtonsDOMService, subtaskFormDOMService,
-                graph) {
+                graph, planButtonDOMService) {
         this.subtaskBackendService = subtaskBackendService;
         this.subtaskDOMService = subtaskDOMService;
         this.paginationButtonsDOMService = paginationButtonsDOMService;
         this.subtaskFormDOMService = subtaskFormDOMService;
         this.graph = graph;
+        this.planButtonDOMService = planButtonDOMService;
 
         this.postHandler = this.addSubtaskToDB.bind(this);
         this.putHandler = this.editSubtaskInDB.bind(this);
@@ -27,6 +29,11 @@ export class SubtaskController {
     //GET
     async loadSubtasks() {
         let [subtasks, pageInfo] = await this.subtaskBackendService.loadSubtasks();
+        if(subtasks.length === 0)
+            this.planButtonDOMService.hidePlanButton();
+        else
+            this.planButtonDOMService.showPlanButton();
+
         const editHandler = this.editSubtask.bind(this);
         const checkHandler = this.checkSubtask.bind(this);
         const deleteHandler = this.deleteSubtaskFromDB.bind(this);
@@ -104,6 +111,7 @@ export class SubtaskController {
         this.subtaskFormDOMService.removePostHandler(this.postHandler);
         this.subtaskFormDOMService.addPutHandler(this.putHandler);
         this.paginationButtonsDOMService.hidePaginationButtons();
+        this.planButtonDOMService.hidePlanButton();
     }
 
     async editSubtaskInDB(event) {
