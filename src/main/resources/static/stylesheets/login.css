@@ -76,3 +76,21 @@
 .loginContent > p {
     margin: 16px 0;
 }
+
+@media screen and (max-width: 500px) {
+    .text-input {
+        width: 90vw;
+    }
+
+    .name-text-input {
+        width: 40vw;
+    }
+
+    #loginBody {
+        font-size: 1.4rem;
+    }
+
+    .loginContent > p {
+        font-size: 20px;
+    }
+}

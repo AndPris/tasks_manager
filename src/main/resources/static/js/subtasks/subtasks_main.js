@@ -4,6 +4,7 @@ import {SubtaskFormDOMService} from "SubtaskFormDOMService.js";
 import {PaginationButtonsDOMService} from "PaginationButtonsDOMService.js";
 import {SubtaskController} from "SubtaskController.js";
 import {Graph} from "graph.js";
+import {PlanButtonDOMService} from "PlanButtonDOMService.js";
 
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -14,10 +15,11 @@ const paginationButtonsDOMService = new PaginationButtonsDOMService(document.get
                                                                 document.getElementById("forward-button"));
 const subtaskFormDOMService = new SubtaskFormDOMService(document.getElementById("form"));
 const graph = new Graph();
+const planButtonDOMService = new PlanButtonDOMService(document.getElementById("plan-button"),);
 
 const subtaskController = new SubtaskController(subtaskBackendService, subtaskDOMService,
                                                                 paginationButtonsDOMService, subtaskFormDOMService,
-                                                                graph);
+                                                                graph, planButtonDOMService);
 
 await subtaskController.loadSubtasks();
 

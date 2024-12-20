@@ -22,7 +22,7 @@ public class RegistrationForm {
     private String email;
 
     @NotNull
-    @NotEmpty(message = "Provide password name")
+    @NotEmpty(message = "Provide password")
     private String password;
     private String matchingPassword;
 
