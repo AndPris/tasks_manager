@@ -39,6 +39,7 @@ export class FormDOMService {
         descriptionInput.type = "text";
         descriptionInput.name = "description";
         descriptionInput.placeholder = "Add a task.";
+        descriptionInput.required = true;
         descriptionInput.minLength = 1;
         descriptionInput.maxLength = 30;
         this.form.appendChild(descriptionInput);
@@ -94,6 +95,7 @@ export class FormDOMService {
     changeToCreateForm() {
         this.form.removeAttribute("task-id");
         this.form.description.placeholder = "Add a task.";
+        this.form.description.required = true;
         this.submitButton.textContent = "Add Task!";
         this.form.method = "post";
 
@@ -107,6 +109,7 @@ export class FormDOMService {
 
         this.form.description.value = event.title;
         this.form.description.placeholder = "Edit the task.";
+        this.form.description.required = true;
         this.form.priority.value = this.getPriorityValueByName(event.extendedProps.priority);
         this.submitButton.textContent = "Edit Task!";
 

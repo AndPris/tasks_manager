@@ -3,7 +3,7 @@ import {clearChildren} from "utilDOMFunctions.js";
 import {getDateWithShift} from "utilFunctions.js";
 
 export class Graph {
-    width = 640;
+    width = 740;
     height = 400;
     marginTop = 20;
     marginRight = 20;
